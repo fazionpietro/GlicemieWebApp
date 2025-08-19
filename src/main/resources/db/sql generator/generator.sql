@@ -1,7 +1,6 @@
 create table if not exists utenti
 (
-    id_utente uuid not null
-        primary key,
+    id_utente uuid primary key DEFAULT uuid_generate_v4(),
     email varchar(320) not null,
     password_hash varchar(256) not null,
     nome varchar(20) not null,
@@ -37,32 +36,28 @@ create table if not exists medici
 
 create table if not exists farmaci
 (
-    id_farmaco uuid not null
-        primary key,
+    id_farmaco uuid primary key DEFAULT uuid_generate_v4(),
     nome varchar(20) not null,
     bugiardino text
 );
 
 create table if not exists sintomi
 (
-    id_sintomo uuid not null
-        primary key,
+    id_sintomo uuid primary key DEFAULT uuid_generate_v4(),
     nome varchar(20) not null,
     descrizione text not null
 );
 
 create table if not exists logs
 (
-    id_log uuid not null
-        primary key,
+    id_log uuid primary key DEFAULT uuid_generate_v4(),
     descrizione text not null,
     timestamp timestamp not null
 );
 
 create table if not exists segnalazioni
 (
-    id_segnalazione uuid not null
-        primary key,
+    id_segnalazione uuid primary key DEFAULT uuid_generate_v4(),
     id_sintomo uuid not null
         references sintomi,
     id_paziente uuid not null
@@ -74,8 +69,7 @@ create table if not exists segnalazioni
 
 create table if not exists rilevazioni
 (
-    id_segnalazione uuid not null
-        primary key,
+    id_segnalazione uuid primary key DEFAULT uuid_generate_v4(),
     id_paziente uuid not null
         references pazienti,
     valore double precision not null,
@@ -84,8 +78,7 @@ create table if not exists rilevazioni
 
 create table if not exists assunzioni
 (
-    id_assunzione uuid not null
-        primary key,
+    id_assunzione uuid primary key DEFAULT uuid_generate_v4(),
     id_farmaco uuid not null
         references farmaci,
     quantita double precision not null,
@@ -97,8 +90,7 @@ create table if not exists assunzioni
 
 create table if not exists terapie
 (
-    id_terapipa uuid not null
-        primary key,
+    id_terapipa uuid primary key DEFAULT uuid_generate_v4(),
     id_farmaco uuid not null
         references farmaci,
     num_assunzioni integer not null,
