@@ -37,6 +37,11 @@
             <version>3.1.1</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+        </dependency>
+
         <!-- JWT (se ti serve per autenticazione custom) -->
         <dependency>
             <groupId>com.auth0</groupId>
