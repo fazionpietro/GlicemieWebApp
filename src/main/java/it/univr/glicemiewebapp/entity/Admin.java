@@ -1,35 +1,24 @@
 package it.univr.glicemiewebapp.entity;
 
-import jakarta.persistence.*;
-
-import java.util.UUID;
+import jakarta.persistence.Entity;
+import jakarta.persistence.PrimaryKeyJoinColumn;
+import jakarta.persistence.Table;
+import lombok.*;
 
 @Entity
 @Table(name = "admins")
-public class Admin {
-    @Id
-    @Column(name = "id_admin", nullable = false)
-    private UUID id;
+@PrimaryKeyJoinColumn(name = "id_admin")
+@NoArgsConstructor
+@Getter(AccessLevel.PUBLIC)
+@Setter(AccessLevel.PRIVATE)
+@ToString
+public class Admin extends Utente {
 
-    @MapsId
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "id_admin", nullable = false)
-    private Utenti utenti;
 
-    public UUID getId() {
-        return id;
+
+    public Admin(String email, String passwordHash, String nome, String cognome) {
+        super(null, email, passwordHash, nome, cognome);
     }
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public Utenti getUtenti() {
-        return utenti;
-    }
-
-    public void setUtenti(Utenti utenti) {
-        this.utenti = utenti;
-    }
 
 }

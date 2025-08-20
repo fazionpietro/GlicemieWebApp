@@ -3,12 +3,22 @@ package it.univr.glicemiewebapp.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.*;
 
 import java.util.UUID;
 
 @Entity
 @Table(name = "utenti")
-public class Utenti {
+@Inheritance(strategy = InheritanceType.JOINED)
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Getter(AccessLevel.PUBLIC)
+@Setter(AccessLevel.PRIVATE)
+@Builder
+@ToString(exclude = "passwordHash")
+
+public class Utente {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id_utente", nullable = false)
@@ -34,44 +44,5 @@ public class Utenti {
     @Column(name = "cognome", nullable = false, length = 20)
     private String cognome;
 
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPasswordHash() {
-        return passwordHash;
-    }
-
-    public void setPasswordHash(String passwordHash) {
-        this.passwordHash = passwordHash;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getCognome() {
-        return cognome;
-    }
-
-    public void setCognome(String cognome) {
-        this.cognome = cognome;
-    }
 
 }

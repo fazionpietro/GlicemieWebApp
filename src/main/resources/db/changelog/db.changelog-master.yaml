@@ -1,0 +1,5 @@
+databaseChangeLog:
+# Qui puoi iniziare ad aggiungere i tuoi script di modifica del database.
+# Ad esempio, per includere un file SQL:
+# - include:
+#     file: db/changelog/changes/001-crea-tabella-utenti.sql

@@ -2,12 +2,18 @@ package it.univr.glicemiewebapp.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.*;
 
 import java.time.Instant;
 import java.util.UUID;
 
 @Entity
 @Table(name = "logs")
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@ToString
+
 public class Log {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -26,7 +32,7 @@ public class Log {
         return id;
     }
 
-    public void setId(UUID id) {
+    private void setId(UUID id) {
         this.id = id;
     }
 
@@ -34,7 +40,7 @@ public class Log {
         return descrizione;
     }
 
-    public void setDescrizione(String descrizione) {
+    private void setDescrizione(String descrizione) {
         this.descrizione = descrizione;
     }
 
@@ -42,7 +48,7 @@ public class Log {
         return timestamp;
     }
 
-    public void setTimestamp(Instant timestamp) {
+    private void setTimestamp(Instant timestamp) {
         this.timestamp = timestamp;
     }
 

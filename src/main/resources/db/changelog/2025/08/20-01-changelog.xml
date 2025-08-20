@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.31.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="1755682138014-1" author="pietro">
+        <createTable tableName="admins">
+            <column name="id_admin" type="char(36)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="admins_pkey"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1755682138014-2" author="pietro">
+        <createTable tableName="assunzioni">
+            <column defaultValueComputed="uuid_generate_v4()" name="id_assunzione" type="char(36)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="assunzioni_pkey"/>
+            </column>
+            <column name="id_farmaco" type="char(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="quantita" type="DOUBLE precision">
+                <constraints nullable="false"/>
+            </column>
+            <column name="timestamp" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_paziente" type="char(36)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1755682138014-3" author="pietro">
+        <createTable tableName="farmaci">
+            <column defaultValueComputed="uuid_generate_v4()" name="id_farmaco" type="char(36)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="farmaci_pkey"/>
+            </column>
+            <column name="nome" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="bugiardino" type="CLOB"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1755682138014-4" author="pietro">
+        <createTable tableName="logs">
+            <column defaultValueComputed="uuid_generate_v4()" name="id_log" type="char(36)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="logs_pkey"/>
+            </column>
+            <column name="descrizione" type="CLOB">
+                <constraints nullable="false"/>
+            </column>
+            <column name="timestamp" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1755682138014-5" author="pietro">
+        <createTable tableName="medici">
+            <column name="id_medico" type="char(36)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="medici_pkey"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1755682138014-6" author="pietro">
+        <createTable tableName="pazienti">
+            <column name="id_paziente" type="char(36)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pazienti_pkey"/>
+            </column>
+            <column name="data_nascita" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fattori_rischio" type="CLOB"/>
+            <column name="comorbita" type="CLOB"/>
+            <column name="patologie_presse" type="CLOB"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1755682138014-7" author="pietro">
+        <createTable tableName="rilevazioni">
+            <column defaultValueComputed="uuid_generate_v4()" name="id_segnalazione" type="char(36)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="rilevazioni_pkey"/>
+            </column>
+            <column name="id_paziente" type="char(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="valore" type="DOUBLE precision">
+                <constraints nullable="false"/>
+            </column>
+            <column name="timestamp" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1755682138014-8" author="pietro">
+        <createTable tableName="segnalazioni">
+            <column defaultValueComputed="uuid_generate_v4()" name="id_segnalazione" type="char(36)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="segnalazioni_pkey"/>
+            </column>
+            <column name="id_sintomo" type="char(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_paziente" type="char(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="intensita" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="descrizione" type="CLOB">
+                <constraints nullable="false"/>
+            </column>
+            <column name="timestamp" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1755682138014-9" author="pietro">
+        <createTable tableName="sintomi">
+            <column defaultValueComputed="uuid_generate_v4()" name="id_sintomo" type="char(36)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="sintomi_pkey"/>
+            </column>
+            <column name="nome" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="descrizione" type="CLOB">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1755682138014-10" author="pietro">
+        <createTable tableName="terapie">
+            <column defaultValueComputed="uuid_generate_v4()" name="id_terapipa" type="char(36)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="terapie_pkey"/>
+            </column>
+            <column name="id_farmaco" type="char(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="num_assunzioni" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="quantita" type="DOUBLE precision">
+                <constraints nullable="false"/>
+            </column>
+            <column name="indicazioni" type="CLOB"/>
+            <column name="id_paziente" type="char(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="medico_curante" type="char(36)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1755682138014-11" author="pietro">
+        <createTable tableName="utenti">
+            <column defaultValueComputed="uuid_generate_v4()" name="id_utente" type="char(36)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="utenti_pkey"/>
+            </column>
+            <column name="email" type="VARCHAR(320)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password_hash" type="VARCHAR(256)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="nome" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cognome" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1755682138014-12" author="pietro">
+        <addForeignKeyConstraint baseColumnNames="id_admin" baseTableName="admins" constraintName="admins_id_admin_fkey"
+                                 onDelete="NO ACTION" referencedColumnNames="id_utente" referencedTableName="utenti"/>
+    </changeSet>
+    <changeSet id="1755682138014-13" author="pietro">
+        <addForeignKeyConstraint baseColumnNames="id_farmaco" baseTableName="assunzioni"
+                                 constraintName="assunzioni_id_farmaco_fkey" onDelete="NO ACTION"
+                                 referencedColumnNames="id_farmaco" referencedTableName="farmaci"/>
+    </changeSet>
+    <changeSet id="1755682138014-14" author="pietro">
+        <addForeignKeyConstraint baseColumnNames="id_paziente" baseTableName="assunzioni"
+                                 constraintName="assunzioni_id_paziente_fk" onDelete="NO ACTION"
+                                 referencedColumnNames="id_paziente" referencedTableName="pazienti"/>
+    </changeSet>
+    <changeSet id="1755682138014-15" author="pietro">
+        <addForeignKeyConstraint baseColumnNames="id_medico" baseTableName="medici"
+                                 constraintName="medici_id_medico_fkey" onDelete="NO ACTION"
+                                 referencedColumnNames="id_utente" referencedTableName="utenti"/>
+    </changeSet>
+    <changeSet id="1755682138014-16" author="pietro">
+        <addForeignKeyConstraint baseColumnNames="id_paziente" baseTableName="pazienti"
+                                 constraintName="pazienti_id_utente_fkey" onDelete="CASCADE"
+                                 referencedColumnNames="id_utente" referencedTableName="utenti"/>
+    </changeSet>
+    <changeSet id="1755682138014-17" author="pietro">
+        <addForeignKeyConstraint baseColumnNames="id_paziente" baseTableName="rilevazioni"
+                                 constraintName="rilevazioni_id_paziente_fkey" onDelete="NO ACTION"
+                                 referencedColumnNames="id_paziente" referencedTableName="pazienti"/>
+    </changeSet>
+    <changeSet id="1755682138014-18" author="pietro">
+        <addForeignKeyConstraint baseColumnNames="id_paziente" baseTableName="segnalazioni"
+                                 constraintName="segnalazioni_id_paziente_fkey" onDelete="NO ACTION"
+                                 referencedColumnNames="id_paziente" referencedTableName="pazienti"/>
+    </changeSet>
+    <changeSet id="1755682138014-19" author="pietro">
+        <addForeignKeyConstraint baseColumnNames="id_sintomo" baseTableName="segnalazioni"
+                                 constraintName="segnalazioni_id_sintomo_fkey" onDelete="NO ACTION"
+                                 referencedColumnNames="id_sintomo" referencedTableName="sintomi"/>
+    </changeSet>
+    <changeSet id="1755682138014-20" author="pietro">
+        <addForeignKeyConstraint baseColumnNames="id_farmaco" baseTableName="terapie"
+                                 constraintName="terapie_id_farmaco_fkey" onDelete="NO ACTION"
+                                 referencedColumnNames="id_farmaco" referencedTableName="farmaci"/>
+    </changeSet>
+    <changeSet id="1755682138014-21" author="pietro">
+        <addForeignKeyConstraint baseColumnNames="id_paziente" baseTableName="terapie"
+                                 constraintName="terapie_id_paziente_fk" onDelete="NO ACTION"
+                                 referencedColumnNames="id_paziente" referencedTableName="pazienti"/>
+    </changeSet>
+    <changeSet id="1755682138014-22" author="pietro">
+        <addForeignKeyConstraint baseColumnNames="medico_curante" baseTableName="terapie"
+                                 constraintName="terapie_medico_curante_fk" onDelete="NO ACTION"
+                                 referencedColumnNames="id_medico" referencedTableName="medici"/>
+    </changeSet>
+
+</databaseChangeLog>
