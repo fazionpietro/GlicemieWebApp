@@ -1,106 +1,180 @@
-create table if not exists utenti
+create table public.utenti
 (
-    id_utente uuid primary key DEFAULT uuid_generate_v4(),
-    email varchar(320) not null,
-    password_hash varchar(256) not null,
-    nome varchar(20) not null,
-    cognome varchar(20) not null
+    id_utente     uuid default uuid_generate_v4() not null
+        primary key,
+    email         varchar(320)                    not null,
+    password_hash varchar(256)                    not null,
+    nome          varchar(20)                     not null,
+    cognome       varchar(20)                     not null
 );
 
-create table if not exists pazienti
+alter table public.utenti
+    owner to postgres;
+
+create table public.pazienti
 (
-    id_paziente uuid not null
+    id_paziente      uuid not null
         primary key
         constraint pazienti_id_utente_fkey
-            references utenti
+            references public.utenti
             on delete cascade,
-    data_nascita date not null,
-    fattori_rischio text,
-    comorbita text,
+    data_nascita     date not null,
+    fattori_rischio  text,
+    comorbita        text,
     patologie_presse text
 );
 
-create table if not exists admins
+alter table public.pazienti
+    owner to postgres;
+
+create table public.admins
 (
     id_admin uuid not null
         primary key
-        references utenti
+        references public.utenti
 );
 
-create table if not exists medici
+alter table public.admins
+    owner to postgres;
+
+create table public.medici
 (
     id_medico uuid not null
         primary key
-        references utenti
+        references public.utenti
 );
 
-create table if not exists farmaci
+alter table public.medici
+    owner to postgres;
+
+create table public.farmaci
 (
-    id_farmaco uuid primary key DEFAULT uuid_generate_v4(),
-    nome varchar(20) not null,
+    id_farmaco uuid default uuid_generate_v4() not null
+        primary key,
+    nome       varchar(20)                     not null,
     bugiardino text
 );
 
-create table if not exists sintomi
+alter table public.farmaci
+    owner to postgres;
+
+create table public.sintomi
 (
-    id_sintomo uuid primary key DEFAULT uuid_generate_v4(),
-    nome varchar(20) not null,
-    descrizione text not null
+    id_sintomo  uuid default uuid_generate_v4() not null
+        primary key,
+    nome        varchar(20)                     not null,
+    descrizione text                            not null
 );
 
-create table if not exists logs
+alter table public.sintomi
+    owner to postgres;
+
+create table public.logs
 (
-    id_log uuid primary key DEFAULT uuid_generate_v4(),
-    descrizione text not null,
-    timestamp timestamp not null
+    id_log      uuid default uuid_generate_v4() not null
+        primary key,
+    descrizione text                            not null,
+    timestamp   timestamp                       not null
 );
 
-create table if not exists segnalazioni
+alter table public.logs
+    owner to postgres;
+
+create table public.segnalazioni
 (
-    id_segnalazione uuid primary key DEFAULT uuid_generate_v4(),
-    id_sintomo uuid not null
-        references sintomi,
-    id_paziente uuid not null
-        references pazienti,
-    intensita integer not null,
-    descrizione text not null,
-    timestamp timestamp not null
+    id_segnalazione uuid default uuid_generate_v4() not null
+        primary key,
+    id_sintomo      uuid                            not null
+        references public.sintomi,
+    id_paziente     uuid                            not null
+        references public.pazienti,
+    intensita       integer                         not null,
+    descrizione     text                            not null,
+    timestamp       timestamp                       not null
 );
 
-create table if not exists rilevazioni
+alter table public.segnalazioni
+    owner to postgres;
+
+create table public.rilevazioni
 (
-    id_segnalazione uuid primary key DEFAULT uuid_generate_v4(),
-    id_paziente uuid not null
-        references pazienti,
-    valore double precision not null,
-    timestamp timestamp not null
+    id_segnalazione uuid default uuid_generate_v4() not null
+        primary key,
+    id_paziente     uuid                            not null
+        references public.pazienti,
+    valore          double precision                not null,
+    timestamp       timestamp                       not null
 );
 
-create table if not exists assunzioni
+alter table public.rilevazioni
+    owner to postgres;
+
+create table public.assunzioni
 (
-    id_assunzione uuid primary key DEFAULT uuid_generate_v4(),
-    id_farmaco uuid not null
-        references farmaci,
-    quantita double precision not null,
-    timestamp timestamp not null,
-    id_paziente uuid not null
+    id_assunzione uuid default uuid_generate_v4() not null
+        primary key,
+    id_farmaco    uuid                            not null
+        references public.farmaci,
+    quantita      double precision                not null,
+    timestamp     timestamp                       not null,
+    id_paziente   uuid                            not null
         constraint assunzioni_id_paziente_fk
-            references pazienti
+            references public.pazienti
 );
 
-create table if not exists terapie
+alter table public.assunzioni
+    owner to postgres;
+
+create table public.terapie
 (
-    id_terapipa uuid primary key DEFAULT uuid_generate_v4(),
-    id_farmaco uuid not null
-        references farmaci,
-    num_assunzioni integer not null,
-    quantita double precision not null,
-    indicazioni text,
-    id_paziente uuid not null
+    id_terapipa    uuid default uuid_generate_v4() not null
+        primary key,
+    id_farmaco     uuid                            not null
+        references public.farmaci,
+    num_assunzioni integer                         not null,
+    quantita       double precision                not null,
+    indicazioni    text,
+    id_paziente    uuid                            not null
         constraint terapie_id_paziente_fk
-            references pazienti,
-    medico_curante uuid not null
+            references public.pazienti,
+    medico_curante uuid                            not null
         constraint terapie_medico_curante_fk
-            references medici
+            references public.medici
 );
+
+alter table public.terapie
+    owner to postgres;
+
+create table public.databasechangelog
+(
+    id            varchar(255) not null,
+    author        varchar(255) not null,
+    filename      varchar(255) not null,
+    dateexecuted  timestamp    not null,
+    orderexecuted integer      not null,
+    exectype      varchar(10)  not null,
+    md5sum        varchar(35),
+    description   varchar(255),
+    comments      varchar(255),
+    tag           varchar(255),
+    liquibase     varchar(20),
+    contexts      varchar(255),
+    labels        varchar(255),
+    deployment_id varchar(10)
+);
+
+alter table public.databasechangelog
+    owner to postgres;
+
+create table public.databasechangeloglock
+(
+    id          integer not null
+        primary key,
+    locked      boolean not null,
+    lockgranted timestamp,
+    lockedby    varchar(255)
+);
+
+alter table public.databasechangeloglock
+    owner to postgres;
 
