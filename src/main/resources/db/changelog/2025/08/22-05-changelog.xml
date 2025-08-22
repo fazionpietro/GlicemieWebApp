@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.31.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="1755871523090-5" author="pietro">
+        <dropForeignKeyConstraint baseTableName="pazienti" constraintName="fk_pazienti_on_medico_id_utente"/>
+    </changeSet>
+    <changeSet id="1755871523090-3" author="pietro">
+        <addUniqueConstraint columnNames="id_medico" constraintName="uc_pazienti_id_medico" tableName="pazienti"/>
+    </changeSet>
+    <changeSet id="1755871523090-6" author="pietro">
+        <dropColumn columnName="medico_id_utente" tableName="pazienti"/>
+
+        <dropColumn columnName="id_medico" tableName="pazienti"/>
+    </changeSet>
+    <changeSet id="1755871523090-2" author="pietro">
+        <addColumn tableName="pazienti">
+            <column name="id_medico" type="UUID">
+                <constraints foreignKeyName="FK_PAZIENTI_ON_ID_MEDICO" references="medici(id_medico)" unique="true"
+                             uniqueConstraintName="uc_pazienti_id_medico"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+</databaseChangeLog>

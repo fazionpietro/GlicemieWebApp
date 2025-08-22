@@ -9,6 +9,7 @@ import lombok.*;
 @Table(name = "admins")
 @PrimaryKeyJoinColumn(name = "id_admin")
 @NoArgsConstructor
+
 @Getter(AccessLevel.PUBLIC)
 @Setter(AccessLevel.PRIVATE)
 @ToString

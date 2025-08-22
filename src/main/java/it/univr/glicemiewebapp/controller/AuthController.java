@@ -10,6 +10,7 @@ import it.univr.glicemiewebapp.forms.SignInForm;
 import it.univr.glicemiewebapp.repository.UtenteRepository;
 import it.univr.glicemiewebapp.service.JwtService;
 import jakarta.validation.Valid;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -38,22 +39,34 @@ public class AuthController {
     @PostMapping("/signin")
     public ResponseEntity<String> signin(@RequestBody @Valid SignInForm signInForm) {
         Optional<Utente> tmp = utenteRepository.findByEmailAddress(signInForm.getEmail());
+        JSONObject body = new JSONObject();
+        body.put("message", "credenziali errate");
+
 
         if(tmp.isPresent()) {
             System.out.println(passwordEncoder.encode(signInForm.getPassword()));
             System.out.println(tmp.get().getPasswordHash());
             System.out.println(passwordEncoder.matches(tmp.get().getPasswordHash(), passwordEncoder.encode(signInForm.getPassword())));
 
+
+
+
             if(passwordEncoder.matches(signInForm.getPassword(),tmp.get().getPasswordHash())) {
 
                 HttpHeaders headers = new HttpHeaders();
                 headers.add("Authorization",  "Bearer " + jwtService.generateToken(signInForm.getEmail()));
-                return new ResponseEntity<>("credenziali corrette",headers, HttpStatus.ACCEPTED);
+
+                body.put("message", "credenziali corrette");
+                body.put("email", signInForm.getEmail());
+
+                return new ResponseEntity<>(body.toString(),headers, HttpStatus.ACCEPTED);
             }else{
-                return new ResponseEntity<>("credenziali errate", HttpStatus.UNAUTHORIZED);
+
+
+                return new ResponseEntity<>(body.toString(), HttpStatus.UNAUTHORIZED);
             }
         }
-        return new ResponseEntity<>("credenziali errate", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(body.toString(), HttpStatus.BAD_REQUEST);
     }
 
 
@@ -66,7 +79,11 @@ public class AuthController {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization",  "Bearer " + jwtService.generateToken(utente.getEmail()));
 
-        return new ResponseEntity<>("medico registrato correttamente",headers, HttpStatus.CREATED);
+        JSONObject body = new JSONObject();
+        body.put("message", "medico registrato correttamente");
+        body.put("email", utente.getEmail());
+
+        return new ResponseEntity<>(body.toString(),headers, HttpStatus.CREATED);
     }
 
     @PostMapping("/signup/admin")
@@ -78,7 +95,12 @@ public class AuthController {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization",  "Bearer " + jwtService.generateToken(utente.getEmail()));
 
-        return new ResponseEntity<>("admin registrato correttamente",headers, HttpStatus.CREATED);
+        JSONObject body = new JSONObject();
+        body.put("message", "admin registrato correttamente");
+        body.put("email", utente.getEmail());
+
+
+        return new ResponseEntity<>(body.toString(),headers, HttpStatus.CREATED);
     }
 
     @PostMapping("/signup/paziente")
@@ -99,7 +121,11 @@ public class AuthController {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization",  "Bearer " + jwtService.generateToken(utente.getEmail()));
 
-        return new ResponseEntity<>("paziente registrato correttamente",headers, HttpStatus.CREATED);
+        JSONObject body = new JSONObject();
+        body.put("message", "paziente registrato correttamente");
+        body.put("email", utente.getEmail());
+
+        return new ResponseEntity<>(body.toString(),headers, HttpStatus.CREATED);
     }
 
 

@@ -12,6 +12,7 @@ import java.util.List;
 @Table(name = "pazienti")
 @PrimaryKeyJoinColumn(name = "id_paziente")
 @NoArgsConstructor
+
 @Getter(AccessLevel.PUBLIC)
 @Setter(AccessLevel.PRIVATE)
 @ToString
@@ -30,6 +31,12 @@ public class Paziente extends Utente {
 
     @Column(name = "patologie_pregresse", length = Integer.MAX_VALUE)
     private String patologiePregresse;
+
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ToString.Exclude
+    @JoinColumn(name = "id_medico")
+    private Medico idMedico;
 
 
     @OneToMany(mappedBy = "idPaziente", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

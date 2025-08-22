@@ -10,6 +10,7 @@ import java.util.List;
 @Table(name = "medici")
 @PrimaryKeyJoinColumn(name = "id_medico")
 @NoArgsConstructor
+
 @Getter(AccessLevel.PUBLIC)
 @Setter(AccessLevel.PRIVATE)
 @ToString
