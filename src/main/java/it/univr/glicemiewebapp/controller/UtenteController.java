@@ -24,9 +24,15 @@ public class UtenteController {
         return repository.findAll();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/id/{id}")
     public ResponseEntity<Utente> getUtenteById(@PathVariable UUID id) {
         Optional<Utente> result = repository.findById(id);
+        return result.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/email/{email}")
+    public ResponseEntity<Utente> getUtenteByEmail(@PathVariable String email) {
+        Optional<Utente> result = repository.findByEmailAddress(email);
         return result.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

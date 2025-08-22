@@ -17,7 +17,7 @@ public class Admin extends Utente {
 
 
     public Admin(String email, String passwordHash, String nome, String cognome) {
-        super(null, email, passwordHash, nome, cognome);
+        super(null, email, passwordHash, nome, cognome, "ROLE_ADMIN");
     }
 
 

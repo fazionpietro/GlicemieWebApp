@@ -21,7 +21,7 @@ public class Medico extends Utente {
     private List<Terapia> terapiePrescritte = new ArrayList<>();
 
     public Medico(String email, String passwordHash, String nome, String cognome) {
-        super(null, email, passwordHash, nome, cognome);
+        super(null, email, passwordHash, nome, cognome, "ROLE_MEDICO");
     }
 }
 

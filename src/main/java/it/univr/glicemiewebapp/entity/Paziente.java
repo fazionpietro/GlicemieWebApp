@@ -28,8 +28,8 @@ public class Paziente extends Utente {
     @Column(name = "comorbita", length = Integer.MAX_VALUE)
     private String comorbita;
 
-    @Column(name = "patologie_presse", length = Integer.MAX_VALUE)
-    private String patologiePresse;
+    @Column(name = "patologie_pregresse", length = Integer.MAX_VALUE)
+    private String patologiePregresse;
 
 
     @OneToMany(mappedBy = "idPaziente", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -53,19 +53,19 @@ public class Paziente extends Utente {
 
     public Paziente(String email, String passwordHash, String nome, String cognome,
                     LocalDate dataNascita) {
-        super(null, email, passwordHash, nome, cognome);
+        super(null, email, passwordHash, nome, cognome, "ROLE_PAZIENTE");
         this.dataNascita = dataNascita;
     }
 
 
     public Paziente(String email, String passwordHash, String nome, String cognome,
                     LocalDate dataNascita, String fattoriRischio, String comorbita,
-                    String patologiePresse) {
-        super(null, email, passwordHash, nome, cognome);
+                    String patologiePregresse) {
+        super(null, email, passwordHash, nome, cognome, "ROLE_PAZIENTE");
         this.dataNascita = dataNascita;
         this.fattoriRischio = fattoriRischio;
         this.comorbita = comorbita;
-        this.patologiePresse = patologiePresse;
+        this.patologiePregresse = patologiePregresse;
     }
 
 
