@@ -18,7 +18,7 @@ import java.util.UUID;
 public class Terapia {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id_terapipa", nullable = false)
+    @Column(name = "id_terapia", nullable = false)
     private UUID id;
 
     @NotNull
@@ -45,7 +45,7 @@ public class Terapia {
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "medico_curante", nullable = false)
-    private Medico medicoCurante;
+    private Utente medicoCurante;
 
 
 }

@@ -1,14 +1,15 @@
 package it.univr.glicemiewebapp.service;
 
-import it.univr.glicemiewebapp.entity.Admin;
-import it.univr.glicemiewebapp.entity.Medico;
 import it.univr.glicemiewebapp.entity.Paziente;
 import it.univr.glicemiewebapp.entity.Utente;
-import it.univr.glicemiewebapp.forms.MedicoAdminForm;
+import it.univr.glicemiewebapp.forms.AdminForm;
+import it.univr.glicemiewebapp.forms.MedicoForm;
 import it.univr.glicemiewebapp.forms.PazienteForm;
 import it.univr.glicemiewebapp.forms.SignInForm;
+import it.univr.glicemiewebapp.forms.UtenteForm;
 import it.univr.glicemiewebapp.repository.UtenteRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -23,114 +24,178 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthenticationService {
     private final UtenteRepository utenteRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
-    public ResponseEntity<String> registerMedico(MedicoAdminForm userData) throws ResponseStatusException {
+    public ResponseEntity<String> register(UtenteForm req) throws ResponseStatusException {
+        log.info("Tentativo di registrazione per email: {}", req.getEmail());
 
-        if (utenteRepository.findByEmailAddress(userData.getEmail()).isPresent()) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "EMAIL EXIST");
+        try {
+            // Verifica se l'email esiste già
+            if (utenteRepository.findByEmailAddress(req.getEmail()).isPresent()) {
+                log.warn("Tentativo di registrazione con email già esistente: {}", req.getEmail());
+                throw new ResponseStatusException(HttpStatus.CONFLICT, "EMAIL EXIST");
+            }
+
+            if (req instanceof PazienteForm pazienteForm) {
+                return handlePazienteRegistration(pazienteForm);
+            } else if (req instanceof AdminForm adminForm) {
+                return handleAdminRegistration(adminForm);
+            } else if (req instanceof MedicoForm medicoForm) {
+                return handleMedicoRegistration(medicoForm);
+            } else {
+                log.error("Tipo di form non riconosciuto: {}", req.getClass().getSimpleName());
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "UNSUPPORTED FORM TYPE");
+            }
+
+        } catch (ResponseStatusException e) {
+            log.error("Errore durante la registrazione per email {}: {}", req.getEmail(), e.getReason(), e);
+            throw e;
+        } catch (Exception e) {
+            log.error("Errore imprevisto durante la registrazione per email {}: {}", req.getEmail(), e.getMessage(), e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "AN ERROR OCCURRED");
         }
-        Medico med = new Medico(userData.getEmail(), passwordEncoder.encode(userData.getPassword()), userData.getNome(), userData.getCognome());
-        try{
-            utenteRepository.save(med);
-        }catch (ResponseStatusException e){
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "FAILED TO REGISTER");
-        }
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization",  "Bearer " + jwtService.generateToken(med));
-        JSONObject body = new JSONObject();
-        body.put("message", "SUCCESS TO CREATE USER");
-        body.put("email", userData.getEmail());
-
-        return new ResponseEntity<>(body.toString(),headers, HttpStatus.CREATED);
-
     }
 
-    public ResponseEntity<String> registerAdmin(MedicoAdminForm userData) throws ResponseStatusException {
+    private ResponseEntity<String> handlePazienteRegistration(PazienteForm pazienteForm) {
+        log.info("Registrazione paziente per email: {}", pazienteForm.getEmail());
 
-        if (utenteRepository.findByEmailAddress(userData.getEmail()).isPresent()) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "EMAIL EXIST");
+        try {
+            Paziente newPaziente = new Paziente(
+                    pazienteForm.getEmail(),
+                    passwordEncoder.encode(pazienteForm.getPassword()),
+                    pazienteForm.getNome(),
+                    pazienteForm.getCognome(),
+                    pazienteForm.getDataNascita(),
+                    pazienteForm.getFattoriRischio(),
+                    pazienteForm.getComorbita(),
+                    pazienteForm.getPatologiePregresse());
+
+            utenteRepository.save(newPaziente);
+            log.info("Paziente registrato con successo: {}", pazienteForm.getEmail());
+
+            return createSuccessResponse(newPaziente, pazienteForm.getEmail());
+
+        } catch (Exception e) {
+            log.error("Errore durante il salvataggio del paziente {}: {}", pazienteForm.getEmail(), e.getMessage(), e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "FAILED TO REGISTER PAZIENTE");
         }
-        Admin admin = new Admin(userData.getEmail(), passwordEncoder.encode(userData.getPassword()), userData.getNome(), userData.getCognome());
-
-        try{
-            utenteRepository.save(admin);
-        }catch (ResponseStatusException e){
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "FAILED TO REGISTER");
-        }
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization",  "Bearer " + jwtService.generateToken(admin));
-        JSONObject body = new JSONObject();
-        body.put("message", "SUCCESS TO CREATE USER");
-        body.put("email", userData.getEmail());
-        return new ResponseEntity<>(body.toString(),headers, HttpStatus.CREATED);
-
     }
 
-    public ResponseEntity<String> registerPaziente(PazienteForm userData) throws ResponseStatusException {
+    private ResponseEntity<String> handleAdminRegistration(AdminForm adminForm) {
+        log.info("Registrazione admin per email: {}", adminForm.getEmail());
 
-        if (utenteRepository.findByEmailAddress(userData.getEmail()).isPresent()) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "EMAIL EXIST");
+        try {
+            Utente newAdmin = new Utente(null,
+                    adminForm.getEmail(),
+                    passwordEncoder.encode(adminForm.getPassword()),
+                    adminForm.getNome(),
+                    adminForm.getCognome(),
+                    adminForm.getDataNascita(),
+                    adminForm.getRuolo());
+
+            utenteRepository.save(newAdmin);
+            log.info("Admin registrato con successo: {}", adminForm.getEmail());
+
+            return createSuccessResponse(newAdmin, adminForm.getEmail());
+
+        } catch (Exception e) {
+            log.error("Errore durante il salvataggio dell'admin {}: {}", adminForm.getEmail(), e.getMessage(), e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "FAILED TO REGISTER ADMIN");
         }
-        Utente paz = new Paziente(
-                userData.getEmail(),
-                passwordEncoder.encode(userData.getPassword()),
-                userData.getNome(),
-                userData.getCognome(),
-                userData.getDataNascita(),
-                userData.getFattoriRischio(),
-                userData.getComorbita(),
-                userData.getPatologiePregresse());
+    }
 
-        try{
-            utenteRepository.save(paz);
-        }catch (ResponseStatusException e){
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "FAILED TO REGISTER");
+    private ResponseEntity<String> handleMedicoRegistration(MedicoForm medicoForm) {
+        log.info("Registrazione medico per email: {}", medicoForm.getEmail());
+
+        try {
+            Utente newMedico = new Utente(null,
+                    medicoForm.getEmail(),
+                    passwordEncoder.encode(medicoForm.getPassword()),
+                    medicoForm.getNome(),
+                    medicoForm.getCognome(),
+                    medicoForm.getDataNascita(),
+                    medicoForm.getRuolo());
+
+            utenteRepository.save(newMedico);
+            log.info("Medico registrato con successo: {}", medicoForm.getEmail());
+
+            return createSuccessResponse(newMedico, medicoForm.getEmail());
+
+        } catch (Exception e) {
+            log.error("Errore durante il salvataggio del medico {}: {}", medicoForm.getEmail(), e.getMessage(), e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "FAILED TO REGISTER MEDICO");
         }
+    }
 
+    private ResponseEntity<String> createSuccessResponse(Utente utente, String email) {
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization",  "Bearer " + jwtService.generateToken(paz));
+        headers.add("Authorization", "Bearer " + jwtService.generateToken(utente));
+
         JSONObject body = new JSONObject();
         body.put("message", "SUCCESS TO CREATE USER");
-        body.put("email", userData.getEmail());
-        return new ResponseEntity<>(body.toString(),headers, HttpStatus.CREATED);
+        body.put("email", email);
 
+        return new ResponseEntity<>(body.toString(), headers, HttpStatus.CREATED);
     }
 
     public ResponseEntity<String> authentication(SignInForm signInForm) throws ResponseStatusException {
+        log.info("Tentativo di autenticazione per email: {}", signInForm.getEmail());
 
-        Optional<Utente> tmp = utenteRepository.findByEmailAddress(signInForm.getEmail());
+        try {
+            Optional<Utente> userOpt = utenteRepository.findByEmailAddress(signInForm.getEmail());
 
-        if(tmp.isPresent()) {
+            if (userOpt.isEmpty()) {
+                log.warn("Tentativo di login con email non esistente: {}", signInForm.getEmail());
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "INCORRECT EMAIL");
+            }
 
-            if(passwordEncoder.matches(signInForm.getPassword(),tmp.get().getPasswordHash())) {
-                authenticationManager.authenticate(
-                        new UsernamePasswordAuthenticationToken(signInForm.getEmail(), signInForm.getPassword())
-                );
-                HttpHeaders headers = new HttpHeaders();
-                headers.add("Authorization",  "Bearer " + jwtService.generateToken(tmp.get()));
-                JSONObject body = new JSONObject();
-                body.put("message", "CREDENTIAL VALIDATED");
-                body.put("email", signInForm.getEmail());
+            Utente user = userOpt.get();
 
-                return new ResponseEntity<>(body.toString(),headers, HttpStatus.ACCEPTED);
-            }else{
+            if (!passwordEncoder.matches(signInForm.getPassword(), user.getPasswordHash())) {
+                log.warn("Tentativo di login con password errata per email: {}", signInForm.getEmail());
                 throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "INCORRECT PASSWORD");
             }
+
+            // Autenticazione con Spring Security
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(signInForm.getEmail(), signInForm.getPassword())
+            );
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Authorization", "Bearer " + jwtService.generateToken(user));
+
+            JSONObject body = new JSONObject();
+            body.put("message", "CREDENTIAL VALIDATED");
+            body.put("email", signInForm.getEmail());
+
+            log.info("Autenticazione completata con successo per email: {}", signInForm.getEmail());
+            return new ResponseEntity<>(body.toString(), headers, HttpStatus.ACCEPTED);
+
+        } catch (ResponseStatusException e) {
+            log.error("Errore durante l'autenticazione per email {}: {}", signInForm.getEmail(), e.getReason(), e);
+            throw e;
+        } catch (Exception e) {
+            log.error("Errore imprevisto durante l'autenticazione per email {}: {}", signInForm.getEmail(), e.getMessage(), e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "AUTHENTICATION ERROR");
         }
-        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "INCORRECT EMAIL");
     }
-
-
 
     public Boolean validateToken(String token) {
-        return jwtService.checkValidity(token);
-    }
+        log.debug("Validazione token richiesta");
 
+        try {
+            boolean isValid = jwtService.checkValidity(token);
+            log.debug("Risultato validazione token: {}", isValid);
+            return isValid;
+
+        } catch (Exception e) {
+            log.error("Errore durante la validazione del token: {}", e.getMessage(), e);
+            return false;
+        }
+    }
 }

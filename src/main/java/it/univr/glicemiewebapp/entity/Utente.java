@@ -8,6 +8,7 @@ import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -31,7 +32,7 @@ public class Utente {
 
     @Size(max = 320)
     @NotNull
-    @Column(name = "email", nullable = false, length = 320)
+    @Column(name = "email", nullable = false, length = 320, unique = true)
     private String email;
 
     @Size(max = 256)
@@ -49,6 +50,10 @@ public class Utente {
     @NotNull
     @Column(name = "cognome", nullable = false, length = 20)
     private String cognome;
+
+    @NotNull
+    @Column(name = "data_nascita", nullable = false)
+    private LocalDate dataNascita;
 
     @NotNull
     @Column(name = "ruolo", nullable = false, length = 20)
