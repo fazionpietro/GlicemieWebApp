@@ -1,6 +1,7 @@
 package it.univr.glicemiewebapp.service;
 
 import io.jsonwebtoken.*;
+import it.univr.glicemiewebapp.entity.Utente;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -15,9 +16,10 @@ public class JwtService {
     private long expirationTimeMs;
 
 
-    public String generateToken(String email) {
+    public String generateToken(Utente utente) {
         return Jwts.builder()
-                .setSubject(email)
+                .setSubject(utente.getEmail())
+                .claim("roles", utente.getAuthorities())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expirationTimeMs))
                 .signWith(SignatureAlgorithm.HS256, secretKey.getBytes())

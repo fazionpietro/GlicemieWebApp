@@ -15,4 +15,14 @@ public class TestController {
     public String userAccess() {
         return "User Content.";
     }
+
+    @GetMapping("/admin")
+    public String adminAccess() {
+        return "Admin Content.";
+    }
+
+    @GetMapping("/medico")
+    public String medicoAccess() {
+        return "medico Content.";
+    }
 }

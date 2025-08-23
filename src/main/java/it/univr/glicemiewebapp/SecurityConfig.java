@@ -49,7 +49,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
                                 .requestMatchers("/api/auth/**", "/api/test/all").permitAll()
+                                .requestMatchers("/api/test/admin").hasAnyAuthority("ROLE_ADMIN")
+                                .requestMatchers("/api/test/medico").hasAnyAuthority("ROLE_MEDICO")
                                 .anyRequest().authenticated()
+
                 );
 
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);

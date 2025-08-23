@@ -1,5 +1,6 @@
 package it.univr.glicemiewebapp.filter;
 
+import io.micrometer.common.lang.NonNull;
 import it.univr.glicemiewebapp.service.JwtService;
 import it.univr.glicemiewebapp.service.MyUserDetailsService;
 import jakarta.servlet.FilterChain;
@@ -22,16 +23,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private MyUserDetailsService myDetailsService;
 
-    protected void doFilterInternal(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            FilterChain filterChain
+    protected void doFilterInternal(@NonNull HttpServletRequest request,
+                                    @NonNull HttpServletResponse response,
+                                    @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
         try {
             String jwt = parseJwt(request);
             if (jwt != null && jwtService.checkValidity(jwt)) {
-                String username = jwtService.getMailFromToken(jwt);
-                UserDetails userDetails = myDetailsService.loadUserByUsername(username);
+                String email = jwtService.getMailFromToken(jwt);
+                UserDetails userDetails = myDetailsService.loadUserByUsername(email);
+                System.out.println(userDetails.getAuthorities());
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(
                                 userDetails,
