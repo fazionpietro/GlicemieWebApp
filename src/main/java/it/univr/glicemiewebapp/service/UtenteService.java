@@ -1,9 +1,6 @@
 package it.univr.glicemiewebapp.service;
 
 import it.univr.glicemiewebapp.entity.Utente;
-import it.univr.glicemiewebapp.repository.AdminRepository;
-import it.univr.glicemiewebapp.repository.MedicoRepository;
-import it.univr.glicemiewebapp.repository.PazienteRepository;
 import it.univr.glicemiewebapp.repository.UtenteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,9 +13,7 @@ import java.util.UUID;
 public class UtenteService {
 
     private UtenteRepository repository;
-    private MedicoRepository medicoRepository;
-    private AdminRepository adminRepository;
-    private PazienteRepository pazienteRepository;
+
     
 
     @Autowired

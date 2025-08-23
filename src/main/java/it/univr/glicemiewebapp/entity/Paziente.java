@@ -1,12 +1,12 @@
 package it.univr.glicemiewebapp.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 
 @Entity
 @Table(name = "pazienti")
@@ -16,12 +16,9 @@ import java.util.List;
 @Getter(AccessLevel.PUBLIC)
 @Setter(AccessLevel.PRIVATE)
 @ToString
+public class Paziente extends Utente{
 
-public class Paziente extends Utente {
 
-    @NotNull
-    @Column(name = "data_nascita", nullable = false)
-    private LocalDate dataNascita;
 
     @Column(name = "fattori_rischio", length = Integer.MAX_VALUE)
     private String fattoriRischio;
@@ -33,47 +30,40 @@ public class Paziente extends Utente {
     private String patologiePregresse;
 
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @ToString.Exclude
-    @JoinColumn(name = "id_medico")
-    private Medico idMedico;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_medico", unique = false, nullable = true)
+    private Utente idMedico;
 
+    @OneToMany
+    @JoinColumn(name = "id_paziente")
+    private Set<Assunzione> assunzioni = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "idPaziente", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @ToString.Exclude
-    private List<Segnalazione> segnalazioni = new ArrayList<>();
+    @OneToMany
+    @JoinColumn(name = "id_paziente")
+    private Set<Rilevazione> rilevazioni = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "idPaziente", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @ToString.Exclude
-    private List<Rilevazione> rilevazioni = new ArrayList<>();
+    @OneToMany
+    @JoinColumn(name = "id_paziente")
+    private Set<Segnalazione> segnalazioni = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "idPaziente", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @ToString.Exclude
-    private List<Assunzione> assunzioni = new ArrayList<>();
-
-    @OneToMany(mappedBy = "idPaziente", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @ToString.Exclude
-    private List<Terapia> terapie = new ArrayList<>();
-
-
-
+    @OneToMany
+    @JoinColumn(name = "id_paziente")
+    private Set<Terapia> terapies = new LinkedHashSet<>();
 
     public Paziente(String email, String passwordHash, String nome, String cognome,
                     LocalDate dataNascita) {
-        super(null, email, passwordHash, nome, cognome, "ROLE_PAZIENTE");
-        this.dataNascita = dataNascita;
+        super(null, email, passwordHash, nome, cognome,dataNascita, "ROLE_PAZIENTE");
+
     }
 
 
     public Paziente(String email, String passwordHash, String nome, String cognome,
                     LocalDate dataNascita, String fattoriRischio, String comorbita,
                     String patologiePregresse) {
-        super(null, email, passwordHash, nome, cognome, "ROLE_PAZIENTE");
-        this.dataNascita = dataNascita;
+        super(null, email, passwordHash, nome, cognome,dataNascita, "ROLE_PAZIENTE");
         this.fattoriRischio = fattoriRischio;
         this.comorbita = comorbita;
         this.patologiePregresse = patologiePregresse;
     }
-
 
 }

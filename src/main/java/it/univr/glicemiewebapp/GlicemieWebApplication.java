@@ -5,10 +5,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 
 @SpringBootApplication
-public class GlicemieWebAppApplication {
+public class GlicemieWebApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(GlicemieWebAppApplication.class, args);
+        SpringApplication.run(GlicemieWebApplication.class, args);
     }
 
 }

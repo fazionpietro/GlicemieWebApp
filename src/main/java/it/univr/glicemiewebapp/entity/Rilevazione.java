@@ -19,7 +19,7 @@ import java.util.UUID;
 public class Rilevazione {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id_segnalazione", nullable = false)
+    @Column(name = "id_rilevazione", nullable = false)
     private UUID id;
 
     @NotNull
