@@ -2,6 +2,8 @@ package it.univr.glicemiewebapp.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDate;
 import java.util.LinkedHashSet;
@@ -12,7 +14,7 @@ import java.util.Set;
 @Table(name = "pazienti")
 @PrimaryKeyJoinColumn(name = "id_paziente")
 @NoArgsConstructor
-
+@OnDelete(action = OnDeleteAction.CASCADE)
 @Getter(AccessLevel.PUBLIC)
 @Setter(AccessLevel.PRIVATE)
 @ToString
@@ -48,7 +50,7 @@ public class Paziente extends Utente{
 
     @OneToMany
     @JoinColumn(name = "id_paziente")
-    private Set<Terapia> terapies = new LinkedHashSet<>();
+    private Set<Terapia> terapie = new LinkedHashSet<>();
 
     public Paziente(String email, String passwordHash, String nome, String cognome,
                     LocalDate dataNascita) {
