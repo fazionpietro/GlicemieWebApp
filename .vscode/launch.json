@@ -2,11 +2,11 @@
     "configurations": [
         {
             "type": "java",
-            "name": "Spring Boot-GlicemieWebApplication<GlicemieWebApp>",
+            "name": "Spring Boot-GlicemiewebappApplication<glicemieapp>",
             "request": "launch",
             "cwd": "${workspaceFolder}",
-            "mainClass": "it.univr.glicemiewebapp.GlicemieWebApplication",
-            "projectName": "GlicemieWebApp",
+            "mainClass": "it.univr.glicemiewebapp.GlicemiewebappApplication",
+            "projectName": "glicemieapp",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
         }
