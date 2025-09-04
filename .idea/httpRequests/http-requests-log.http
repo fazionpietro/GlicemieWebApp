@@ -1,0 +1,18 @@
+GET http://localhost:8080/api/test/all
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2025.2.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<> 2025-09-04T185218.200.txt
+
+###
+
+GET http://localhost:8080/api/test/all
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2025.2.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+<> 2025-09-04T185212.200.txt
+
+###
+
