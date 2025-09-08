@@ -1,8 +1,5 @@
 import { useState } from "react";
-
 import axios, { AxiosError, type AxiosResponse } from "axios";
-import "./../AppPage/App.css";
-import "./../CommonFile/App.css";
 
 import {
     Anchor,
@@ -15,8 +12,8 @@ import {
     Title,
 } from "@mantine/core";
 
-import classes from "./AuthenticationTitle.module.css";
-import emailcss from "./InvalidEmail.module.css";
+import classes from "../CommonFile/AuthenticationTitle.module.css";
+import emailcss from "../CommonFile/InvalidEmail.module.css";
 import { IconAlertTriangle, IconAt } from "@tabler/icons-react";
 import { useNavigate } from "react-router";
 import { useAuth } from "../../context/Authentication";
