@@ -13,9 +13,9 @@ import {
     TextInput,
     Title,
 } from "@mantine/core";
-import '../AppPage/App.css'
-import classes from '../LoginPage/AuthenticationTitle.module.css';
-import emailcss from '../LoginPage/InvalidEmail.module.css';
+import '../CommonFile/App.css'
+import classes from "../CommonFile/AuthenticationTitle.module.css";
+import emailcss from "../CommonFile/InvalidEmail.module.css";
 import { IconAlertTriangle } from "@tabler/icons-react";
 import { IconCheck, IconX } from "@tabler/icons-react";
 import { useInputState } from "@mantine/hooks";

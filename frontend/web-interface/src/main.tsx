@@ -6,16 +6,21 @@ import { MantineProvider } from '@mantine/core'
 import '@mantine/core/styles.css';
 import Register from './app/RegisterPage/Register'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import { HeaderMegaMenu } from './app/AdminPage/Header'
 import AdminPage from './app/AdminPage/AdminPage'
+
 import ProtectedRoute from './routes/ProtectedRoute'
 import Unauthorized from './routes/Unhautorized'
 import { AuthProvider } from './context/Authentication'
+
+import MedicPage from './app/MedicPage/MedicPage'
+import UserPage from './app/UserPage/UserPage'
+
 
 createRoot(document.getElementById('root')!).render(
    <StrictMode>
     <MantineProvider>
       <BrowserRouter>
+
       <AuthProvider>
          <Routes>
           
