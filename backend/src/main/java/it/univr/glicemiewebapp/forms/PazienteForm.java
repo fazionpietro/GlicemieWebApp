@@ -30,8 +30,4 @@ public class PazienteForm extends UtenteForm {
 
     }
 
-
-    public Object getId() {
-        return this.getId();    
-    }
 }

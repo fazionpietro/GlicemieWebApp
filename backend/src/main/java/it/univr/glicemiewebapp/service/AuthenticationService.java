@@ -77,9 +77,9 @@ public class AuthenticationService {
                     pazienteForm.getPatologiePregresse());
 
             utenteRepository.save(newPaziente);
-            log.info("Paziente registrato con successo: {}", pazienteForm.getId());
+            log.info("Paziente registrato con successo: {}", newPaziente.getId().toString());
 
-            return createSuccessResponse(newPaziente, pazienteForm.getId().toString(), newPaziente.getRuolo());
+            return createSuccessResponse(newPaziente, newPaziente.getId().toString(), newPaziente.getRuolo());
 
         } catch (Exception e) {
             log.error("Errore durante il salvataggio del paziente {}: {}", pazienteForm.getEmail(), e.getMessage(), e);
