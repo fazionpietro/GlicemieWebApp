@@ -29,4 +29,9 @@ public class PazienteForm extends UtenteForm {
         this.ruolo="ROLE_PAZIENTE";
 
     }
+
+
+    public Object getId() {
+        return this.getId();    
+    }
 }

@@ -60,9 +60,12 @@ public class Utente {
     private String ruolo;
 
 
+
     public Collection<? extends GrantedAuthority> getAuthorities() {
 
         return List.of(new SimpleGrantedAuthority(this.ruolo));
     }
+
+    
 
 }
