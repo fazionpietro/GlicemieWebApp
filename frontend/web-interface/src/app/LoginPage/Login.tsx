@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "./../AppPage/App.css";
+import "./../CommonFile/App.css";
 import {
     Anchor,
     Button,
@@ -14,8 +14,8 @@ import {
     TextInput,
     Title,
 } from "@mantine/core";
-import classes from "./AuthenticationTitle.module.css";
-import emailcss from "./InvalidEmail.module.css";
+import classes from "../CommonFile/AuthenticationTitle.module.css";
+import emailcss from "../CommonFile/InvalidEmail.module.css";
 import { IconAlertTriangle } from "@tabler/icons-react";
 
 function Login() {

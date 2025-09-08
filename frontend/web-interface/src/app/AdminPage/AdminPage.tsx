@@ -1,4 +1,4 @@
-import { HeaderMegaMenu } from './Header';
+import { HeaderMegaMenu } from '../CommonFile/Header';
 import { LeadGrid } from './LeadGrid';
 
 function AdminPage() {
