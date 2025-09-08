@@ -17,13 +17,8 @@ import emailcss from "../CommonFile/InvalidEmail.module.css";
 import { IconAlertTriangle, IconAt } from "@tabler/icons-react";
 import { useNavigate } from "react-router";
 import { useAuth } from "../../context/Authentication";
+import type { User } from "../type/User";
 
-interface User {
-  id: string;
-  email: string;
-  role: string;
-  token: string;
-}
 
 
 
@@ -46,7 +41,7 @@ function Login() {
             method: "post",
             url: `${import.meta.env.VITE_API_KEY}api/auth/signin`,
             headers: {
-                "Access-Control-Allow-Origin": "true",
+                "Access-Control-Allow-Origin": "*",
                 "Content-Type": "application/json",
             },
             data: {
@@ -73,7 +68,7 @@ function Login() {
     }
 
     return (
-        <Container fluid w={600} my={400}>
+        <Container fluid w={600} my={40}>
             <Title ta="center" className={classes.title}>
                 Welcome!
             </Title>

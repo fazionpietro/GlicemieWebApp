@@ -18,7 +18,7 @@ import UserPage from './app/UserPage/UserPage'
 
 createRoot(document.getElementById('root')!).render(
    <StrictMode>
-    <MantineProvider>
+     <MantineProvider defaultColorScheme="dark">
       <BrowserRouter>
 
       <AuthProvider>
