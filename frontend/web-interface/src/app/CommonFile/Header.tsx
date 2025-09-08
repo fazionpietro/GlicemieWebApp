@@ -28,6 +28,7 @@ import {
 import { useDisclosure } from '@mantine/hooks';
 import { MantineLogo } from '@mantinex/mantine-logo';
 import classes from './HeaderTabs.module.css'
+import { UserInfoIcons } from './Profileicon';
 
 export function HeaderMegaMenu() {
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] = useDisclosure(false);
@@ -38,7 +39,7 @@ export function HeaderMegaMenu() {
     <Box pt={60} pb={120}>
       <header className={classes.header}>
         <Group justify="space-between" align="center" h="100%">
-          <MantineLogo size={30} />
+          <UserInfoIcons/>
           
           <Group visibleFrom="sm" >
             <Button color='red'>Log out</Button>
