@@ -22,6 +22,7 @@ import { IconCheck, IconX } from "@tabler/icons-react";
 import { useInputState } from "@mantine/hooks";
 import { useAuth } from "../../context/Authentication";
 import { DatePickerInput, DatesProvider, type DateValue } from "@mantine/dates";
+
 import "@mantine/dates/styles.css";
 import axios from "axios";
 import type { User } from "../type/User";
@@ -77,23 +78,30 @@ function Register() {
         ));
 
     async function handleRegister() {
-        await axios({
-            method: "post",
-            url: `${import.meta.env.VITE_API_KEY}api/auth/signup/${data[
-                active
-            ].toLowerCase()}`,
-            headers: {
-                "Access-Control-Allow-Origin": "true",
-                "Content-Type": "application/json",
-            },
-            data: {
+        let body;
+        if (active == 1) {
+            body = {
                 email: `${email}`,
                 password: `${password}`,
                 nome: `${nome}`,
                 cognome: `${cognome}`,
                 dataNascita: `${dataNascita?.toString()}`,
-            },
-        })
+            };
+        }
+
+        await axios
+            .post(
+                `${import.meta.env.VITE_API_KEY}api/auth/signup/${data[
+                    active
+                ].toLowerCase()}`,
+                JSON.stringify(body),
+                {
+                    headers: {
+                        "Access-Control-Allow-Origin": "true",
+                        "Content-Type": "application/json",
+                    },
+                }
+            )
             .then((res) => {
                 let user: User = {
                     id: res.data.id,
@@ -297,6 +305,19 @@ function Register() {
                                 parent={rootRef}
                                 className={floatingcss.indicator}
                             />
+                        </div>
+                        <div>
+                            {(active == 0) ? 
+                        (
+                            <Button
+                                size="md"
+                                radius={"md"}
+                            />
+                        ) : 
+                        (
+                            <Button disabled/>
+                        )
+                        }
                         </div>
                     </div>
 
