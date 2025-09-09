@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -76,9 +77,9 @@ public class AuthenticationService {
                     pazienteForm.getPatologiePregresse());
 
             utenteRepository.save(newPaziente);
-            log.info("Paziente registrato con successo: {}", pazienteForm.getEmail());
+            log.info("Paziente registrato con successo: {}", newPaziente.getId().toString());
 
-            return createSuccessResponse(newPaziente, pazienteForm.getEmail());
+            return createSuccessResponse(newPaziente, newPaziente.getId().toString(), newPaziente.getRuolo());
 
         } catch (Exception e) {
             log.error("Errore durante il salvataggio del paziente {}: {}", pazienteForm.getEmail(), e.getMessage(), e);
@@ -101,7 +102,7 @@ public class AuthenticationService {
             utenteRepository.save(newAdmin);
             log.info("Admin registrato con successo: {}", adminForm.getEmail());
 
-            return createSuccessResponse(newAdmin, adminForm.getEmail());
+            return createSuccessResponse(newAdmin, newAdmin.getId().toString(), newAdmin.getRuolo());
 
         } catch (Exception e) {
             log.error("Errore durante il salvataggio dell'admin {}: {}", adminForm.getEmail(), e.getMessage(), e);
@@ -124,7 +125,7 @@ public class AuthenticationService {
             utenteRepository.save(newMedico);
             log.info("Medico registrato con successo: {}", medicoForm.getEmail());
 
-            return createSuccessResponse(newMedico, medicoForm.getEmail());
+            return createSuccessResponse(newMedico, newMedico.getId().toString(), newMedico.getRuolo());
 
         } catch (Exception e) {
             log.error("Errore durante il salvataggio del medico {}: {}", medicoForm.getEmail(), e.getMessage(), e);
@@ -132,13 +133,13 @@ public class AuthenticationService {
         }
     }
 
-    private ResponseEntity<String> createSuccessResponse(Utente utente, String email) {
+    private ResponseEntity<String> createSuccessResponse(Utente utente, String id, String role) {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + jwtService.generateToken(utente));
 
         JSONObject body = new JSONObject();
         body.put("message", "SUCCESS TO CREATE USER");
-        body.put("email", email);
+        body.put("id", id);
 
         return new ResponseEntity<>(body.toString(), headers, HttpStatus.CREATED);
     }
@@ -166,12 +167,15 @@ public class AuthenticationService {
                     new UsernamePasswordAuthenticationToken(signInForm.getEmail(), signInForm.getPassword())
             );
 
+            UUID id = userOpt.get().getId();
+
             HttpHeaders headers = new HttpHeaders();
             headers.add("Authorization", "Bearer " + jwtService.generateToken(user));
 
             JSONObject body = new JSONObject();
             body.put("message", "CREDENTIAL VALIDATED");
-            body.put("email", signInForm.getEmail());
+            body.put("id", id.toString());
+            body.put("role", userOpt.get().getRuolo());
 
             log.info("Autenticazione completata con successo per email: {}", signInForm.getEmail());
             return new ResponseEntity<>(body.toString(), headers, HttpStatus.ACCEPTED);
