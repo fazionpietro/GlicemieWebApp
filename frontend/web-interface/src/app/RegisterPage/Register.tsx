@@ -5,15 +5,12 @@ import {
     Group,
     Paper,
     PasswordInput,
-    Text,
-    Box,
     Progress,
     TextInput,
     Title,
     UnstyledButton,
-    FloatingIndicator,
-    Modal,
-    Textarea,
+    FloatingIndicator
+
 } from "@mantine/core";
 import { ModalsProvider } from "@mantine/modals";
 import "../CommonFile/App.css";
@@ -21,10 +18,10 @@ import classes from "../CommonFile/AuthenticationTitle.module.css";
 import emailcss from "../CommonFile/InvalidEmail.module.css";
 import floatingcss from "./FloatingIndicator.module.css";
 import { IconAlertTriangle } from "@tabler/icons-react";
-import { IconCheck, IconX } from "@tabler/icons-react";
+
 import { useDisclosure, useInputState } from "@mantine/hooks";
 import { useAuth } from "../../context/Authentication";
-import { DateInput, DatePickerInput, DatesProvider, type DateValue } from "@mantine/dates";
+import { DateInput, DatesProvider, type DateValue } from "@mantine/dates";
 import "@mantine/dates/styles.css";
 import axios from "axios";
 import type { User } from "../type/User";
@@ -173,7 +170,7 @@ function Register() {
 
     const controls = data.map((item, index) => (
         <UnstyledButton
-            bdrs={7}
+            bdrs={10}
             key={item}
             className={floatingcss.control}
             ref={setControlRef(index)}
