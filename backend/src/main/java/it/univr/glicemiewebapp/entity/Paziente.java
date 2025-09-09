@@ -8,6 +8,7 @@ import org.hibernate.annotations.OnDeleteAction;
 import java.time.LocalDate;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.UUID;
 
 
 @Entity
@@ -68,4 +69,6 @@ public class Paziente extends Utente{
         this.patologiePregresse = patologiePregresse;
     }
 
+
+    
 }
