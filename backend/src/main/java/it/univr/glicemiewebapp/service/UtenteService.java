@@ -2,6 +2,7 @@ package it.univr.glicemiewebapp.service;
 
 import it.univr.glicemiewebapp.entity.Utente;
 import it.univr.glicemiewebapp.repository.UtenteRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,11 +13,12 @@ import java.util.UUID;
 @Service
 public class UtenteService {
 
+    @Autowired
     private UtenteRepository repository;
 
     
 
-    @Autowired
+    
     public UtenteService(UtenteRepository repository) {
         this.repository = repository;
     }
