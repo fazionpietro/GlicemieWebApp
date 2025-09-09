@@ -26,7 +26,6 @@ import {
   useMantineTheme,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { MantineLogo } from '@mantinex/mantine-logo';
 import classes from './HeaderTabs.module.css'
 import { UserInfoIcons } from './Profileicon';
 
