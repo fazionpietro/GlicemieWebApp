@@ -57,9 +57,11 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
-                                .requestMatchers("/api/auth/**", "/api/test/all", "/**").permitAll()
-                                .requestMatchers("/api/test/admin").hasAnyAuthority("ROLE_ADMIN")
-                                .requestMatchers("/api/test/medico").hasAnyAuthority("ROLE_MEDICO")
+                                
+                                .requestMatchers("/api/test/admin").hasAuthority("ROLE_ADMIN")
+                                .requestMatchers("/api/test/medico").hasAuthority("ROLE_MEDICO")
+                                .requestMatchers("/api/test/user").authenticated()
+                                .requestMatchers("/api/auth/**","/**").permitAll()
                                 .anyRequest().authenticated()
 
                 );
