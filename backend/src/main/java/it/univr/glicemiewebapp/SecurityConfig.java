@@ -28,47 +28,47 @@ public class SecurityConfig {
     MyUserDetailsService myDetailsService;
     @Autowired
     private AuthEntryPointJwt unauthorizedHandler;
+
     @Bean
     public JwtAuthenticationFilter authenticationJwtTokenFilter() {
         return new JwtAuthenticationFilter();
     }
+
     @Bean
     public AuthenticationManager authenticationManager(
-            AuthenticationConfiguration authenticationConfiguration
-    ) throws Exception {
+            AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         // Updated configuration for Spring Security 6.x
         http
-                
+
                 .csrf(csrf -> csrf.disable()) // Disable CSRF
-                .exceptionHandling(exceptionHandling ->
-                        exceptionHandling.authenticationEntryPoint(unauthorizedHandler)
-                )
+                .exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(unauthorizedHandler))
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
-                .sessionManagement(sessionManagement ->
-                        sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
-                .authorizeHttpRequests(authorizeRequests ->
-                        authorizeRequests
-                                
-                                .requestMatchers("/api/test/admin").hasAuthority("ROLE_ADMIN")
-                                .requestMatchers("/api/test/medico").hasAuthority("ROLE_MEDICO")
-                                .requestMatchers("/api/test/user").authenticated()
-                                .requestMatchers("/api/auth/**","/**").permitAll()
-                                .anyRequest().authenticated()
+                .sessionManagement(
+                        sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(authorizeRequests -> authorizeRequests
+
+                        .requestMatchers("/api/test/admin").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers("/api/test/medico").hasAuthority("ROLE_MEDICO")
+                        .requestMatchers("/api/test/user").authenticated()
+                        .requestMatchers("/api/auth/**", "/**").permitAll()
+                        .anyRequest().authenticated()
 
                 );
 
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
