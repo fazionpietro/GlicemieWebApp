@@ -17,7 +17,7 @@ import { ModalsProvider } from "@mantine/modals";
 import "../CommonFile/App.css";
 import classes from "../CommonFile/AuthenticationTitle.module.css";
 import emailcss from "../CommonFile/InvalidEmail.module.css";
-import floatingcss from "./FloatingIndicator.module.css";
+import floatingcss from "../CommonFile/FloatingIndicator.module.css";
 import { IconAlertTriangle } from "@tabler/icons-react";
 
 import { useDisclosure, useInputState } from "@mantine/hooks";

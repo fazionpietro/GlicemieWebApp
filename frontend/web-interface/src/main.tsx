@@ -6,7 +6,7 @@ import { MantineProvider } from '@mantine/core'
 import '@mantine/core/styles.css';
 import Register from './app/RegisterPage/Register'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import AdminPage from './app/AdminPage/AdminPage'
+import AdminPage from './app/DashboardAdmin/DashboardAdmin'
 
 import ProtectedRoute from './routes/ProtectedRoute'
 import Unauthorized from './routes/Unhautorized'
@@ -26,9 +26,9 @@ createRoot(document.getElementById('root')!).render(
           
             <Route path='/login' element={<Login />} />
             <Route path='/register' element={<Register />} />
-            <Route path='/admin2' element={<AdminPage/>}/>
+            <Route path='/admin' element={<AdminPage/>}/>
             <Route path="/unauthorized" element={<Unauthorized />}/>
-            <Route path='/admin' element={
+            <Route path='/admin2' element={
               <ProtectedRoute allowedRoles={['ROLE_ADMIN']}>
                 <AdminPage />
               </ProtectedRoute>
