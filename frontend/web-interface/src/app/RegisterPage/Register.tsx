@@ -9,8 +9,9 @@ import {
     TextInput,
     Title,
     UnstyledButton,
-    FloatingIndicator
-
+    FloatingIndicator,
+    Notification,
+    Alert,
 } from "@mantine/core";
 import { ModalsProvider } from "@mantine/modals";
 import "../CommonFile/App.css";
@@ -23,7 +24,7 @@ import { useDisclosure, useInputState } from "@mantine/hooks";
 import { useAuth } from "../../context/Authentication";
 import { DateInput, DatesProvider, type DateValue } from "@mantine/dates";
 import "@mantine/dates/styles.css";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import type { User } from "../type/User";
 import { requirements, data } from "./registerConstant";
 import { PasswordRequirement, getStrength } from "./PasswordUtils";
@@ -37,13 +38,11 @@ function Register() {
     const [dataNascita, setDataNascita] = useState<DateValue>("");
     const [opened, { open, close }] = useDisclosure(false);
     const { login } = useAuth();
-    
-    // Variabili finali che vengono salvate
+
     const [fattoriRischio, setFattoriRischio] = useState("");
     const [comorbita, setComorbita] = useState("");
     const [patologiePregresse, setPatologiePregresse] = useState("");
-    
-    // Variabili temporanee per il modal
+
     const [tempFattoriRischio, setTempFattoriRischio] = useState("");
     const [tempComorbita, setTempComorbita] = useState("");
     const [tempPatologiePregresse, setTempPatologiePregresse] = useState("");
@@ -55,7 +54,7 @@ function Register() {
     const [active, setActive] = useState(0);
     const [confirmPassword, setConfirmPassword] = useState("");
     const strength = getStrength(password);
-    
+
     const checks = requirements.map((requirement, index) => (
         <PasswordRequirement
             key={index}
@@ -63,7 +62,7 @@ function Register() {
             meets={requirement.re.test(password)}
         />
     ));
-    
+
     const bars = Array(4)
         .fill(0)
         .map((_, index) => (
@@ -131,9 +130,9 @@ function Register() {
                 comorbita: `${comorbita}`,
                 patologiePregresse: `${patologiePregresse}`,
             };
-        } 
+        }
         console.log(body);
-        
+
         await axios
             .post(
                 `${import.meta.env.VITE_API_KEY}api/auth/signup/${data[
@@ -156,7 +155,12 @@ function Register() {
                 };
                 login(user);
             })
-            .catch((err) => {
+            .catch((err: AxiosError) => {
+
+
+                setIsError(err.toString());
+
+
                 setPassword("");
                 setConfirmPassword("");
                 console.error(err);
@@ -185,6 +189,7 @@ function Register() {
         /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 
     const isInvalid = email.length > 0 && !isValidEmail(email);
+    const [isError, setIsError] = useState("");
 
     return (
         <Container fluid w={600} my={40}>
@@ -323,13 +328,19 @@ function Register() {
                                     onClose={handleCloseModal}
                                     onSave={handleSaveAndClose}
                                     tempFattoriRischio={tempFattoriRischio}
-                                    setTempFattoriRischio={setTempFattoriRischio}
+                                    setTempFattoriRischio={
+                                        setTempFattoriRischio
+                                    }
                                     tempComorbita={tempComorbita}
                                     setTempComorbita={setTempComorbita}
-                                    tempPatologiePregresse={tempPatologiePregresse}
-                                    setTempPatologiePregresse={setTempPatologiePregresse}
+                                    tempPatologiePregresse={
+                                        tempPatologiePregresse
+                                    }
+                                    setTempPatologiePregresse={
+                                        setTempPatologiePregresse
+                                    }
                                 />
-                                
+
                                 <Button
                                     disabled={active == 1}
                                     size="sm"
@@ -343,6 +354,28 @@ function Register() {
                             </ModalsProvider>
                         </div>
                     </div>
+
+                    {isError != "" ? (
+                        <Alert
+                            variant="light"
+                            color="red"
+                            title="Alert title"
+                            withCloseButton
+                            onClose={() => setIsError("")}
+                            icon={
+                                <IconAlertTriangle
+                                    stroke={1.5}
+                                    size={18}
+                                    className={emailcss.icon}
+                                />
+                            }
+                            
+                        >
+                            {isError}
+                        </Alert>
+                    ) : (
+                        null
+                    )}
 
                     <Button
                         size="md"

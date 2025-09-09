@@ -33,6 +33,8 @@ createRoot(document.getElementById('root')!).render(
                 <AdminPage />
               </ProtectedRoute>
             } />
+            <Route path='/medic' element={<MedicPage/>}/>
+            <Route path='/user' element={<UserPage/>}/>
         </Routes>
       </AuthProvider>
        
