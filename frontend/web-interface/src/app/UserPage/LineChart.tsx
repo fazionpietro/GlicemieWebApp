@@ -12,6 +12,14 @@ const data=[
   {
     date: '2024-01-03',
     glicemia:170
+  },
+  {
+    date: '2024-01-04',
+    glicemia:90
+  },
+  {
+    date: '2024-01-05',
+    glicemia:70
   }
 ];
 
