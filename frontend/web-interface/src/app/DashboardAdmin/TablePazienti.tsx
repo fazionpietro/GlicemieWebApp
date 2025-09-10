@@ -179,6 +179,12 @@ export default function TablePazienti() {
                                     </Table.Td>
                                     <Table.Td style={{ textAlign: "left" }}>
                                         <Group gap={0} justify="flex-end">
+
+                                            
+
+
+
+
                                             <ActionIcon
                                                 variant="subtle"
                                                 color="gray"
