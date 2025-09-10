@@ -43,59 +43,59 @@ public class AuthController {
     @Autowired
     JwtService jwtService;
 
-    @CrossOrigin
+    
     @CrossOrigin
     @PostMapping("/signin")
     public ResponseEntity<String> signin(@RequestBody @Valid SignInForm signInForm) {
-        try {
+        
         try {
             return authenticationService.authentication(signInForm);
-        } catch (ResponseStatusException e) {
+        
         } catch (ResponseStatusException e) {
             System.out.println(e);
             return new ResponseEntity<>(e.getReason(), e.getStatusCode());
-            return new ResponseEntity<>(e.getReason(), e.getStatusCode());
+            
         }
     }
 
     @PostMapping("/signup/medico")
     public ResponseEntity<String> registerMedico(@RequestBody @Valid MedicoForm medico) {
         log.error(medico.toString());
-        try {
+        
         try {
 
             return authenticationService.register(medico);
         } catch (ResponseStatusException e) {
-        } catch (ResponseStatusException e) {
+        
             System.out.println(e);
             return new ResponseEntity<>(e.getReason(), e.getStatusCode());
-            return new ResponseEntity<>(e.getReason(), e.getStatusCode());
+            
         }
     }
 
     @PostMapping("/signup/admin")
     public ResponseEntity<String> registerAdmin(@RequestBody @Valid AdminForm admin) {
-        try {
+       
         try {
             return authenticationService.register(admin);
         } catch (ResponseStatusException e) {
-        } catch (ResponseStatusException e) {
+        
             System.out.println(e);
             return new ResponseEntity<>(e.getReason(), e.getStatusCode());
-            return new ResponseEntity<>(e.getReason(), e.getStatusCode());
+            
         }
     }
 
     @PostMapping("/signup/paziente")
     public ResponseEntity<String> registerPaziente(@RequestBody @Valid PazienteForm paziente) {
-        try {
+        
         try {
             return authenticationService.register(paziente);
         } catch (ResponseStatusException e) {
-        } catch (ResponseStatusException e) {
+        
             System.out.println(e);
             return new ResponseEntity<>(e.getReason(), e.getStatusCode());
-            return new ResponseEntity<>(e.getReason(), e.getStatusCode());
+            
         }
     }
 
