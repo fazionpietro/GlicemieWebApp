@@ -1,39 +1,78 @@
-import { Container, Grid, SimpleGrid, Skeleton } from '@mantine/core';
+import { Grid, Card} from '@mantine/core';
 import LineC from './LineChart';
-
-
-
-const PRIMARY_COL_HEIGHT = '300px';
+import ContactMedic from './Contact';
+import {ModalSintomi, ModalMedicinali, ModalGlicemia} from './Modal';
+import TableGlicemia from './TableGlicemia';
+import { GiMedicines } from "react-icons/gi";
+import { TbActivityHeartbeat } from "react-icons/tb";
+import { IoIosAlert } from "react-icons/io";
+import { PiPercentFill } from "react-icons/pi";
 
 export function LeadGrid() {
-  const SECONDARY_COL_HEIGHT = `calc(${PRIMARY_COL_HEIGHT} / 2 - var(--mantine-spacing-md) / 2)`;
-
-
-  /*sosituire skeleton con oggetti */
   return (
-    <Container my="md">
-      <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="md">
-          <div>
-            <LineC/>
-          </div>
-        <Grid gutter="md">
-          <Grid.Col>
-            <div>
-              <p>ultimi inserimenti</p>
-            </div>
-          </Grid.Col>
-          <Grid.Col span={6}>
-            <div>
-              <p>aggiugi segnalazione</p>
-            </div>
-          </Grid.Col>
-          <Grid.Col span={6}>
-            <div>
-              <p>contatta medico</p>
-            </div>
-          </Grid.Col>
-        </Grid>
-      </SimpleGrid>
-    </Container>
+    <>
+      <Grid>
+        <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
+          <Card shadow="sm" padding="lg" radius="md" withBorder className='stat-card'>
+            <GiMedicines size={40} />
+            <p>NUMERO RILEVAZIONI</p>
+            <p>150</p>
+          </Card>
+        </Grid.Col>
+        <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
+          <Card shadow="sm" padding="lg" radius="md" withBorder className='stat-card'>
+            <TbActivityHeartbeat size={40} />
+            <p>MEDIA GLICEMIA</p>
+            <p>130</p>
+          </Card>
+        </Grid.Col>
+        <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
+          <Card shadow="sm" padding="lg" radius="md" withBorder className='stat-card'>
+            <PiPercentFill  size={40}/>
+            <p>VALORI TARGET</p>
+            <p>70%</p>
+          </Card>
+        </Grid.Col>
+        <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
+          <Card shadow="sm" padding="lg" radius="md" withBorder className='stat-card'>
+            <IoIosAlert  size={40}/>
+            <p>NUMERO ALERT</p>
+            <p>5</p>
+          </Card>
+        </Grid.Col>
+      </Grid>
+
+      <Grid columns={24}>
+        <Grid.Col span={12}>
+          <LineC />
+        </Grid.Col>
+
+        <Grid.Col span={12}>
+          <Grid>
+            {/*blocco grande*/}
+            <Grid.Col span={12}>
+              <div style={{height: "300px"}}>
+                <TableGlicemia />
+              </div>
+            </Grid.Col>
+
+            {/*due blocchi piccoli*/}
+            <Grid.Col span={6}>
+              <div style={{height: "300px"}}>
+                <ModalGlicemia/>
+                <ModalMedicinali/>
+                <ModalSintomi/>
+              </div>
+            </Grid.Col>
+            <Grid.Col span={6}>
+              <div style={{height: "300px"}}>
+                <ContactMedic />
+              </div>
+            </Grid.Col>
+
+          </Grid>
+        </Grid.Col>
+      </Grid>
+    </>
   );
 }
