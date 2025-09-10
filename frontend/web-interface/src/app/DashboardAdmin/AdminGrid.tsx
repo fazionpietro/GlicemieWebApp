@@ -2,7 +2,7 @@ import { Container, Grid, SimpleGrid, Skeleton } from '@mantine/core';
 
 const PRIMARY_COL_HEIGHT = '300px';
 
-export function LeadGrid() {
+export function AdminGrid() {
   const SECONDARY_COL_HEIGHT = `calc(${PRIMARY_COL_HEIGHT} / 2 - var(--mantine-spacing-md) / 2)`;
 
 

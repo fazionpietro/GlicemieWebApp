@@ -1,28 +1,45 @@
-import { useAuth } from "../context/Authentication";
-import { Navigate, useNavigate } from "react-router-dom";
+import React from 'react';
+import { Navigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import { Loader, Center } from '@mantine/core';
 
 interface ProtectedRouteProps {
-    children: React.ReactNode;
-    allowedRoles: string[];
+  children: React.ReactNode;
+  requiredRole?: string | string[];
+  fallbackPath?: string;
 }
 
-const ProtectedRoute = ({ children, allowedRoles }: ProtectedRouteProps) => {
-    const { user, loading } = useAuth();
-    const navigate = useNavigate();
+export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
+  children,
+  requiredRole,
+  fallbackPath = '/login'
+}) => {
+  const { user, isAuthenticated, isLoading } = useAuth();
+  const location = useLocation();
 
-    if (loading) {
-        return <div>Loading...</div>; // Puoi sostituire con un componente di loading
+  if (isLoading) {
+    return (
+      <Center style={{ height: '100vh' }}>
+        <Loader size="lg" />
+      </Center>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to={fallbackPath} state={{ from: location }} replace />;
+  }
+
+  if (requiredRole && user) {
+    const userRole = user.role.replace('ROLE_', ''); // Rimuovi prefisso se presente
+    const allowedRoles = Array.isArray(requiredRole) ? requiredRole : [requiredRole];
+    
+    if (!allowedRoles.some(role => 
+      userRole.toLowerCase() === role.toLowerCase() ||
+      user.role.toLowerCase() === `role_${role.toLowerCase()}`
+    )) {
+      return <Navigate to="/unauthorized" replace />;
     }
+  }
 
-    if (!user) {
-        return <Navigate to="/login" replace />;
-    }
-
-    if (!allowedRoles.includes(user.role)) {
-        return <Navigate to="/unauthorized" replace />;
-    }
-
-    return <>{children}</>;
-};
-
-export default ProtectedRoute;
+  return <>{children}</>;
+}

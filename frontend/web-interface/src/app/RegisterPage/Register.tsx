@@ -17,15 +17,15 @@ import { ModalsProvider } from "@mantine/modals";
 import "../CommonFile/App.css";
 import classes from "../CommonFile/AuthenticationTitle.module.css";
 import emailcss from "../CommonFile/InvalidEmail.module.css";
-import floatingcss from "./FloatingIndicator.module.css";
+import floatingcss from "../CommonFile/FloatingIndicator.module.css";
 import { IconAlertTriangle } from "@tabler/icons-react";
 
 import { useDisclosure, useInputState } from "@mantine/hooks";
-import { useAuth } from "../../context/Authentication";
+import { useAuth } from "../../context/AuthContext";
 import { DateInput, DatesProvider, type DateValue } from "@mantine/dates";
 import "@mantine/dates/styles.css";
 import axios, { AxiosError } from "axios";
-import type { User } from "../type/User";
+import type { User } from "../type/DataType";
 import { requirements, data } from "./registerConstant";
 import { PasswordRequirement, getStrength } from "./PasswordUtils";
 import { PatientInfoModal } from "./PatientInfoModal";
@@ -150,8 +150,7 @@ function Register() {
                 let user: User = {
                     id: res.data.id,
                     email: email,
-                    role: res.data.ruolo,
-                    token: res.data.token,
+                    role: res.data.ruolo
                 };
                 login(user);
             })
