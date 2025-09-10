@@ -187,7 +187,7 @@ public class AuthenticationService {
             
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(signInForm.getEmail(), signInForm.getPassword()));
-                    new UsernamePasswordAuthenticationToken(signInForm.getEmail(), signInForm.getPassword()));
+                    
 
             UUID id = userOpt.get().getId();
             String token = jwtService.generateToken(user);
