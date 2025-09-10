@@ -27,13 +27,14 @@ createRoot(document.getElementById("root")!).render(
             {/* Public routes that need AuthProvider */}
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            
             <Route path="/unauthorized" element={<Unauthorized />} />
 
             {/* Private routes with ProtectedRoute */}
             <Route
               path="/admin"
               element={
-                <ProtectedRoute requiredRole="paziente">
+                <ProtectedRoute requiredRole="admin">
                   <AdminPage />
                 </ProtectedRoute>
               }

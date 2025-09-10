@@ -3,6 +3,9 @@ package it.univr.glicemiewebapp.service;
 
 
 import org.springframework.http.ResponseEntity;
+
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
@@ -32,4 +35,17 @@ public class PazienteService {
         }
     }
 
+
+    public ResponseEntity<String> deleteByID(UUID id){
+        try {
+            pazienteRepository.deleteById(id);
+
+            return new ResponseEntity<>("{message: \"PAZIENTE ELIMINATO\" }", HttpStatus.OK); 
+
+
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL SERVER ERROR");
+        }
+
+    }
 }

@@ -12,6 +12,7 @@ import java.util.UUID;
 public class PazienteUtenteDTO {
     private UUID id;
     private String email;
+    private String passwordHash;
     private String nome;
     private String cognome;
     private LocalDate dataNascita;

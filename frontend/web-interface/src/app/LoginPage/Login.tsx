@@ -106,19 +106,7 @@ function Login() {
                 radius="lg"
                 style={{ width: "100%", margin: "0 auto" }}
             >
-                {errorMessage && (
-                    <Alert
-                        icon={<IconAlertTriangle size="1rem" />}
-                        title="Errore"
-                        color="red"
-                        variant="light"
-                        mb="md"
-                        withCloseButton
-                        onClose={() => setErrorMessage("")}
-                    >
-                        {errorMessage}
-                    </Alert>
-                )}
+                
 
                 <form onSubmit={handleSubmit} className="inputForm">
                     <div style={{ textAlign: "left" }}>
@@ -169,12 +157,26 @@ function Login() {
                             size="md"
                         />
                     </div>
+                    {errorMessage && (
+                    <Alert
+                        icon={<IconAlertTriangle size="1rem" />}
+                        title="Errore"
+                        color="red"
+                        variant="light"
+                        mb="md"
+                        withCloseButton
+                        onClose={() => setErrorMessage("")}
+                    >
+                        {errorMessage}
+                    </Alert>
+                )}
 
                     <Group justify="space-between" mt="lg">
                         <Anchor component="button" size="sm">
                             Forgot password?
                         </Anchor>
                     </Group>
+
 
                     <Button
                         size="md"
