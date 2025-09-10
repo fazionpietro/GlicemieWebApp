@@ -19,6 +19,7 @@ import java.util.UUID;
 @ToString
 
 public class Farmaco {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id_farmaco", nullable = false)
@@ -39,6 +40,5 @@ public class Farmaco {
     @OneToMany(mappedBy = "idFarmaco", fetch = FetchType.LAZY)
     @ToString.Exclude
     private List<Terapia> terapie = new ArrayList<>();
-
 
 }

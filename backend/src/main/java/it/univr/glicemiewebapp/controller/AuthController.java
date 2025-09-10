@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
@@ -43,12 +44,16 @@ public class AuthController {
     JwtService jwtService;
 
     @CrossOrigin
+    @CrossOrigin
     @PostMapping("/signin")
     public ResponseEntity<String> signin(@RequestBody @Valid SignInForm signInForm) {
         try {
+        try {
             return authenticationService.authentication(signInForm);
         } catch (ResponseStatusException e) {
+        } catch (ResponseStatusException e) {
             System.out.println(e);
+            return new ResponseEntity<>(e.getReason(), e.getStatusCode());
             return new ResponseEntity<>(e.getReason(), e.getStatusCode());
         }
     }
@@ -57,10 +62,13 @@ public class AuthController {
     public ResponseEntity<String> registerMedico(@RequestBody @Valid MedicoForm medico) {
         log.error(medico.toString());
         try {
+        try {
 
             return authenticationService.register(medico);
         } catch (ResponseStatusException e) {
+        } catch (ResponseStatusException e) {
             System.out.println(e);
+            return new ResponseEntity<>(e.getReason(), e.getStatusCode());
             return new ResponseEntity<>(e.getReason(), e.getStatusCode());
         }
     }
@@ -68,9 +76,12 @@ public class AuthController {
     @PostMapping("/signup/admin")
     public ResponseEntity<String> registerAdmin(@RequestBody @Valid AdminForm admin) {
         try {
+        try {
             return authenticationService.register(admin);
         } catch (ResponseStatusException e) {
+        } catch (ResponseStatusException e) {
             System.out.println(e);
+            return new ResponseEntity<>(e.getReason(), e.getStatusCode());
             return new ResponseEntity<>(e.getReason(), e.getStatusCode());
         }
     }
@@ -78,9 +89,12 @@ public class AuthController {
     @PostMapping("/signup/paziente")
     public ResponseEntity<String> registerPaziente(@RequestBody @Valid PazienteForm paziente) {
         try {
+        try {
             return authenticationService.register(paziente);
         } catch (ResponseStatusException e) {
+        } catch (ResponseStatusException e) {
             System.out.println(e);
+            return new ResponseEntity<>(e.getReason(), e.getStatusCode());
             return new ResponseEntity<>(e.getReason(), e.getStatusCode());
         }
     }

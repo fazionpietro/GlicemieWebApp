@@ -25,6 +25,7 @@
     "@mantine/tiptap": "^8.2.8",
     "@mantinex/mantine-logo": "^2.0.0",
     "@tabler/icons-react": "^3.34.1",
+    "@tailwindcss/vite": "^4.1.13",
     "@tiptap/extension-link": "^3.4.1",
     "@tiptap/pm": "^3.4.1",
     "@tiptap/react": "^3.4.1",
@@ -34,6 +35,7 @@
     "dayjs": "^1.11.18",
     "embla-carousel": "^8.5.2",
     "embla-carousel-react": "^8.5.2",
+    "lucide-react": "^0.542.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-icons": "^5.5.0",
@@ -46,6 +48,7 @@
     "@types/react": "^19.1.10",
     "@types/react-dom": "^19.1.7",
     "@vitejs/plugin-react-swc": "^4.0.0",
+    "autoprefixer": "^10.4.21",
     "eslint": "^9.33.0",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",
@@ -56,8 +59,12 @@
     "postcss-nested": "^7.0.2",
     "postcss-preset-mantine": "^1.18.0",
     "postcss-simple-vars": "^7.0.1",
+    "tailwindcss": "^4.1.13",
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.39.1",
     "vite": "^7.1.2"
+  },
+  "overrides": {
+    "react-is": "^19.1.1"
   }
 }

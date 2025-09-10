@@ -10,7 +10,6 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.UUID;
 
-
 @Entity
 @Table(name = "pazienti")
 @PrimaryKeyJoinColumn(name = "id_paziente")
@@ -19,9 +18,7 @@ import java.util.UUID;
 @Getter(AccessLevel.PUBLIC)
 @Setter(AccessLevel.PRIVATE)
 @ToString
-public class Paziente extends Utente{
-
-
+public class Paziente extends Utente {
 
     @Column(name = "fattori_rischio", length = Integer.MAX_VALUE)
     private String fattoriRischio;
@@ -31,7 +28,6 @@ public class Paziente extends Utente{
 
     @Column(name = "patologie_pregresse", length = Integer.MAX_VALUE)
     private String patologiePregresse;
-
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_medico", unique = false, nullable = true)
@@ -54,21 +50,18 @@ public class Paziente extends Utente{
     private Set<Terapia> terapie = new LinkedHashSet<>();
 
     public Paziente(String email, String passwordHash, String nome, String cognome,
-                    LocalDate dataNascita) {
-        super(null, email, passwordHash, nome, cognome,dataNascita, "ROLE_PAZIENTE");
+            LocalDate dataNascita) {
+        super(null, email, passwordHash, nome, cognome, dataNascita, "ROLE_PAZIENTE");
 
     }
 
-
     public Paziente(String email, String passwordHash, String nome, String cognome,
-                    LocalDate dataNascita, String fattoriRischio, String comorbita,
-                    String patologiePregresse) {
-        super(null, email, passwordHash, nome, cognome,dataNascita, "ROLE_PAZIENTE");
+            LocalDate dataNascita, String fattoriRischio, String comorbita,
+            String patologiePregresse) {
+        super(null, email, passwordHash, nome, cognome, dataNascita, "ROLE_PAZIENTE");
         this.fattoriRischio = fattoriRischio;
         this.comorbita = comorbita;
         this.patologiePregresse = patologiePregresse;
     }
 
-
-    
 }
