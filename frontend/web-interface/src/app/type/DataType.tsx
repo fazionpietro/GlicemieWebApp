@@ -9,6 +9,10 @@ export type Paziente = {
   comorbita: string | null;
   patologiePregresse: string | null;
   idMedico: string | null;
+  nomeMedico: string | null;
+  cognomeMedico: string | null;
+  emailMedico: string | null;
+  passwordHash: any | null;
 };
 
 

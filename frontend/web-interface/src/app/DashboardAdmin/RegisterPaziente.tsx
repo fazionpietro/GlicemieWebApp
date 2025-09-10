@@ -276,7 +276,7 @@ export default function RegisterPaziente({ onSuccess }: Props) {
                     mb={20}
                     value={password}
                     onChange={setPassword}
-                    placeholder="Your password"
+                    placeholder="Password"
                     label="Password"
                     required
                 />

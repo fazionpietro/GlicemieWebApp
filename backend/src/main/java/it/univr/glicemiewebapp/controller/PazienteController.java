@@ -32,7 +32,7 @@ public class PazienteController {
     
     @CrossOrigin
     @GetMapping("/all")
-    public ResponseEntity<String>  prova() {
+    public ResponseEntity<String> getAll() {
         
         try{
             return pazienteService.findAllComplete();

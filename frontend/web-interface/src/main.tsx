@@ -16,6 +16,7 @@ import { ProtectedRoute } from "./routes/ProtectedRoute";
 
 // Axios global config
 import axios from "axios";
+import DetailsPaziente from "./app/DashboardAdmin/DetailsPaziente";
 axios.defaults.withCredentials = true;
 
 createRoot(document.getElementById("root")!).render(
@@ -27,7 +28,7 @@ createRoot(document.getElementById("root")!).render(
             {/* Public routes that need AuthProvider */}
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            
+            <Route path="/details" element={<DetailsPaziente/>}/> 
             <Route path="/unauthorized" element={<Unauthorized />} />
 
             {/* Private routes with ProtectedRoute */}

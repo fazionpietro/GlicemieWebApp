@@ -16,6 +16,7 @@ import axios from "axios";
 import { modals, ModalsProvider } from "@mantine/modals";
 import RegisterPaziente from "./RegisterPaziente";
 import { useDisclosure } from "@mantine/hooks";
+import DetailsPaziente from "./DetailsPaziente";
 
 export default function TablePazienti() {
     const [elements, setElements] = useState<Paziente[] | null>(null);
@@ -23,6 +24,9 @@ export default function TablePazienti() {
     const [openedRegister, { open: openRegister, close: closeRegister }] =
         useDisclosure(false);
     const [openedDel, { open: openDel, close: closeDel }] =
+        useDisclosure(false);
+
+    const [openedEdit, { open: openEdit, close: closeEdit }] =
         useDisclosure(false);
 
     async function fetchData() {
@@ -180,22 +184,32 @@ export default function TablePazienti() {
                                     <Table.Td style={{ textAlign: "left" }}>
                                         <Group gap={0} justify="flex-end">
 
-                                            
-
-
+                                            <div>
+                                               <Modal
+                                                opened={openedEdit}
+                                                onClose={closeEdit}
+                                                radius={"md"}
+                                                size={"auto"}
+                                            >
+                                                <DetailsPaziente/>
+                                            </Modal>
 
 
                                             <ActionIcon
                                                 variant="subtle"
                                                 color="gray"
+                                                onClick={openEdit}
                                             >
                                                 <IconPencil
                                                     size={16}
                                                     stroke={1.5}
                                                 />
-                                            </ActionIcon>
+                                            </ActionIcon> 
+                                            </div>
 
-                                            <Modal
+                                            
+                                            <div>
+                                                <Modal
                                                 opened={openedDel}
                                                 onClose={closeDel}
                                                 radius={"md"}
@@ -214,6 +228,8 @@ export default function TablePazienti() {
                                                     stroke={1.5}
                                                 />
                                             </ActionIcon>
+                                            </div>
+                                            
                                         </Group>
                                     </Table.Td>
                                 </Table.Tr>
