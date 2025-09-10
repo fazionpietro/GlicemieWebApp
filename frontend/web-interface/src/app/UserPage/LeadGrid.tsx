@@ -1,37 +1,29 @@
 import { Container, Grid, SimpleGrid, Skeleton } from '@mantine/core';
 import LineC from './LineChart';
 import ContactMedic from './Contact';
-
-
-
-const PRIMARY_COL_HEIGHT = '300px';
+import {ModalSintomi, ModalMedicinali, ModalGlicemia} from './Modal';
 
 export function LeadGrid() {
-  const SECONDARY_COL_HEIGHT = `calc(${PRIMARY_COL_HEIGHT} / 2 - var(--mantine-spacing-md) / 2)`;
 
 
   /*sosituire skeleton con oggetti */
   return (
     <Container my="md">
       <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="md">
-          <div style={{ height: PRIMARY_COL_HEIGHT }}>
+          <div style={{height: "100%"}}>
             <LineC/>
           </div>
         <Grid gutter="md">
-          <Grid.Col>
-            <div style={{ height: SECONDARY_COL_HEIGHT }}>
+          <Grid.Col span={12}>
               <p>ultimi inserimenti</p>
-            </div>
           </Grid.Col>
           <Grid.Col span={6}>
-            <div style={{ height: SECONDARY_COL_HEIGHT }}>
-              <p>aggiugi segnalazione</p>
-            </div>
+            <ModalGlicemia/>
+            <ModalMedicinali/>
+            <ModalSintomi/>
           </Grid.Col>
           <Grid.Col span={6}>
-            <div style={{ height: SECONDARY_COL_HEIGHT }}>
               <ContactMedic/>
-            </div>
           </Grid.Col>
         </Grid>
       </SimpleGrid>
