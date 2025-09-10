@@ -1,15 +1,10 @@
 package it.univr.glicemiewebapp.service;
 
-import it.univr.glicemiewebapp.entity.Paziente;
-import it.univr.glicemiewebapp.entity.Utente;
-import it.univr.glicemiewebapp.forms.AdminForm;
-import it.univr.glicemiewebapp.forms.MedicoForm;
-import it.univr.glicemiewebapp.forms.PazienteForm;
-import it.univr.glicemiewebapp.forms.SignInForm;
-import it.univr.glicemiewebapp.forms.UtenteForm;
-import it.univr.glicemiewebapp.repository.UtenteRepository;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.json.JSONObject;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -20,8 +15,16 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Optional;
-import java.util.UUID;
+import it.univr.glicemiewebapp.entity.Paziente;
+import it.univr.glicemiewebapp.entity.Utente;
+import it.univr.glicemiewebapp.forms.AdminForm;
+import it.univr.glicemiewebapp.forms.MedicoForm;
+import it.univr.glicemiewebapp.forms.PazienteForm;
+import it.univr.glicemiewebapp.forms.SignInForm;
+import it.univr.glicemiewebapp.forms.UtenteForm;
+import it.univr.glicemiewebapp.repository.UtenteRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +34,7 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+   
 
     public ResponseEntity<String> register(UtenteForm req) throws ResponseStatusException {
         log.info("Tentativo di registrazione per email: {}", req.getEmail());
@@ -164,8 +168,7 @@ public class AuthenticationService {
 
             // Autenticazione con Spring Security
             authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(signInForm.getEmail(), signInForm.getPassword())
-            );
+                    new UsernamePasswordAuthenticationToken(signInForm.getEmail(), signInForm.getPassword()));
 
             UUID id = userOpt.get().getId();
 
@@ -184,7 +187,8 @@ public class AuthenticationService {
             log.error("Errore durante l'autenticazione per email {}: {}", signInForm.getEmail(), e.getReason(), e);
             throw e;
         } catch (Exception e) {
-            log.error("Errore imprevisto durante l'autenticazione per email {}: {}", signInForm.getEmail(), e.getMessage(), e);
+            log.error("Errore imprevisto durante l'autenticazione per email {}: {}", signInForm.getEmail(),
+                    e.getMessage(), e);
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "AUTHENTICATION ERROR");
         }
     }
@@ -201,5 +205,33 @@ public class AuthenticationService {
             log.error("Errore durante la validazione del token: {}", e.getMessage(), e);
             return false;
         }
+    }
+
+   
+
+    public ResponseEntity<String> logout(String token) {
+        log.debug("logout di " + token);
+        try {
+
+            if (!jwtService.checkValidity(token)) {
+                return new ResponseEntity<>("INVALID TOKEN", HttpStatus.UNAUTHORIZED);
+            }
+
+            
+            jwtService.addToBlacklist(token);
+
+            log.info("Logout successful for token: {}", token.substring(0, 10) + "...");
+
+            JSONObject response = new JSONObject();
+            response.put("message", "LOGOUT SUCCESSFUL");
+
+            return new ResponseEntity<>(response.toString(), HttpStatus.OK);
+
+        } catch (Exception e) {
+            log.error("Errore durante il logout: {}", e.getMessage(), e);
+            return new ResponseEntity<>("LOGOUT ERROR", HttpStatus.INTERNAL_SERVER_ERROR);
+            
+        }
+
     }
 }

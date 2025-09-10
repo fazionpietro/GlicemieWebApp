@@ -15,11 +15,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
-
-
+import org.springframework.http.HttpStatus;
 
 @Slf4j
 @RestController
@@ -34,52 +34,60 @@ public class AuthController {
     @Autowired
     JwtService jwtService;
 
-    @CrossOrigin    
+    @CrossOrigin
     @PostMapping("/signin")
     public ResponseEntity<String> signin(@RequestBody @Valid SignInForm signInForm) {
-        try{
+        try {
             return authenticationService.authentication(signInForm);
-        }catch(ResponseStatusException e){
+        } catch (ResponseStatusException e) {
             System.out.println(e);
-            return new ResponseEntity<>(e.getReason(),e.getStatusCode());
+            return new ResponseEntity<>(e.getReason(), e.getStatusCode());
         }
     }
-
-
 
     @PostMapping("/signup/medico")
     public ResponseEntity<String> registerMedico(@RequestBody @Valid MedicoForm medico) {
         log.error(medico.toString());
-        try{
+        try {
 
             return authenticationService.register(medico);
-        }catch(ResponseStatusException e){
+        } catch (ResponseStatusException e) {
             System.out.println(e);
-            return new ResponseEntity<>(e.getReason(),e.getStatusCode());
+            return new ResponseEntity<>(e.getReason(), e.getStatusCode());
         }
     }
 
     @PostMapping("/signup/admin")
     public ResponseEntity<String> registerAdmin(@RequestBody @Valid AdminForm admin) {
-        try{
+        try {
             return authenticationService.register(admin);
-        }catch(ResponseStatusException e){
+        } catch (ResponseStatusException e) {
             System.out.println(e);
-            return new ResponseEntity<>(e.getReason(),e.getStatusCode());
+            return new ResponseEntity<>(e.getReason(), e.getStatusCode());
         }
     }
 
     @PostMapping("/signup/paziente")
     public ResponseEntity<String> registerPaziente(@RequestBody @Valid PazienteForm paziente) {
-        try{
+        try {
             return authenticationService.register(paziente);
-        }catch(ResponseStatusException e){
+        } catch (ResponseStatusException e) {
             System.out.println(e);
-            return new ResponseEntity<>(e.getReason(),e.getStatusCode());
+            return new ResponseEntity<>(e.getReason(), e.getStatusCode());
         }
     }
 
+    @PostMapping("/logout")
+    public ResponseEntity<String> postMethodName(@RequestHeader("Authorization") String header) {
+        if (header != null && header.startsWith("Bearer ")) {
+            String token = header.substring(7);
 
+            return authenticationService.logout(token);
 
+        } else {
+            return new ResponseEntity<>("NO TOKEN PROVIDED", HttpStatus.BAD_REQUEST);
+        }
+
+    }
 
 }
