@@ -11,8 +11,10 @@ import it.univr.glicemiewebapp.repository.UtenteRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -27,6 +29,10 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Slf4j
 public class AuthenticationService {
+
+    @Value("${security.jwt.expiration-time}")
+    private long expirationTimeMs;
+
     private final UtenteRepository utenteRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
@@ -162,15 +168,23 @@ public class AuthenticationService {
                 throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "INCORRECT PASSWORD");
             }
 
-            // Autenticazione con Spring Security
+            
             authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(signInForm.getEmail(), signInForm.getPassword())
-            );
+                    new UsernamePasswordAuthenticationToken(signInForm.getEmail(), signInForm.getPassword()));
 
             UUID id = userOpt.get().getId();
+            String token = jwtService.generateToken(user);
+
+            ResponseCookie cookie = ResponseCookie.from("token", token)
+                    .httpOnly(true)
+                    .secure(false) 
+                    .sameSite("Strict")
+                    .path("/")
+                    .maxAge(expirationTimeMs)
+                    .build();
 
             HttpHeaders headers = new HttpHeaders();
-            headers.add("Authorization", "Bearer " + jwtService.generateToken(user));
+            headers.add("Set-Cookie", cookie.toString());
 
             JSONObject body = new JSONObject();
             body.put("message", "CREDENTIAL VALIDATED");
@@ -184,7 +198,8 @@ public class AuthenticationService {
             log.error("Errore durante l'autenticazione per email {}: {}", signInForm.getEmail(), e.getReason(), e);
             throw e;
         } catch (Exception e) {
-            log.error("Errore imprevisto durante l'autenticazione per email {}: {}", signInForm.getEmail(), e.getMessage(), e);
+            log.error("Errore imprevisto durante l'autenticazione per email {}: {}", signInForm.getEmail(),
+                    e.getMessage(), e);
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "AUTHENTICATION ERROR");
         }
     }

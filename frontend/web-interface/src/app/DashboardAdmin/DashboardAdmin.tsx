@@ -15,6 +15,7 @@ import { FiUsers, FiActivity, FiAlignRight } from "react-icons/fi";
 import { FaUserMd } from "react-icons/fa";
 import floatingcss from "./AdminFloatingIndicator.module.css";
 import { useState } from "react";
+import TablePazienti from "./TablePazienti";
 
 const PRIMARY_COL_HEIGHT = "50vh";
 
@@ -180,47 +181,9 @@ function DashboardAdmin() {
                     </Grid.Col>
 
                     <Grid.Col span={12}>
-                        <Paper
-                            withBorder
-                            radius="md"
-                            style={{ overflow: "hidden" }}
-                        >
-                            <ScrollArea
-                                h={"40vh"}
-                                type="always"
-                                offsetScrollbars
-                            >
-                                <Table
-                                    highlightOnHover
-                                    withTableBorder
-                                    withColumnBorders
-                                    verticalSpacing="sm"
-                                    horizontalSpacing="md"
-                                    style={{
-                                        tableLayout: "fixed",
-                                        minWidth: "100%",
-                                    }}
-                                >
-                                    <Table.Thead>
-                                        <Table.Tr>
-                                            <Table.Th style={{ width: "25%" }}>
-                                                Element position
-                                            </Table.Th>
-                                            <Table.Th style={{ width: "25%" }}>
-                                                Element name
-                                            </Table.Th>
-                                            <Table.Th style={{ width: "25%" }}>
-                                                Symbol
-                                            </Table.Th>
-                                            <Table.Th style={{ width: "25%" }}>
-                                                Atomic mass
-                                            </Table.Th>
-                                        </Table.Tr>
-                                    </Table.Thead>
-                                    <Table.Tbody>{rows}</Table.Tbody>
-                                </Table>
-                            </ScrollArea>
-                        </Paper>
+                        <TablePazienti>
+                            
+                        </TablePazienti>
                     </Grid.Col>
                 </Grid>
             </Container>

@@ -1,6 +1,6 @@
+// LoginPage/Login.tsx - Versione aggiornata
 import { useState } from "react";
 import axios, { AxiosError, type AxiosResponse } from "axios";
-
 import {
     Anchor,
     Button,
@@ -10,26 +10,29 @@ import {
     PasswordInput,
     TextInput,
     Title,
+    Alert
 } from "@mantine/core";
-
 import classes from "../CommonFile/AuthenticationTitle.module.css";
 import emailcss from "../CommonFile/InvalidEmail.module.css";
 import { IconAlertTriangle, IconAt } from "@tabler/icons-react";
-import { useNavigate } from "react-router";
-import { useAuth } from "../../context/Authentication";
-import type { User } from "../type/User";
-
-
-
+import { useNavigate, useLocation } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+import type { User } from "../type/DataType";
 
 function Login() {
-    const {login} = useAuth()
+    const { login } = useAuth();
     const navigate = useNavigate();
+    const location = useLocation();
+    
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [isPasswordInvalid, setIsPasswordInvalid] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
 
-    // semplice validazione email
+    // Ottieni la pagina da cui l'utente è stato reindirizzato
+    const from = location.state?.from?.pathname || "/user";
+
     const isValidEmail = (value: string) =>
         /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 
@@ -37,34 +40,56 @@ function Login() {
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
-        await axios({
-            method: "post",
-            url: `${import.meta.env.VITE_API_KEY}api/auth/signin`,
-            headers: {
-                "Access-Control-Allow-Origin": "*",
-                "Content-Type": "application/json",
-            },
-            data: {
-                email: `${email}`,
-                password: `${password}`,
-            },
-        }).then((res: AxiosResponse) => {
-                let user: User = {
-                    id: res.data.id,
-                    email: email,
-                    role: res.data.ruolo,
-                    token: res.data.token
-                }
+        setIsLoading(true);
+        setErrorMessage("");
+        setIsPasswordInvalid(false);
 
-                login(user)
-                navigate("/");
-                localStorage.setItem("access_token", res.data.token);
-                console.log(res);
-        }).catch((err: AxiosError<string>) => {
-                setPassword("");
-                setIsPasswordInvalid(true);
-                console.error(err);
-        });
+        try {
+            const response: AxiosResponse = await axios({
+                method: "post",
+                url: `${import.meta.env.VITE_API_KEY}api/auth/signin`,
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                data: {
+                    email: email,
+                    password: password,
+                },
+                withCredentials: true,
+            });
+
+            const user: User = {
+                id: response.data.id,
+                email: email,
+                role: response.data.role,
+            };
+
+            // Salva l'utente nel contesto
+            login(user);
+
+            console.log("Login successful:", response.data);
+            
+            // Reindirizza alla pagina originale o alla dashboard
+            navigate(from, { replace: true });
+
+        } catch (error) {
+            const axiosError = error as AxiosError<string>;
+            console.error("Login error:", axiosError);
+            
+            setPassword("");
+            setIsPasswordInvalid(true);
+            
+            // Gestisci diversi tipi di errore
+            if (axiosError.response?.status === 401) {
+                setErrorMessage("Email o password non corretti");
+            } else if (axiosError.response?.status === 500) {
+                setErrorMessage("Errore del server. Riprova più tardi");
+            } else {
+                setErrorMessage("Si è verificato un errore durante il login");
+            }
+        } finally {
+            setIsLoading(false);
+        }
     }
 
     return (
@@ -81,6 +106,20 @@ function Login() {
                 radius="lg"
                 style={{ width: "100%", margin: "0 auto" }}
             >
+                {errorMessage && (
+                    <Alert
+                        icon={<IconAlertTriangle size="1rem" />}
+                        title="Errore"
+                        color="red"
+                        variant="light"
+                        mb="md"
+                        withCloseButton
+                        onClose={() => setErrorMessage("")}
+                    >
+                        {errorMessage}
+                    </Alert>
+                )}
+
                 <form onSubmit={handleSubmit} className="inputForm">
                     <div style={{ textAlign: "left" }}>
                         <TextInput
@@ -88,7 +127,7 @@ function Login() {
                             value={email}
                             onChange={(e) => setEmail(e.currentTarget.value)}
                             required
-                            error={isEmailInvalid ? "Invalid email" : null}
+                            error={isEmailInvalid ? "Email non valida" : null}
                             placeholder="Email"
                             classNames={
                                 isEmailInvalid
@@ -122,7 +161,7 @@ function Login() {
                             label="Password"
                             error={
                                 isPasswordInvalid && password.length <= 0
-                                    ? "Invalid password"
+                                    ? "Password non valida"
                                     : null
                             }
                             required
@@ -143,9 +182,11 @@ function Login() {
                         mt="xl"
                         radius="md"
                         mb={60}
-                        type={"submit"}
+                        type="submit"
+                        loading={isLoading}
+                        disabled={isEmailInvalid || !email || !password}
                     >
-                        Sign in
+                        {isLoading ? "Accesso in corso..." : "Sign in"}
                     </Button>
                 </form>
             </Paper>

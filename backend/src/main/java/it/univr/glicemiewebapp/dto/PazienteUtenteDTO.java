@@ -20,6 +20,5 @@ public class PazienteUtenteDTO {
     private String comorbita;
     private String patologiePregresse;
     private UUID idMedico;
-    private String nomeMedico;
-    private String cognomeMedico;
+    
 }

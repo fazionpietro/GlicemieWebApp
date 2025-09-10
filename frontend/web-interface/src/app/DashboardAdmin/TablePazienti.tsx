@@ -16,6 +16,10 @@ import {
     UnstyledButton,
 } from "@mantine/core";
 import { IconPencil, IconTrash } from "@tabler/icons-react";
+import type { Paziente } from "../type/DataType";
+import { useState } from "react";
+import axios from "axios";
+import { useAuth } from "../../context/AuthContext";
 
 const element = [
     {
@@ -55,8 +59,29 @@ const element = [
     },
 ];
 
-
 export default function TablePazienti() {
+    const { user } = useAuth();
+    const [data, setData] = useState<Paziente | null>(null);
+
+    async function fetchData() {
+        
+        await axios({
+            method: "GET",
+            url: `${import.meta.env.VITE_API_KEY}api/pazienti/all`,
+            headers: {
+                "Access-Control-Allow-Origin": "true",
+                "Content-Type": "application/json",
+                withCredentials: true
+            },
+        })
+            .then((res) => {
+                console.log(res);
+            })
+            .catch((err) => {
+                console.error(err);
+            });
+    }
+
     return (
         <Paper withBorder radius="md" style={{ overflow: "hidden" }}>
             <ScrollArea mah={"40vh"} type="always" offsetScrollbars>
@@ -81,7 +106,7 @@ export default function TablePazienti() {
                                 Data di nascita
                             </Table.Th>
                             <Table.Th style={{ textAlign: "right" }}>
-                                <Button variant="filled">
+                                <Button variant="filled" onClick={fetchData}>
                                     Aggiungi paziente
                                 </Button>
                             </Table.Th>
