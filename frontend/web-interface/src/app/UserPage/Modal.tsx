@@ -7,18 +7,17 @@ function ModalSintomi() {
 
   return (
     <>
-      <Modal opened={opened} onClose={close} title="Authentication" centered>
+      <Modal opened={opened} onClose={close} title="Inserisci una descrizione dei sintomi" centered>
             <JsonInput
                 size="xs"
                 radius="lg"
-                label="Inserisci una descrizione dei sintomi"
                 placeholder="segnala i sintomi qui"
                 w="100%"
             />
-            <button>invia</button>
+            <button style={{marginTop:"20px"}}>invia</button>
       </Modal>
 
-      <Button variant="default" onClick={open}>
+      <Button fullWidth variant="default" onClick={open} mt="30">
         Inserisci malattia o sintomo
       </Button>
     </>
@@ -29,18 +28,17 @@ function ModalMedicinali() {
   const [opened, { open, close }] = useDisclosure(false);
   return (
     <>
-      <Modal opened={opened} onClose={close} title="Authentication" centered>
+      <Modal opened={opened} onClose={close} title="Inserisci i medicinali assunti" centered>
             <JsonInput
                 size="xs"
                 radius="lg"
-                label="Inserisci i medicinali assunti"
                 placeholder="Inserisci nome e quantità delle assunzioni qui"
                 w="100%"
             />
-            <button>invia</button>
+            <button style={{marginTop:"20px"}}>invia</button>
       </Modal>
 
-      <Button variant="default" onClick={open}>
+      <Button fullWidth variant="default" onClick={open} mt="30">
         Inserisci Medicinali Assunti
       </Button>
     </>
@@ -51,18 +49,17 @@ function ModalGlicemia() {
   const [opened, { open, close }] = useDisclosure(false);
   return (
     <>
-      <Modal opened={opened} onClose={close} title="Authentication" centered>
+      <Modal opened={opened} onClose={close} title="Inserisci Glicemia" centered>
             <JsonInput
                 size="xs"
                 radius="lg"
-                label="Inserisci Glicemia"
                 placeholder="Inserisci valore Glicemico qui"
                 w="100%"
             />
-            <button>invia</button>
+            <button style={{marginTop:"20px"}}>invia</button>
       </Modal>
 
-      <Button variant="default" onClick={open}>
+      <Button fullWidth variant="default" onClick={open} mt="30">
         Inserisci Valore Glicemia
       </Button>
     </>
