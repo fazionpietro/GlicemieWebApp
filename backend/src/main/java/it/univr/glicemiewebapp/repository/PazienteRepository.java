@@ -17,14 +17,24 @@ public interface PazienteRepository extends JpaRepository<Paziente, UUID> {
 
     @Query("""
     SELECT new it.univr.glicemiewebapp.dto.PazienteUtenteDTO(
-        p.id, p.email,p.passwordHash, p.nome, p.cognome, p.dataNascita, p.ruolo,
-        p.fattoriRischio, p.comorbita, p.patologiePregresse,
-        p.idMedico.id
+        p.id, 
+        p.email,
+        p.nome, 
+        p.cognome, 
+        p.dataNascita, 
+        p.ruolo,
+        p.fattoriRischio, 
+        p.comorbita, 
+        p.patologiePregresse,
+        m.id,      
+        m.nome,    
+        m.cognome, 
+        m.email    
     )
     FROM Paziente p
-    LEFT JOIN p.idMedico
-    """)
-    List<PazienteUtenteDTO> findAllComplete();
+    LEFT JOIN p.idMedico m
+""")
+List<PazienteUtenteDTO> findAllComplete();
 
 
 

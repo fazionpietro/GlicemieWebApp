@@ -8,76 +8,56 @@ import {
     Table,
     Text,
 } from "@mantine/core";
-import { IconPencil, IconTrash } from "@tabler/icons-react";
-import type { Paziente } from "../type/DataType";
+import { IconTrash } from "@tabler/icons-react";
+import type { Medico, Paziente } from "../type/DataType";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
 import { modals, ModalsProvider } from "@mantine/modals";
 import RegisterPaziente from "./RegisterPaziente";
 import { useDisclosure } from "@mantine/hooks";
+import DetailsPaziente from "./DetailsPaziente";
 
-export default function TablePazienti() {
-    const [elements, setElements] = useState<Paziente[] | null>(null);
+type Props = {
+    pazienti: Paziente[] | null;
+    medici: Medico[] | null;
+    fetchPazienti: () => void;
+    fetchMedici: () => void;
+};
+
+export default function TablePazienti({
+    pazienti,
+    medici,
+    fetchPazienti,
+}: Props) {
     const [didFetch, setDidFetch] = useState(false);
     const [openedRegister, { open: openRegister, close: closeRegister }] =
         useDisclosure(false);
     const [openedDel, { open: openDel, close: closeDel }] =
         useDisclosure(false);
 
-    async function fetchData() {
+    const handleDelete = async (id: string) => {
+        console.log("Deleting patient with ID:", id);
+
         await axios({
-            method: "GET",
-            url: `${import.meta.env.VITE_API_KEY}api/pazienti/all`,
+            method: "DELETE",
+            url: `${import.meta.env.VITE_API_KEY}api/pazienti/delete/${id}`,
             headers: {
-                
                 "Content-Type": "application/json",
                 withCredentials: true,
             },
         })
             .then((res) => {
-                setElements(res.data);
-                console.log(elements);
-                
+                console.log(res);
+                fetchPazienti()
             })
             .catch((err) => {
                 console.error(err);
             });
-    }
-
-
-    
-
-
-
-
-    const handleDelete = async (id: string) => {
-        console.log("Deleting patient with ID:", id);
-        
-        await axios({
-            method: "DELETE",
-            url: `${import.meta.env.VITE_API_KEY}api/pazienti/delete`,
-            headers: {
-                "Content-Type": "application/json",
-                withCredentials: true
-            },
-            data: {
-                "id": `${id}`
-            }
-        }).then((res)=>{
-            console.log(res);
-            fetchData()
-            
-
-        }).catch((err)=>{
-            console.error(err);
-            
-        })
     };
 
     useEffect(() => {
         if (!didFetch) {
-            fetchData();
             setDidFetch(true);
         }
     }, []);
@@ -94,7 +74,10 @@ export default function TablePazienti() {
                     dati.
                 </Text>
             ),
-            labels: { confirm: "Elimina paziente", cancel: "Cancella operazione" },
+            labels: {
+                confirm: "Elimina paziente",
+                cancel: "Cancella operazione",
+            },
             confirmProps: { color: "red" },
             onCancel: () => modals.closeAll(),
             onConfirm: () => {
@@ -130,18 +113,19 @@ export default function TablePazienti() {
                                 <Table.Th style={{ textAlign: "right" }}>
                                     <Modal
                                         opened={openedRegister}
-                                        onClose={()=>{
-                                            fetchData();
+                                        onClose={() => {
+                                            fetchPazienti();
                                             closeRegister();
-                                            
                                         }}
                                         radius={"md"}
                                         size="auto"
                                     >
-                                        <RegisterPaziente onSuccess={() => {
-                                            fetchData();
-                                            closeRegister();
-                                        }}/>
+                                        <RegisterPaziente
+                                            onSuccess={() => {
+                                                fetchPazienti();
+                                                closeRegister();
+                                            }}
+                                        />
                                     </Modal>
 
                                     <Button
@@ -154,7 +138,7 @@ export default function TablePazienti() {
                             </Table.Tr>
                         </Table.Thead>
                         <Table.Tbody>
-                            {elements?.map((item) => (
+                            {pazienti?.map((item) => (
                                 <Table.Tr key={item.id}>
                                     <Table.Td style={{ textAlign: "left" }}>
                                         <Group gap="sm">
@@ -179,41 +163,33 @@ export default function TablePazienti() {
                                     </Table.Td>
                                     <Table.Td style={{ textAlign: "left" }}>
                                         <Group gap={0} justify="flex-end">
+                                            <DetailsPaziente
+                                                paziente={item}
+                                                medici={medici}
+                                                fetchMedici={fetchPazienti}
+                                                fetchPazienti={fetchPazienti}
+                                            />
 
-                                            
+                                            <div>
+                                                <Modal
+                                                    opened={openedDel}
+                                                    onClose={closeDel}
+                                                    radius={"md"}
+                                                ></Modal>
 
-
-
-
-                                            <ActionIcon
-                                                variant="subtle"
-                                                color="gray"
-                                            >
-                                                <IconPencil
-                                                    size={16}
-                                                    stroke={1.5}
-                                                />
-                                            </ActionIcon>
-
-                                            <Modal
-                                                opened={openedDel}
-                                                onClose={closeDel}
-                                                radius={"md"}
-                                            ></Modal>
-
-                                            <ActionIcon
-                                                
-                                                variant="subtle"
-                                                color="red"
-                                                onClick={() =>
-                                                    openDeleteModal(item.id)
-                                                }
-                                            >
-                                                <IconTrash
-                                                    size={16}
-                                                    stroke={1.5}
-                                                />
-                                            </ActionIcon>
+                                                <ActionIcon
+                                                    variant="subtle"
+                                                    color="red"
+                                                    onClick={() =>
+                                                        openDeleteModal(item.id)
+                                                    }
+                                                >
+                                                    <IconTrash
+                                                        size={16}
+                                                        stroke={1.5}
+                                                    />
+                                                </ActionIcon>
+                                            </div>
                                         </Group>
                                     </Table.Td>
                                 </Table.Tr>

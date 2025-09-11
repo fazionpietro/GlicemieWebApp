@@ -3,9 +3,6 @@ import {
     FloatingIndicator,
     Grid,
     Paper,
-    ScrollArea,
-    Skeleton,
-    Table,
     Text,
     UnstyledButton,
 } from "@mantine/core";
@@ -14,8 +11,10 @@ import classes from "./StatsCard.module.css";
 import { FiUsers, FiActivity, FiAlignRight } from "react-icons/fi";
 import { FaUserMd } from "react-icons/fa";
 import floatingcss from "./AdminFloatingIndicator.module.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TablePazienti from "./TablePazienti";
+import axios from "axios";
+import type { Medico, Paziente } from "../type/DataType";
 
 const PRIMARY_COL_HEIGHT = "50vh";
 
@@ -26,6 +25,11 @@ function DashboardAdmin() {
     const [controlsRefs, setControlsRefs] = useState<
         Record<string, HTMLButtonElement | null>
     >({});
+    const [didFetch, setDidFetch] = useState(false);
+
+    const [pazienti, setPazienti] = useState<Paziente[] | null>(null);
+    const [medici, setMedici] = useState<Medico[] | null>(null);
+
     const setControlRef = (index: number) => (node: HTMLButtonElement) => {
         controlsRefs[index] = node;
         setControlsRefs(controlsRefs);
@@ -43,7 +47,49 @@ function DashboardAdmin() {
         </UnstyledButton>
     ));
 
+    async function fetchPazienti() {
+        await axios({
+            method: "GET",
+            url: `${import.meta.env.VITE_API_KEY}api/pazienti/all`,
+            headers: {
+                "Content-Type": "application/json",
+                withCredentials: true,
+            },
+        })
+            .then((res) => {
+                setPazienti(res.data);
+                console.log(pazienti);
+            })
+            .catch((err) => {
+                console.error(err);
+            });
+    }
 
+    async function fetchMedici() {
+        await axios({
+            method: "GET",
+            url: `${import.meta.env.VITE_API_KEY}api/utenti/medici/all`,
+            headers: {
+                "Content-Type": "application/json",
+                withCredentials: true,
+            },
+        })
+            .then((res) => {
+                setMedici(res.data);
+                console.log(medici);
+            })
+            .catch((err) => {
+                console.error(err);
+            });
+    }
+
+    useEffect(() => {
+        if (!didFetch) {
+            fetchPazienti();
+            fetchMedici();
+            setDidFetch(true);
+        }
+    }, []);
 
     return (
         <div>
@@ -129,11 +175,18 @@ function DashboardAdmin() {
                         </div>
                     </Grid.Col>
 
-                    <Grid.Col span={12}>
-                        <TablePazienti>
-                            
-                        </TablePazienti>
-                    </Grid.Col>
+                    {active == 0 ? (
+                        <Grid.Col span={12}>
+                            <TablePazienti
+                                pazienti={pazienti}
+                                fetchPazienti={fetchPazienti}
+                                medici={medici}
+                                fetchMedici={fetchMedici}
+                            ></TablePazienti>
+                        </Grid.Col>
+                    ) : (
+                        <Grid.Col span={12}></Grid.Col>
+                    )}
                 </Grid>
             </Container>
         </div>

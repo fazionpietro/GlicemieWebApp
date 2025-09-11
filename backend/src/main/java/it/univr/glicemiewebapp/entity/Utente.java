@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+
+import org.apache.commons.lang3.builder.ToStringExclude;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
@@ -20,8 +22,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Builder
-@Getter(AccessLevel.PUBLIC)
-@Setter(AccessLevel.PRIVATE)
+@Getter
+@Setter
 @ToString(exclude = "passwordHash")
 
 public class Utente {
@@ -60,7 +62,7 @@ public class Utente {
     private String ruolo;
 
 
-
+    @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
 
         return List.of(new SimpleGrantedAuthority(this.ruolo));

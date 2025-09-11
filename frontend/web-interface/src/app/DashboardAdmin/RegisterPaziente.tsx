@@ -69,7 +69,10 @@ function getStrength(password: string) {
     return Math.max(100 - (100 / (requirements.length + 1)) * multiplier, 0);
 }
 
-/* ---------- Componente principale ---------- */
+
+
+
+
 export default function RegisterPaziente({ onSuccess }: Props) {
     
     const [email, setEmail] = useState("");
@@ -276,7 +279,7 @@ export default function RegisterPaziente({ onSuccess }: Props) {
                     mb={20}
                     value={password}
                     onChange={setPassword}
-                    placeholder="Your password"
+                    placeholder="Password"
                     label="Password"
                     required
                 />
@@ -312,7 +315,7 @@ export default function RegisterPaziente({ onSuccess }: Props) {
                     }
                 />
 
-                {/* --- Errori --- */}
+                
                 {isError && (
                     <Alert
                         variant="light"
@@ -328,13 +331,14 @@ export default function RegisterPaziente({ onSuccess }: Props) {
                     </Alert>
                 )}
 
-                {/* --- Submit --- */}
+                
                 <Button
                     size="md"
                     fullWidth
                     mt="xl"
                     radius="md"
                     onClick={handleRegister}
+                    disabled={ password.length<=0 || (password.length != 0 && confirmPassword !== password)}
                 >
                     Register
                 </Button>
