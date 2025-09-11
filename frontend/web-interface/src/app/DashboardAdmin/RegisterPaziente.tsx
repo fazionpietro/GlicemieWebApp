@@ -132,6 +132,10 @@ export default function RegisterPaziente({ onSuccess }: Props) {
             setIsError("Inserisci una data di nascita valida");
             return;
         }
+        if(nome=="" || cognome==""){
+            setIsError("Inserisci nome e cognome");
+            return
+        }
 
         const body = {
             email,

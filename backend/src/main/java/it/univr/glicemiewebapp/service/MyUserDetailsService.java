@@ -14,8 +14,8 @@ import java.util.Optional;
 public class MyUserDetailsService implements UserDetailsService {
     @Autowired
     private UtenteRepository userRepository;
+    @Autowired
     private LogService logger;
-
 
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Optional<Utente> user = userRepository.findByEmailAddress(email);
@@ -26,7 +26,6 @@ public class MyUserDetailsService implements UserDetailsService {
         return new org.springframework.security.core.userdetails.User(
                 user.get().getEmail(),
                 user.get().getPasswordHash(),
-                user.get().getAuthorities()
-        );
+                user.get().getAuthorities());
     }
 }

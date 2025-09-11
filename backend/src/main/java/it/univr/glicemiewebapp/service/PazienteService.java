@@ -2,7 +2,7 @@ package it.univr.glicemiewebapp.service;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
 import org.springframework.stereotype.Service;
@@ -26,6 +26,7 @@ public class PazienteService {
     private final PazienteRepository pazienteRepository;
     private final UtenteRepository utenteRepository;
     private final ObjectMapper mapper;
+    @Autowired
     private LogService logger;
 
     public PazienteService(PasswordEncoder passwordEncoder,
@@ -59,7 +60,7 @@ public class PazienteService {
         
 
         try {
-            
+             logger.info("Modifing data of: "+p.toString());
 
             p.setEmail(up.getEmail());
             p.setNome(up.getNome());

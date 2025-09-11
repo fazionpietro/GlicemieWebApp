@@ -8,6 +8,7 @@ import it.univr.glicemiewebapp.forms.SignInForm;
 import it.univr.glicemiewebapp.repository.UtenteRepository;
 import it.univr.glicemiewebapp.service.AuthenticationService;
 import it.univr.glicemiewebapp.service.JwtService;
+import it.univr.glicemiewebapp.service.LogService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -25,7 +26,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
+
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
@@ -42,12 +43,14 @@ public class AuthController {
     PasswordEncoder passwordEncoder;
     @Autowired
     JwtService jwtService;
+    @Autowired
+    private LogService logger;
 
     
     @CrossOrigin
     @PostMapping("/signin")
     public ResponseEntity<String> signin(@RequestBody @Valid SignInForm signInForm) {
-        
+        logger.info("Login attempt"); 
         try {
             return authenticationService.authentication(signInForm);
         
@@ -60,7 +63,7 @@ public class AuthController {
 
     @PostMapping("/signup/medico")
     public ResponseEntity<String> registerMedico(@RequestBody @Valid MedicoForm medico) {
-        log.error(medico.toString());
+        logger.info("Attempt to create a new doctor");
         
         try {
 
@@ -75,7 +78,7 @@ public class AuthController {
 
     @PostMapping("/signup/admin")
     public ResponseEntity<String> registerAdmin(@RequestBody @Valid AdminForm admin) {
-       
+        logger.info("Attempt to create a new admin");
         try {
             return authenticationService.register(admin);
         } catch (ResponseStatusException e) {
@@ -88,7 +91,7 @@ public class AuthController {
 
     @PostMapping("/signup/paziente")
     public ResponseEntity<String> registerPaziente(@RequestBody @Valid PazienteForm paziente) {
-        
+        logger.info("Attempt to create a new patient"); 
         try {
             return authenticationService.register(paziente);
         } catch (ResponseStatusException e) {
@@ -101,8 +104,11 @@ public class AuthController {
 
     @GetMapping("/verify")
     public ResponseEntity<String> verifyToken(HttpServletRequest request) {
+
+        
         try {
             String token = extractTokenFromCookie(request);
+            logger.info("Veryfing Token: "+token);
 
             if (token == null || !jwtService.checkValidity(token)) {
                 return new ResponseEntity<>("INVALID TOKEN", HttpStatus.UNAUTHORIZED);
@@ -135,9 +141,11 @@ public class AuthController {
     @PostMapping("/logout")
     public ResponseEntity<String> logout(HttpServletRequest request,
                                      HttpServletResponse response) {
+                                        
         try {
+
             String token = extractTokenFromCookie(request);
-            log.warn("Logout – token estratto: {}", token);
+            logger.warn("Logout – token estratto: "+ token);
             ResponseEntity<String> svcResp = authenticationService.logout(token);
 
             // Invalida il cookie impostando maxAge a 0

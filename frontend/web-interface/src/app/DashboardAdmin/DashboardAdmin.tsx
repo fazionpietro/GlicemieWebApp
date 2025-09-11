@@ -3,8 +3,11 @@ import {
     FloatingIndicator,
     Grid,
     Paper,
+    Notification,
     Text,
     UnstyledButton,
+    ScrollArea,
+    Title,
 } from "@mantine/core";
 import { HeaderMegaMenu } from "../CommonFile/Header";
 import classes from "./StatsCard.module.css";
@@ -15,11 +18,12 @@ import { useEffect, useState } from "react";
 import TablePazienti from "./TablePazienti";
 import axios from "axios";
 import type { Medico, Paziente } from "../type/DataType";
-import {  TableMedici } from "./TableMedici";
+import { TableMedici } from "./TableMedici";
+
 
 const PRIMARY_COL_HEIGHT = "50vh";
 
-const data = ["Gestione pazienti", "Gestione medici", "Logs report"];
+const data = ["Gestione pazienti", "Gestione medici"];
 function DashboardAdmin() {
     const [rootRef, setRootRef] = useState<HTMLDivElement | null>(null);
     const [active, setActive] = useState(0);
@@ -96,7 +100,7 @@ function DashboardAdmin() {
         <div>
             <HeaderMegaMenu />
             <Container fluid my={40}>
-                <Grid gutter="md" mb={100}>
+                <Grid gutter="md" mb={70}>
                     {/* Le tue card statistiche */}
                     <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
                         <Paper className={classes.stat} radius="md" shadow="md">
@@ -161,7 +165,7 @@ function DashboardAdmin() {
                 </Grid>
 
                 <Grid gutter="md" pt={60}>
-                    <Grid.Col span={12}>
+                    <Grid.Col span={{ base: 12, md: 12, lg: 6 }}>
                         <div
                             className={floatingcss.root}
                             ref={setRootRef}
@@ -174,35 +178,38 @@ function DashboardAdmin() {
                                 className={floatingcss.indicator}
                             />
                         </div>
+                        {active == 0 ? (
+                            <Grid.Col span={12}>
+                                <TablePazienti
+                                    pazienti={pazienti}
+                                    fetchPazienti={fetchPazienti}
+                                    medici={medici}
+                                    fetchMedici={fetchMedici}
+                                ></TablePazienti>
+                            </Grid.Col>
+                        ) : (
+                            <Grid.Col span={12}>
+                                <TableMedici
+                                    medici={medici}
+                                    fetchMedici={fetchMedici}
+                                />
+                            </Grid.Col>
+                        )}
                     </Grid.Col>
-
-                    
-
-
-
-                    {active == 0 ? (
-                        <Grid.Col span={12}>
-                            <TablePazienti
-                                pazienti={pazienti}
-                                fetchPazienti={fetchPazienti}
-                                medici={medici}
-                                fetchMedici={fetchMedici}
-                            ></TablePazienti>
-                        </Grid.Col>
-                    ) : ("")}
-                    
-                    {active == 1 ? (
-                        <Grid.Col span={12}>
-                            <TableMedici
-                                medici={medici}
-                                fetchMedici={fetchMedici}
-                            />
-                        </Grid.Col>
-                    ) : ("")}
-                    
-
-
+                    <Grid.Col span={{ base: 12, md: 12, lg: 6 }}>
+                        <Container  h={"45vh"} ta={"left"} pl="2vw" >
+                                <Title fz="3rem">Logs</Title>
+                                <ScrollArea style={{ height: "100%" }} mah="45vh">
+                                    
+                                    
+                                </ScrollArea>
+                                
+                                
+                            
+                        </Container>
+                    </Grid.Col>
                 </Grid>
+                
             </Container>
         </div>
     );

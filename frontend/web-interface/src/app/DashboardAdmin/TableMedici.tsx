@@ -81,8 +81,12 @@ export function TableMedici({ medici, fetchMedici }: Props) {
 
     return (
         <ModalsProvider>
-            <Paper withBorder radius={"md"} style={{ overflow: "hidden" }}>
-                <ScrollArea mah={"40vh"} type="always" offsetScrollbars>
+            <Paper
+                withBorder
+                radius="md"
+                style={{ overflow: "hidden", height: "40vh" }}
+            >
+                <ScrollArea style={{ height: "100%" }}>
                     <Table
                         highlightOnHover
                         verticalSpacing="sm"
@@ -122,7 +126,7 @@ export function TableMedici({ medici, fetchMedici }: Props) {
                                         />
                                     </Modal>
 
-                                    <Button variant="filled" onClick={open}>
+                                    <Button variant="filled" onClick={open} w="80%">
                                         Aggiungi medico
                                     </Button>
                                 </Table.Th>

@@ -30,7 +30,7 @@ public class UtenteService {
 
     @Autowired
     private ObjectMapper mapper;
-
+    @Autowired
     private LogService logger;
 
     public UtenteService(UtenteRepository repository, PasswordEncoder passwordEncoder) {
@@ -88,15 +88,15 @@ public class UtenteService {
 
     }
 
-
     @Transactional
     public ResponseEntity<String> update(UtenteDTO up) {
 
         log.info(up.toString());
 
-
         Utente u = repository.findById(up.getId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "DATABASE ERROR"));
+
+        logger.info("Modifing data of: " + u.toString());
 
         try {
             log.info(up.toString());

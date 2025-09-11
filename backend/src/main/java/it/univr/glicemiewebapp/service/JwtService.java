@@ -27,7 +27,7 @@ public class JwtService {
 
     @Autowired
     private TokenBlacklistRepository tokenBlacklistRepository;
-
+    @Autowired
     private LogService logger;
 
     public String generateToken(Utente utente) {
@@ -49,17 +49,17 @@ public class JwtService {
         try {
 
             Claims claims = Jwts.parserBuilder()
-                .setSigningKey(secretKey.getBytes())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+                    .setSigningKey(secretKey.getBytes())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
 
-        String jti = claims.getId();
+            String jti = claims.getId();
 
-        if (isTokenBlacklisted(jti)) {
-            log.debug("Token {} is black-listed", jti);
-            return false;
-        }
+            if (isTokenBlacklisted(jti)) {
+                log.debug("Token {} is black-listed", jti);
+                return false;
+            }
 
             Jwts.parserBuilder().setSigningKey(secretKey.getBytes()).build().parseClaimsJws(token);
             return true;
@@ -110,7 +110,7 @@ public class JwtService {
 
             if (jti != null && !tokenBlacklistRepository.existsById(jti)) {
                 tokenBlacklistRepository.save(new BlacklistedToken(jti, expiry, Instant.now()));
-                logger.info("Token "+jti+" aggiunto alla blacklist");
+                logger.info("Token " + jti + " aggiunto alla blacklist");
 
             }
 

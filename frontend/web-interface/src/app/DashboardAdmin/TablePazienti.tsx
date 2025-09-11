@@ -1,6 +1,7 @@
 import {
     ActionIcon,
     Button,
+    Container,
     Group,
     Modal,
     Paper,
@@ -49,7 +50,7 @@ export default function TablePazienti({
         })
             .then((res) => {
                 console.log(res);
-                fetchPazienti()
+                fetchPazienti();
             })
             .catch((err) => {
                 console.error(err);
@@ -88,9 +89,15 @@ export default function TablePazienti({
 
     return (
         <ModalsProvider>
-            <Paper withBorder radius="md" style={{ overflow: "hidden" }}>
-                <ScrollArea mah={"40vh"} type="always" offsetScrollbars>
+            <Paper
+                
+                withBorder
+                radius="md"
+                style={{ overflow: "hidden", height: "40vh" }}
+            >
+                <ScrollArea style={{ height: "100%" }}>
                     <Table
+                        stickyHeader
                         highlightOnHover
                         verticalSpacing="sm"
                         horizontalSpacing="md"
@@ -132,6 +139,7 @@ export default function TablePazienti({
                                     <Button
                                         variant="filled"
                                         onClick={openRegister}
+                                        w="80%"
                                     >
                                         Aggiungi paziente
                                     </Button>

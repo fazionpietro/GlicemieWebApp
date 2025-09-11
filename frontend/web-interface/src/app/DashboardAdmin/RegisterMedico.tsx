@@ -3,7 +3,7 @@ import {
     Button,
     Container,
     Group,
-    Paper,
+
     PasswordInput,
     Progress,
     TextInput,
@@ -11,19 +11,17 @@ import {
     Text,
     Alert,
     Box,
-    Textarea,
+
 } from "@mantine/core";
 import { DateInput, type DateValue } from "@mantine/dates";
 import { IconAlertTriangle, IconCheck, IconX } from "@tabler/icons-react";
 import { useInputState } from "@mantine/hooks";
-import { useAuth } from "../../context/AuthContext";
-import axios, { AxiosError } from "axios";
-import type { User } from "../type/DataType";
 
-/* ---------- Stili CSS ---------- */
+import axios, { AxiosError } from "axios";
+
 import "../CommonFile/App.css";
 import emailcss from "../CommonFile/InvalidEmail.module.css";
-import { useNavigate } from "react-router";
+
 
 const requirements = [
     { re: /[0-9]/, label: "Includes number" },
@@ -114,6 +112,10 @@ export function RegisterMedico({onSuccess}:Props) {
         if (!dataNascita) {
             setIsError("Inserisci una data di nascita valida");
             return;
+        }
+        if(nome=="" || cognome==""){
+            setIsError("Inserisci nome e cognome");
+            return
         }
 
         const body = {
