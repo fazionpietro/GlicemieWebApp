@@ -32,3 +32,13 @@ export interface AuthContextType {
   logout: () => void;
   checkAuth: () => Promise<void>;
 }
+
+
+export type Medico = {
+  id: string
+  email: string
+  nome: string
+  cognome: string
+  dataNascita: string
+  ruolo: string
+}

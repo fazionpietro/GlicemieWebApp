@@ -15,8 +15,8 @@ import java.util.UUID;
 @PrimaryKeyJoinColumn(name = "id_paziente")
 @NoArgsConstructor
 @OnDelete(action = OnDeleteAction.CASCADE)
-@Getter(AccessLevel.PUBLIC)
-@Setter(AccessLevel.PRIVATE)
+@Getter
+@Setter
 @ToString
 public class Paziente extends Utente {
 

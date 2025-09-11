@@ -4,7 +4,12 @@ import it.univr.glicemiewebapp.entity.Utente;
 import it.univr.glicemiewebapp.repository.UtenteRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,7 +21,8 @@ public class UtenteService {
     @Autowired
     private UtenteRepository repository;
 
-    
+    @Autowired
+    private ObjectMapper mapper; 
 
     
     public UtenteService(UtenteRepository repository) {
@@ -49,6 +55,19 @@ public class UtenteService {
         return repository.findByEmailAddress(email);
     }
 
+
+
+    public ResponseEntity<String> getMedici(){
+        
+        try {
+            return new ResponseEntity<>(mapper.writeValueAsString(repository.findByRole("ROLE_MEDICO")), HttpStatus.OK);
+            
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "FAILED TO RETRIVE DATA");
+        }
+
+
+    }
 
 
 }
