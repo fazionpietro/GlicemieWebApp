@@ -73,7 +73,14 @@ export function LeadGrid() {
                 </Paper>
           </Grid.Col>
       </Grid>
-      <Grid>
+
+      <Grid columns={24}>
+        <Grid.Col span={12}>
+
+        </Grid.Col>
+        <Grid.Col span={12}>
+
+        </Grid.Col>
         
       </Grid>
     </>

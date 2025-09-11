@@ -440,3 +440,9 @@ Caused by: org.h2.jdbc.JdbcSQLInvalidAuthorizationSpecException: Wrong user name
 	at org.h2.message.DbException.getJdbcSQLException(DbException.java:522)
 	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
 	... 113 more
+2025-09-11 16:37:33.000278+02:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLDataException: Data conversion error converting "'1234' (UTENTI: ""ID_UTENTE"" UUID NOT NULL)"; SQL statement:
+INSERT INTO "PUBLIC"."UTENTI"("ID_UTENTE","COGNOME","DATA_NASCITA","EMAIL","NOME","PASSWORD_HASH","RUOLO")VALUES(?,?,?,?,?,?,?) [22018-232]
+2025-09-11 16:37:33.105276+02:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLDataException: Data conversion error converting "'1234' (UTENTI: ""ID_UTENTE"" UUID NOT NULL)"; SQL statement:
+INSERT INTO "PUBLIC"."UTENTI"("ID_UTENTE","COGNOME","DATA_NASCITA","EMAIL","NOME","PASSWORD_HASH","RUOLO")VALUES(?,?,?,?,?,?,?) [22018-232]
