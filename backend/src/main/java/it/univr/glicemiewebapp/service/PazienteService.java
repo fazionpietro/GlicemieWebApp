@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -48,25 +49,18 @@ public class PazienteService {
         }
     }
 
-    public ResponseEntity<String> deleteByID(UUID id) {
-        try {
-            pazienteRepository.deleteById(id);
 
-            return new ResponseEntity<>("{message: \"PAZIENTE ELIMINATO\" }", HttpStatus.OK);
-
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL SERVER ERROR");
-        }
-
-    }
-
+    @Transactional
     public ResponseEntity<String> update(PazienteUtenteDTO up) {
 
         Paziente p = pazienteRepository.findById(up.getId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "DATABASE ERROR"));
 
+
+        
+
         try {
-            log.info(up.toString());
+            
 
             p.setEmail(up.getEmail());
             p.setNome(up.getNome());

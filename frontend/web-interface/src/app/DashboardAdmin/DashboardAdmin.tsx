@@ -15,6 +15,7 @@ import { useEffect, useState } from "react";
 import TablePazienti from "./TablePazienti";
 import axios from "axios";
 import type { Medico, Paziente } from "../type/DataType";
+import {  TableMedici } from "./TableMedici";
 
 const PRIMARY_COL_HEIGHT = "50vh";
 
@@ -175,6 +176,10 @@ function DashboardAdmin() {
                         </div>
                     </Grid.Col>
 
+                    
+
+
+
                     {active == 0 ? (
                         <Grid.Col span={12}>
                             <TablePazienti
@@ -184,9 +189,19 @@ function DashboardAdmin() {
                                 fetchMedici={fetchMedici}
                             ></TablePazienti>
                         </Grid.Col>
-                    ) : (
-                        <Grid.Col span={12}></Grid.Col>
-                    )}
+                    ) : ("")}
+                    
+                    {active == 1 ? (
+                        <Grid.Col span={12}>
+                            <TableMedici
+                                medici={medici}
+                                fetchMedici={fetchMedici}
+                            />
+                        </Grid.Col>
+                    ) : ("")}
+                    
+
+
                 </Grid>
             </Container>
         </div>

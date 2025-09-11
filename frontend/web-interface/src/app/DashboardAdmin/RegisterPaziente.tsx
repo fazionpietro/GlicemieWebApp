@@ -87,7 +87,7 @@ export default function RegisterPaziente({ onSuccess }: Props) {
     const [patologiePregresse, setPatologiePregresse] = useState("");
 
     const [isError, setIsError] = useState("");
-    const { login } = useAuth();
+ 
 
     /* --- Validazioni --- */
     const isValidEmail = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
@@ -169,7 +169,7 @@ export default function RegisterPaziente({ onSuccess }: Props) {
     return (
 
 
-        <Container fluid w={600} my={40} pl={40} pr={40}>
+        <Container fluid w={600} my={10} pl={40} pr={40}>
             
 
             <Title size={"xl"} pb={30}>
@@ -337,6 +337,7 @@ export default function RegisterPaziente({ onSuccess }: Props) {
                     fullWidth
                     mt="xl"
                     radius="md"
+                    mb={80}
                     onClick={handleRegister}
                     disabled={ password.length<=0 || (password.length != 0 && confirmPassword !== password)}
                 >
