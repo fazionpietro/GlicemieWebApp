@@ -6,8 +6,8 @@ import java.time.LocalDate;
 
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
-@Getter(AccessLevel.PUBLIC)
-@Setter(AccessLevel.PRIVATE)
+@Getter
+@Setter
 @ToString
 public class UtenteForm {
 

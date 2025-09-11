@@ -46,20 +46,7 @@ public class PazienteController {
         }
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> delete(@PathVariable UUID id) {
-        try {
-            return pazienteService.deleteByID(id);
-
-        } catch (ResponseStatusException e) {
-
-            log.error(e.getReason(),e.getStatusCode());
-            return new ResponseEntity<>(e.getReason(),e.getStatusCode());
-            
-        }
-        
-        
-    }
+    
 
 
     @PutMapping("/update")

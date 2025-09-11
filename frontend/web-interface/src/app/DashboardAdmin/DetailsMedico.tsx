@@ -21,38 +21,22 @@ import { useDisclosure } from "@mantine/hooks";
 import axios from "axios";
 
 type Props = {
-    paziente: Paziente;
-    medici: Medico[] | null;
+    medico: Medico;
     fetchMedici: () => void;
-    fetchPazienti: () => void;
 };
 
-export default function DetailsPaziente({
-    paziente,
-    medici,
-    fetchMedici,
-    fetchPazienti,
+export default function DetailsMedico({
+    medico,
+    fetchMedici
 }: Props) {
-    const [email, setEmail] = useState(paziente.email);
-    const [nome, setNome] = useState(paziente.nome);
-    const [cognome, setCognome] = useState(paziente.cognome);
-    const [password, setPassword] = useState("");
+    const [email, setEmail] = useState(medico.email);
+    const [nome, setNome] = useState(medico.nome);
+    const [cognome, setCognome] = useState(medico.cognome);
+    const [password, setPassword] = useState<String | null>("");
     const [dataNascita, setDataNascita] = useState<DateValue>(
-        paziente.dataNascita
+        medico.dataNascita
     );
-    const [fattoriRischio, setFattoriRischio] = useState(
-        paziente.fattoriRischio ?? ""
-    );
-    const [comorbita, setComorbita] = useState(paziente.comorbita ?? "");
-    const [patologiePregresse, setPatologiePregresse] = useState(
-        paziente.patologiePregresse ?? ""
-    );
-    const [medicoDisplay, setMedicoDisplay] = useState(
-        paziente.idMedico
-            ? `${paziente.cognomeMedico} ${paziente.nomeMedico}`
-            : ""
-    );
-    const [idMedico, setIdMedico] = useState(paziente.idMedico ?? "");
+    
 
     const [openedEdit, { open: openEdit, close: closeEdit }] =
         useDisclosure(false);
@@ -62,34 +46,30 @@ export default function DetailsPaziente({
     const isInvalid = email.length > 0 && !isValidEmail(email);
 
     async function handleSave() {
-
         
         await axios({
             method: "PUT",
-            url: `${import.meta.env.VITE_API_KEY}api/pazienti/update`,
+            url: `${import.meta.env.VITE_API_KEY}api/utenti/update`,
 
             headers: {
                 "Content-Type": "application/json",
                 withCredentials: true,
             },
             data: {
-                id: paziente.id,
+                id: medico.id,
                 email,
                 nome,
+                "passwordHash": password,
                 cognome,
                 dataNascita,
-                ruolo: "ROLE_PAZIENTE",
-                fattoriRischio,
-                comorbita,
-                patologiePregresse,
-                idMedico,
-                "passwordHash":password
-            },
+                
+                
+            },  
         })
             .then((res) => {
                 console.log(res);
                 closeEdit();
-                fetchPazienti();
+                fetchMedici();
             })
             .catch((err) => {
                 console.error(err);
@@ -97,34 +77,19 @@ export default function DetailsPaziente({
     }
 
     function handleClose() {
-        setEmail(paziente.email);
-        setNome(paziente.nome);
-        setCognome(paziente.cognome);
+        setEmail(medico.email);
+        setNome(medico.nome);
+        setCognome(medico.cognome);
         setPassword("");
-        setDataNascita(paziente.dataNascita);
-        setFattoriRischio(paziente.fattoriRischio ?? "");
-        setComorbita(paziente.comorbita ?? "");
-        setPatologiePregresse(paziente.patologiePregresse ?? "");
-        setMedicoDisplay(`${paziente.cognome} ${paziente.nome}`);
+        setDataNascita(medico.dataNascita);
+        
 
         closeEdit();
     }
 
-    useEffect(() => {
-        setIdMedico(paziente.idMedico ?? "");
-        setMedicoDisplay(
-            paziente.idMedico
-                ? `${paziente.cognomeMedico} ${paziente.nomeMedico}`
-                : ""
-        );
-    }, [paziente]);
+    
 
-    useEffect(() => {
-        if (medicoDisplay == null) {
-            fetchMedici();
-            console.log("fetchiammo");
-        }
-    }, []);
+    
 
     return (
         <div>
@@ -181,64 +146,6 @@ export default function DetailsPaziente({
                         />
                     </Group>
 
-                    <Textarea
-                        size="md"
-                        radius="md"
-                        mb={20}
-                        label="Fattori di rischio"
-                        value={fattoriRischio}
-                        onChange={(e) =>
-                            setFattoriRischio(e.currentTarget.value)
-                        }
-                    />
-
-                    <Textarea
-                        size="md"
-                        radius="md"
-                        mb={20}
-                        label="Comorbità"
-                        value={comorbita}
-                        onChange={(e) => setComorbita(e.currentTarget.value)}
-                    />
-
-                    <Textarea
-                        size="md"
-                        radius="md"
-                        mb={20}
-                        label="Patologie pregresse"
-                        value={patologiePregresse}
-                        onChange={(e) =>
-                            setPatologiePregresse(e.currentTarget.value)
-                        }
-                    />
-
-                    <Select
-                        label="Medico curante"
-                        placeholder="Seleziona Medico"
-                        searchable
-                        size="md"
-                        mb={60}
-                        value={idMedico}
-                        data={
-                            medici?.map((m) => ({
-                                value: m.id,
-                                label: `${m.cognome} ${m.nome}`,
-                            })) ?? []
-                        }
-                        onChange={(val) => {
-                            if (val) {
-                                setIdMedico(val);
-                                const selected = medici?.find(
-                                    (m) => m.id === val
-                                );
-                                setMedicoDisplay(
-                                    selected
-                                        ? `${selected.cognome} ${selected.nome}`
-                                        : ""
-                                );
-                            }
-                        }}
-                    />
 
                     <PasswordInput
                         size="md"
@@ -247,7 +154,7 @@ export default function DetailsPaziente({
                         mb={20}
                         placeholder="Nuova Password"
                         rightSection={false}
-                        value={password}
+                        
                         onChange={(e) => setPassword(e.currentTarget.value)}
                     />
                     {isError && (
