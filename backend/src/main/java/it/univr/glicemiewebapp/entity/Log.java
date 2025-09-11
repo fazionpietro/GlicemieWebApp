@@ -12,13 +12,16 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ToString
-
 public class Log {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id_log", nullable = false)
     private UUID id;
+
+    @NotNull
+    @Column(name="tipo", nullable = false)
+    private String tipo;
+
 
     @NotNull
     @Column(name = "descrizione", nullable = false, length = Integer.MAX_VALUE)
@@ -50,6 +53,12 @@ public class Log {
 
     private void setTimestamp(Instant timestamp) {
         this.timestamp = timestamp;
+    }
+
+    @Override
+    public String toString() {
+        
+        return timestamp+" "+tipo+" --- "+descrizione;
     }
 
 }

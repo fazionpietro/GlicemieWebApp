@@ -133,8 +133,13 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<String> logout(HttpServletResponse response) {
+    public ResponseEntity<String> logout(HttpServletRequest request,
+                                     HttpServletResponse response) {
         try {
+            String token = extractTokenFromCookie(request);
+            log.warn("Logout – token estratto: {}", token);
+            ResponseEntity<String> svcResp = authenticationService.logout(token);
+
             // Invalida il cookie impostando maxAge a 0
             ResponseCookie cookie = ResponseCookie.from("token", "")
                     .httpOnly(true)

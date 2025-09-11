@@ -1,9 +1,7 @@
 package it.univr.glicemiewebapp.service;
 
 import it.univr.glicemiewebapp.dto.UtenteDTO;
-import it.univr.glicemiewebapp.entity.Paziente;
 import it.univr.glicemiewebapp.entity.Utente;
-import it.univr.glicemiewebapp.forms.UtenteForm;
 import it.univr.glicemiewebapp.repository.UtenteRepository;
 import lombok.extern.slf4j.Slf4j;
 
@@ -32,6 +30,8 @@ public class UtenteService {
 
     @Autowired
     private ObjectMapper mapper;
+
+    private LogService logger;
 
     public UtenteService(UtenteRepository repository, PasswordEncoder passwordEncoder) {
         this.repository = repository;
@@ -68,6 +68,7 @@ public class UtenteService {
             return new ResponseEntity<>(mapper.writeValueAsString(repository.findByRole("ROLE_MEDICO")), HttpStatus.OK);
 
         } catch (Exception e) {
+            logger.error(e.getMessage());
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "FAILED TO RETRIVE DATA");
         }
 
@@ -80,6 +81,8 @@ public class UtenteService {
             return new ResponseEntity<>("{message: \"UTENTE ELIMINATO\" }", HttpStatus.OK);
 
         } catch (Exception e) {
+            logger.error(e.getMessage());
+
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL SERVER ERROR");
         }
 
@@ -116,6 +119,8 @@ public class UtenteService {
             return new ResponseEntity<>("USER UPDATED", HttpStatus.OK);
 
         } catch (Exception e) {
+            logger.error(e.getMessage());
+
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }

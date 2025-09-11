@@ -28,6 +28,8 @@ public class JwtService {
     @Autowired
     private TokenBlacklistRepository tokenBlacklistRepository;
 
+    private LogService logger;
+
     public String generateToken(Utente utente) {
         String jti = UUID.randomUUID().toString();
 
@@ -108,12 +110,12 @@ public class JwtService {
 
             if (jti != null && !tokenBlacklistRepository.existsById(jti)) {
                 tokenBlacklistRepository.save(new BlacklistedToken(jti, expiry, Instant.now()));
-                log.info("Token {} aggiunto alla blacklist", jti);
+                logger.info("Token "+jti+" aggiunto alla blacklist");
 
             }
 
         } catch (JwtException e) {
-            log.warn("Tentativo di black-listare un token malformato");
+            logger.warn("Tentativo di black-listare un token malformato");
 
         }
 
@@ -128,7 +130,7 @@ public class JwtService {
     public void cleanupExpired() {
 
         tokenBlacklistRepository.deleteAllExpiredSince(Instant.now());
-        log.info("Cancellati {} token scaduti dalla blacklist");
+        logger.info("Cancellati {} token scaduti dalla blacklist");
 
     }
 
