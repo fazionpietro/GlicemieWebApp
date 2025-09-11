@@ -18,15 +18,13 @@ function LineC() {
       w="100%"
       data={data}
       dataKey="date"
-      withLegend
-      legendProps={{ verticalAlign: 'bottom', height: 50 }}
       withPointLabels
       series={[
         { name: 'Inserimenti_Glicemia', color: 'indigo.6' },
       ]}
       curveType="monotone"
       tickLine="x"
-      gridAxis="xy"
+      gridAxis="x"
       gridProps={{ yAxisId:"left" }}
       referenceLines={[{ y: 180, color: "red", label: 'soglia massima' }, { y: 70, color: "red", label: 'soglia minima' }]}
       yAxisProps={{

@@ -10,7 +10,7 @@ import {
     UnstyledButton,
 } from "@mantine/core";
 import { HeaderMegaMenu } from "../CommonFile/Header";
-import classes from "./StatsCard.module.css";
+import classes from "../CommonFile/StatsCard.module.css";
 import { FiUsers, FiActivity, FiAlignRight } from "react-icons/fi";
 import { FaUserMd } from "react-icons/fa";
 import floatingcss from "./AdminFloatingIndicator.module.css";

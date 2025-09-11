@@ -9,7 +9,7 @@ import Register from "./app/RegisterPage/Register";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import AdminPage from "./app/DashboardAdmin/DashboardAdmin";
 import MedicPage from "./app/MedicPage/MedicPage";
-import UserPage from "./app/UserPage/UserPage";
+import UserPage from "./app/DashboardUser/UserPage";
 import Unauthorized from "./routes/Unhautorized";
 import { AuthProvider } from "./context/AuthContext";
 import { ProtectedRoute } from "./routes/ProtectedRoute";
