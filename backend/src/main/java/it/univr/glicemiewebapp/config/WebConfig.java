@@ -1,4 +1,4 @@
-package it.univr.glicemiewebapp;
+package it.univr.glicemiewebapp.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
