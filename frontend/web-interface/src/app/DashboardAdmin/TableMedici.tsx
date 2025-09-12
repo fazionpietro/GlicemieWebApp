@@ -8,7 +8,7 @@ import {
     Table,
     Text,
 } from "@mantine/core";
-import { IconTrash } from "@tabler/icons-react";
+import { IconPencil, IconTrash } from "@tabler/icons-react";
 import type { Medico, Paziente } from "../type/DataType";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -17,24 +17,21 @@ import { modals, ModalsProvider } from "@mantine/modals";
 import RegisterPaziente from "./RegisterPaziente";
 import { useDisclosure } from "@mantine/hooks";
 import DetailsPaziente from "./DetailsPaziente";
+import { RegisterMedico } from "./RegisterMedico";
+import DetailsMedico from "./DetailsMedico";
 
 type Props = {
-    pazienti: Paziente[] | null;
     medici: Medico[] | null;
-    fetchPazienti: () => void;
     fetchMedici: () => void;
 };
 
-export default function TablePazienti({
-    pazienti,
-    medici,
-    fetchPazienti,
-}: Props) {
-    const [didFetch, setDidFetch] = useState(false);
-    const [openedRegister, { open: openRegister, close: closeRegister }] =
-        useDisclosure(false);
+export function TableMedici({ medici, fetchMedici }: Props) {
+    const [opened, { open, close }] = useDisclosure(false);
     const [openedDel, { open: openDel, close: closeDel }] =
         useDisclosure(false);
+
+    console.log(medici);
+    console.log(fetchMedici);
 
     const handleDelete = async (id: string) => {
         console.log("Deleting patient with ID:", id);
@@ -49,18 +46,12 @@ export default function TablePazienti({
         })
             .then((res) => {
                 console.log(res);
-                fetchPazienti()
+                fetchMedici()
             })
             .catch((err) => {
                 console.error(err);
             });
     };
-
-    useEffect(() => {
-        if (!didFetch) {
-            setDidFetch(true);
-        }
-    }, []);
 
     const openDeleteModal = (id: string) =>
         modals.openConfirmModal({
@@ -86,9 +77,11 @@ export default function TablePazienti({
             },
         });
 
+
+
     return (
         <ModalsProvider>
-            <Paper withBorder radius="md" style={{ overflow: "hidden" }}>
+            <Paper withBorder radius={"md"} style={{ overflow: "hidden" }}>
                 <ScrollArea mah={"40vh"} type="always" offsetScrollbars>
                     <Table
                         highlightOnHover
@@ -102,7 +95,7 @@ export default function TablePazienti({
                         <Table.Thead>
                             <Table.Tr>
                                 <Table.Th style={{ textAlign: "left" }}>
-                                    Paziente
+                                    Medico
                                 </Table.Th>
                                 <Table.Th style={{ textAlign: "left" }}>
                                     Email
@@ -112,34 +105,31 @@ export default function TablePazienti({
                                 </Table.Th>
                                 <Table.Th style={{ textAlign: "right" }}>
                                     <Modal
-                                        opened={openedRegister}
+                                        opened={opened}
                                         centered
                                         onClose={() => {
-                                            fetchPazienti();
-                                            closeRegister();
+                                            fetchMedici();
+                                            close();
                                         }}
                                         radius={"md"}
                                         size="auto"
                                     >
-                                        <RegisterPaziente
+                                        <RegisterMedico
                                             onSuccess={() => {
-                                                fetchPazienti();
-                                                closeRegister();
+                                                fetchMedici();
+                                                close();
                                             }}
                                         />
                                     </Modal>
 
-                                    <Button
-                                        variant="filled"
-                                        onClick={openRegister}
-                                    >
-                                        Aggiungi paziente
+                                    <Button variant="filled" onClick={open}>
+                                        Aggiungi medico
                                     </Button>
                                 </Table.Th>
                             </Table.Tr>
                         </Table.Thead>
                         <Table.Tbody>
-                            {pazienti?.map((item) => (
+                            {medici?.map((item) => (
                                 <Table.Tr key={item.id}>
                                     <Table.Td style={{ textAlign: "left" }}>
                                         <Group gap="sm">
@@ -151,24 +141,22 @@ export default function TablePazienti({
                                     <Table.Td style={{ textAlign: "left" }}>
                                         <Group gap="sm">
                                             <Text fz="sm" fw={500}>
-                                                {item.email}
+                                                {`${item.email}`}
                                             </Text>
                                         </Group>
                                     </Table.Td>
                                     <Table.Td style={{ textAlign: "left" }}>
                                         <Group gap="sm">
                                             <Text fz="sm" fw={500}>
-                                                {item.dataNascita}
+                                                {`${item.dataNascita}`}
                                             </Text>
                                         </Group>
                                     </Table.Td>
-                                    <Table.Td style={{ textAlign: "left" }}>
+                                    <Table.Td>
                                         <Group gap={0} justify="flex-end">
-                                            <DetailsPaziente
-                                                paziente={item}
-                                                medici={medici}
-                                                fetchMedici={fetchPazienti}
-                                                fetchPazienti={fetchPazienti}
+                                            <DetailsMedico
+                                                medico={item}
+                                                fetchMedici={fetchMedici}
                                             />
 
                                             <div>
@@ -192,6 +180,8 @@ export default function TablePazienti({
                                                     />
                                                 </ActionIcon>
                                             </div>
+
+                                            
                                         </Group>
                                     </Table.Td>
                                 </Table.Tr>

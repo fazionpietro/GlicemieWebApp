@@ -5,6 +5,7 @@ import { IoIosAlert } from "react-icons/io";
 import { TbActivityHeartbeat } from "react-icons/tb";
 import { HiMiniArrowTrendingUp } from "react-icons/hi2";
 import { FiUsers } from "react-icons/fi";
+import { AlertTable ,ActivityTable } from './Tables';
 
 
 
@@ -76,10 +77,12 @@ export function LeadGrid() {
 
       <Grid columns={24}>
         <Grid.Col span={12}>
-
+          <h1>Alert Pazienti</h1>
+          <AlertTable />
         </Grid.Col>
         <Grid.Col span={12}>
-
+          <h1>Inserimenti Recenti</h1>
+          <ActivityTable />
         </Grid.Col>
         
       </Grid>

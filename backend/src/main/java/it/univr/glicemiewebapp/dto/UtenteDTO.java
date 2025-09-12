@@ -1,20 +1,23 @@
-package it.univr.glicemiewebapp.forms;
+package it.univr.glicemiewebapp.dto;
 
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Getter
 @Setter
 @ToString
-public class UtenteForm {
+public class UtenteDTO {
 
+    private UUID id;
     private String email;
-    private String password;
+    private String passwordHash;
     private String nome;
     private String cognome;
     private LocalDate dataNascita;
+    
 
 }

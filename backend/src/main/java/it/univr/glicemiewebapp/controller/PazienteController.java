@@ -1,5 +1,6 @@
 package it.univr.glicemiewebapp.controller;
 
+import it.univr.glicemiewebapp.dto.PazienteUtenteDTO;
 import it.univr.glicemiewebapp.forms.DeleteRequest;
 import it.univr.glicemiewebapp.repository.AssunzioneRepository;
 import it.univr.glicemiewebapp.service.PazienteService;
@@ -17,6 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
 
 
 @Slf4j
@@ -32,7 +36,7 @@ public class PazienteController {
     
     @CrossOrigin
     @GetMapping("/all")
-    public ResponseEntity<String>  prova() {
+    public ResponseEntity<String> getAll() {
         
         try{
             return pazienteService.findAllComplete();
@@ -42,10 +46,15 @@ public class PazienteController {
         }
     }
 
-    @DeleteMapping("/delete")
-    public ResponseEntity<String> delete(@RequestBody DeleteRequest req) {
+    
+
+
+    @PutMapping("/update")
+    public ResponseEntity<String> putMethodName(@RequestBody PazienteUtenteDTO entity) {
+        
+
         try {
-            return pazienteService.deleteByID(req.getId());
+            return pazienteService.update(entity);
 
         } catch (ResponseStatusException e) {
 
