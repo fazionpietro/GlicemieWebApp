@@ -11,23 +11,23 @@ import jakarta.servlet.http.HttpServletResponse;
 @Component
 public class LoggingInterceptor implements HandlerInterceptor {
 
-    @Autowired
-    private LogService log;
+  @Autowired
+  private LogService log;
 
-    @Override
-    public boolean preHandle(HttpServletRequest request,
-            HttpServletResponse response,
-            Object handler) throws Exception {
+  @Override
+  public boolean preHandle(HttpServletRequest request,
+      HttpServletResponse response,
+      Object handler) throws Exception {
 
-        String ip = request.getRemoteAddr();
-        String userAgent = request.getHeader("User-Agent");
-        String endpoint = request.getRequestURI();
-        String method = request.getMethod();
+    String ip = request.getRemoteAddr();
+    String userAgent = request.getHeader("User-Agent");
+    String endpoint = request.getRequestURI();
+    String method = request.getMethod();
 
-        log.info(
-                "API Request from IP: " + ip + "\n" + "Endpoint: " + method + " " + endpoint + "\n"
-                        + "User-Agent: " + userAgent);
+    log.info(
+        "API Request from IP: " + ip + "\n" + "Endpoint: " + method + " " + endpoint + "\n"
+            + "User-Agent: " + userAgent);
 
-        return true;
-    }
+    return true;
+  }
 }

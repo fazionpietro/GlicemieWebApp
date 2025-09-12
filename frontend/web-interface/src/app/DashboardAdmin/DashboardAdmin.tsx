@@ -5,12 +5,7 @@ import {
   Text,
   Title,
   ScrollArea,
-  Group,
   Card,
-  Progress,
-  RingProgress,
-  Center,
-  Avatar,
   Box,
   FloatingIndicator,
   UnstyledButton,
@@ -40,7 +35,7 @@ const data = ["Gestione pazienti", "Gestione medici"];
 
 
 function DashboardAdmin() {
-  const [logs, setLogs] = useState<Log[] | null>(null)
+  const [logs, setLogs] = useState<Log[]>([])
 
   const [rootRef, setRootRef] = useState<HTMLDivElement | null>(null);
   const [active, setActive] = useState(0);
@@ -48,6 +43,7 @@ function DashboardAdmin() {
     Record<string, HTMLButtonElement | null>
   >({});
   const [didFetch, setDidFetch] = useState(false);
+  const [ws, setWs] = useState<WebSocket | null>(null);
 
   const [pazienti, setPazienti] = useState<Paziente[] | null>(null);
   const [medici, setMedici] = useState<Medico[] | null>(null);
@@ -113,6 +109,48 @@ function DashboardAdmin() {
     }
   }, []);
 
+
+
+
+  useEffect(() => {
+    const websocket = new WebSocket('ws://localhost:8080/ws/greet');
+    setWs(websocket);
+
+    websocket.onopen = () => console.log('Connected to WebSocket server');
+
+    websocket.onmessage = (event) => {
+      try {
+        console.log('Received WebSocket message:', event.data);
+        const newLog: Log[] = JSON.parse(event.data);
+        setLogs(prevLogs => {
+          if (JSON.stringify(prevLogs) !== JSON.stringify(newLog)) {
+            return [...prevLogs, ...newLog].reverse();
+          }
+          return prevLogs;
+        });
+      } catch (error) {
+        console.error('Error parsing WebSocket message:', error);
+      }
+    };
+    websocket.onerror = (error) => {
+      console.error('WebSocket error:', error);
+    };
+
+    websocket.onclose = () => console.log('Disconnected from WebSocket server');
+
+    return () => websocket.close();
+  }, []);
+
+
+
+
+
+
+
+
+
+
+
   return (
     <div>
       <HeaderMegaMenu />
@@ -130,10 +168,10 @@ function DashboardAdmin() {
                 <Text className={classes.label}>
                   Utenti Totali
                 </Text>
-                <Text fz="lg" className={classes.count}>
+                <Box fz="lg" className={classes.count}>
                   <span className={classes.value}>127</span>
                   <Text size="sm" c="green" mt={5}>+12% dal mese scorso</Text>
-                </Text>
+                </Box>
               </div>
             </Paper>
           </Grid.Col>
@@ -146,10 +184,10 @@ function DashboardAdmin() {
                 <Text className={classes.label}>
                   Medici Attivi
                 </Text>
-                <Text fz="lg" className={classes.count}>
+                <Box fz="lg" className={classes.count}>
                   <span className={classes.value}>23</span>
                   <Text size="sm" c="dimmed" mt={5}>Online negli ultimi 7 giorni</Text>
-                </Text>
+                </Box>
               </div>
             </Paper>
           </Grid.Col>
@@ -162,10 +200,10 @@ function DashboardAdmin() {
                 <Text className={classes.label}>
                   Rilevazioni/Giorno
                 </Text>
-                <Text fz="lg" className={classes.count}>
+                <Box fz="lg" className={classes.count}>
                   <span className={classes.value}>1,247</span>
                   <Text size="sm" c="dimmed" mt={5}>Media ultimi 30 giorni</Text>
-                </Text>
+                </Box>
               </div>
             </Paper>
           </Grid.Col>
@@ -178,10 +216,10 @@ function DashboardAdmin() {
                 <Text className={classes.label}>
                   Uptime Sistema
                 </Text>
-                <Text fz="lg" className={classes.count}>
+                <Box fz="lg" className={classes.count}>
                   <span className={classes.value}>99.9%</span>
                   <Text size="sm" c="dimmed" mt={5}>Ultimi 30 giorni</Text>
-                </Text>
+                </Box>
               </div>
             </Paper>
           </Grid.Col>
@@ -257,30 +295,44 @@ function DashboardAdmin() {
             <Card shadow="sm" padding="lg" radius="md" withBorder style={{ height: '52vh' }}>
               <Title order={3} mb="md">Logs</Title>
               <ScrollArea h="100%">
-                {logs?.map((item) => (
-                  <Box key={item.id} style={{
-                    marginBottom: '10px',
-                    textAlign: 'left',
-                    borderLeft: `3px solid ${item.tipo === 'INFO' ? '#4A90E2' :
-                      item.tipo === 'WARN' ? '#e2b74aff' :
-                        '#ff6b6b'
-                      }`,
-                    paddingLeft: '10px'
-                  }}>
-                    <Text size="xs" c="dimmed">
-                      {new Date(item.timestamp).toLocaleDateString()} {new Date(item.timestamp).toLocaleTimeString()}
-                    </Text>
-                    <Text size="sm">
-                      <Text span fw={700} c={
-                        item.tipo === 'INFO' ? 'blue' :
-                          item.tipo === 'WARN' ? 'yellow' :
-                            'red'
-                      }>
-                        {item.tipo}
-                      </Text> - {item.descrizione}
-                    </Text>
-                  </Box>
-                ))}
+                {logs.length === 0 ? (
+                  <Text key="no-logs" size="sm" c="dimmed" style={{ textAlign: 'center', padding: '20px' }}>
+                    Nessun log disponibile
+                  </Text>
+                ) : (
+                  logs.map((item) => {
+                    // Format the timestamp to a more readable format
+                    const formattedTime = new Date(item.timestamp).toLocaleString();
+
+                    return (
+                      <Box key={item.id} style={{
+                        marginBottom: '10px',
+                        textAlign: 'left',
+                        borderLeft: `3px solid ${item.tipo === 'INFO' ? '#4A90E2' :
+                          item.tipo === 'WARN' ? '#e2b74aff' :
+                            '#ff6b6b'
+                          }`,
+                        paddingLeft: '10px',
+                        backgroundColor: 'rgba(0, 0, 0, 0.02)',
+                        borderRadius: '4px',
+                        padding: '8px'
+                      }}>
+                        <Text size="xs" c="dimmed">
+                          {formattedTime}
+                        </Text>
+                        <Text size="sm">
+                          <Text span fw={700} c={
+                            item.tipo === 'INFO' ? 'blue' :
+                              item.tipo === 'WARN' ? 'yellow' :
+                                'red'
+                          }>
+                            {item.tipo}
+                          </Text> - {item.descrizione}
+                        </Text>
+                      </Box>
+                    );
+                  })
+                )}
               </ScrollArea>
             </Card>
           </Grid.Col>

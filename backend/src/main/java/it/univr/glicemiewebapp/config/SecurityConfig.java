@@ -68,10 +68,10 @@ public class SecurityConfig {
   public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
     configuration.setAllowCredentials(true);
-    configuration.setAllowedOriginPatterns(List.of("*")); // ← permette QUALSIASI origine
-    configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+    configuration.setAllowedOriginPatterns(List.of("*"));
+    configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "WEBSOCKET"));
     configuration.setAllowedHeaders(List.of("*"));
-    configuration.setAllowCredentials(true); // ← necessario se usi token in header o cookie
+    configuration.addExposedHeader("Authorization");
 
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
     source.registerCorsConfiguration("/**", configuration);
