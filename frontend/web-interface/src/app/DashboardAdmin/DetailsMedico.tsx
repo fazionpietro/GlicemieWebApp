@@ -147,7 +147,7 @@ export default function DetailsMedico({
           </Group>
 
           <DateInput
-            mb={"30"}
+            mb={"40"}
             size="md"
             radius="md"
             label="Data di nascita"

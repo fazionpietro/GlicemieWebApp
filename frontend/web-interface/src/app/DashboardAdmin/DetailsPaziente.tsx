@@ -179,7 +179,21 @@ export default function DetailsPaziente({
               value={cognome}
               onChange={(e) => setCognome(e.currentTarget.value)}
             />
-          </Group>
+          </Group> <DateInput
+            mb={"40"}
+            size="md"
+            radius="md"
+            label="Data di nascita"
+            placeholder="DD-MM-YYYY"
+            valueFormat="DD-MM-YYYY"
+            withAsterisk
+            value={dataNascita}
+            onChange={(d) => {
+              setDataNascita(d);
+              console.log(d);
+              setIsError("");
+            }}
+          />
 
           <Textarea
             size="md"
