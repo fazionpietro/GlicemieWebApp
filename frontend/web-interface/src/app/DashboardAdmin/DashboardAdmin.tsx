@@ -129,18 +129,25 @@ function DashboardAdmin() {
     websocket.onmessage = (event) => {
       try {
         console.log('Received WebSocket message:', event.data);
-        const newLog: Log[] = JSON.parse(event.data);
+        const newLogs: Log[] = JSON.parse(event.data);
+
         setLogs(prevLogs => {
-          if (JSON.stringify(prevLogs) !== JSON.stringify(newLog)) {
-            return [...prevLogs, ...newLog].reverse();
-          }
-          return prevLogs;
+          const logMap = new Map();
+
+          prevLogs.forEach(log => logMap.set(log.id, log));
+
+          newLogs.forEach(log => logMap.set(log.id, log));
+
+          const uniqueLogs = Array.from(logMap.values()).sort((a, b) =>
+            new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+          );
+
+          return uniqueLogs;
         });
       } catch (error) {
         console.error('Error parsing WebSocket message:', error);
       }
     };
-
     websocket.onerror = (error) => {
       console.error('WebSocket error:', error);
     };

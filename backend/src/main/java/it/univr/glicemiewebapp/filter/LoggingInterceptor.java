@@ -25,8 +25,7 @@ public class LoggingInterceptor implements HandlerInterceptor {
     String method = request.getMethod();
 
     log.info(
-        "API Request from IP: " + ip + "\n" + "Endpoint: " + method + " " + endpoint + "\n"
-            + "User-Agent: " + userAgent);
+        "API Request from IP: " + ip + " Endpoint: " + method + " " + endpoint + " User-Agent: " + userAgent);
 
     return true;
   }
