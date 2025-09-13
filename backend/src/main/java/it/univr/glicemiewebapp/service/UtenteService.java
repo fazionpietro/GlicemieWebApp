@@ -91,12 +91,10 @@ public class UtenteService {
   @Transactional
   public ResponseEntity<String> update(UtenteDTO up) {
 
-    log.info(up.toString());
-
     Utente u = repository.findById(up.getId())
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "DATABASE ERROR"));
 
-    logger.info("Modifing data of: " + u.toString());
+    logger.warn("Modifing data of: " + u.toString());
 
     try {
       log.info(up.toString());

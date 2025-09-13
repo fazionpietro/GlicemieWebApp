@@ -128,6 +128,7 @@ export default function TablePazienti({
                     size="auto"
                   >
                     <RegisterPaziente
+                      medici={medici}
                       onSuccess={() => {
                         fetchPazienti();
                         closeRegister();
