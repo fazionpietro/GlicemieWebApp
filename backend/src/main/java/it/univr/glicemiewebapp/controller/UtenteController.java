@@ -65,6 +65,7 @@ public class UtenteController {
   @DeleteMapping("/delete/{id}")
   public ResponseEntity<String> delete(@PathVariable UUID id) {
     try {
+      logger.warn("Attempt to delete: " + id);
       return utenteService.deleteByID(id);
 
     } catch (ResponseStatusException e) {

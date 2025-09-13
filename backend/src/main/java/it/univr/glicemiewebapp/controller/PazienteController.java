@@ -45,6 +45,7 @@ public class PazienteController {
   public ResponseEntity<String> putMethodName(@RequestBody PazienteUtenteDTO entity) {
 
     try {
+      logger.warn("Attempt to delete: " + entity.getId());
       return pazienteService.update(entity);
 
     } catch (ResponseStatusException e) {
