@@ -1,11 +1,15 @@
 import { useDisclosure } from '@mantine/hooks';
-import { Modal, Button } from '@mantine/core';
+import { NumberInput, Modal, Button } from '@mantine/core';
 import { JsonInput } from '@mantine/core';
+import { useState } from 'react';
+import axios, { AxiosError, type AxiosResponse} from 'axios';
+import {useAuth} from "../../context/AuthContext";
+
 
 function ModalSintomi() {
   const [opened, { open, close }] = useDisclosure(false);
 
-  return (
+return (
     <>
       <Modal opened={opened} onClose={close} title="Inserisci una descrizione dei sintomi" centered>
             <JsonInput
@@ -47,16 +51,65 @@ function ModalMedicinali() {
 
 function ModalGlicemia() {
   const [opened, { open, close }] = useDisclosure(false);
+  const [valore, setValore] = useState<number | undefined>(undefined);
+  const [isLoading, setIsLoading] = useState(false);
+  const {user}=useAuth();
+
+  async function inserisciRilevazione() {
+    if (valore === undefined){
+      alert("Inserisci un valore glicemico");
+      return;
+    }
+
+    if(!user){
+      return null;
+    }
+
+    setIsLoading(true);
+
+    try{
+      const response:AxiosResponse=await axios({
+        method:"post",
+        url:`${import.meta.env.VITE_API_KEY}api/rilevazioni/${user.id}`,
+        headers:{ "Content-Type":"application/json" },
+        params:{ valore:valore,},
+        withCredentials:true,
+      });
+
+      console.log("Rilevazione inserita:", response.data);
+      alert("Rilevazione inserita con successo");
+      
+      setValore(undefined);
+      close();
+    }catch(error){
+      const axiosError=error as AxiosError<string>;
+      console.error("Errore nell'inserimento della rilevazione:", axiosError);
+
+      if(axiosError.response?.status===400){
+        alert("dati non validi");
+      }else if(axiosError.response?.status===500){
+        alert("Errore del server. Riprova più tardi");
+      }else{
+        alert("Si è verificato un errore durante l'inserimento della rilevazione");
+      }
+    }finally{
+      setIsLoading(false);
+    }
+  }
+
   return (
     <>
       <Modal opened={opened} onClose={close} title="Inserisci Glicemia" centered>
-            <JsonInput
+            <NumberInput
                 size="xs"
                 radius="lg"
                 placeholder="Inserisci valore Glicemico qui"
                 w="100%"
+                min={0}
+                value={valore}
+                onChange={(v)=> setValore(typeof v === "number" ? v: undefined)}
             />
-            <button style={{marginTop:"20px"}}>invia</button>
+            <Button style={{marginTop:"20px"}} onClick={inserisciRilevazione}>invia</Button>
       </Modal>
 
       <Button fullWidth variant="default" onClick={open} mt="30">

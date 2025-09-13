@@ -1,19 +1,37 @@
 import { Table } from '@mantine/core';
+import {useAuth} from "../../context/AuthContext";
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
-const elements=[
-  {date: '01-01', Rilevazioni:60, livello:"basso"},
-  {date: '01-02', Rilevazioni:150, livello:"normale"},
-  {date: '01-03', Rilevazioni:170, livello:"normale"},
-  {date: '01-04', Rilevazioni:90, livello:"normale"},
-  {date: '01-05', Rilevazioni:70, livello:"basso"}
-];
+type Rilevazione = {
+  id:string;
+  valore:number;
+  timestamp: string;
+  livello: string;
+}
 
 function TableGlicemia() {
-  const rows = elements.map((element) => (
-    <Table.Tr key={element.date}>
-      <Table.Td style={{textAlign: 'left'}}>{element.date}</Table.Td>
-      <Table.Td style={{textAlign: 'left'}}>{element.Rilevazioni}</Table.Td>
-      <Table.Td style={{textAlign: 'left'}}>{element.livello}</Table.Td>
+  const {user}=useAuth();
+  const [rilevazioni, setRilevazioni]= useState<Rilevazione[]>([]);
+
+  useEffect(() => {
+    if(!user) return;
+
+    axios.get(`${import.meta.env.VITE_API_KEY}api/rilevazioni/dto/${user.id}`, { withCredentials: true })
+    .then((res)=>{
+      console.log(res.data)
+      setRilevazioni(res.data.sort((a:Rilevazione,b:Rilevazione)=>new Date(b.timestamp).getTime()-new Date(a.timestamp).getTime()));
+    })
+    .catch((err)=>{
+      console.error("Errore nel caricamento rilevazioni:", err);
+    });
+  },[user]);
+
+  const rows = rilevazioni.map((r) => (
+    <Table.Tr key={r.id}>
+      <Table.Td style={{textAlign: 'left'}}>{new Date(r.timestamp).toLocaleDateString()}</Table.Td>
+      <Table.Td style={{textAlign: 'left'}}>{r.valore}</Table.Td>
+      <Table.Td style={{textAlign: 'left'}}>{r.livello}</Table.Td>
     </Table.Tr>
   ));
 

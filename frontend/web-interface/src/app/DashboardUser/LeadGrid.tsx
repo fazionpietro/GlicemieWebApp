@@ -1,4 +1,4 @@
-import { Grid, Card} from '@mantine/core';
+import { Grid} from '@mantine/core';
 import LineC from './LineChart';
 import ContactMedic from './Contact';
 import {ModalSintomi, ModalMedicinali, ModalGlicemia} from './Modal';
