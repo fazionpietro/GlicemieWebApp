@@ -6,28 +6,30 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Getter(AccessLevel.PUBLIC)
 @Setter(AccessLevel.PRIVATE)
 @ToString
 public class PazienteForm extends UtenteForm {
 
-    private String fattoriRischio;
-    private String comorbita;
-    private String patologiePregresse;
-    private String ruolo;
+  private String fattoriRischio;
+  private String comorbita;
+  private String patologiePregresse;
+  private String ruolo;
+  private UUID idMedico;
 
+  public PazienteForm(String email, String passwordHash, String nome, String cognome,
+      String fattoriRischio, String comorbita,
+      String patologiePregresse, LocalDate dataNascita, UUID idMEdico) {
+    super(email, passwordHash, nome, cognome, dataNascita);
 
-    public PazienteForm(String email, String passwordHash, String nome, String cognome,
-                        String fattoriRischio, String comorbita,
-                        String patologiePregresse, LocalDate dataNascita) {
-        super(email, passwordHash, nome, cognome, dataNascita);
+    this.fattoriRischio = fattoriRischio;
+    this.comorbita = comorbita;
+    this.patologiePregresse = patologiePregresse;
+    this.ruolo = "ROLE_PAZIENTE";
+    this.idMedico = idMedico;
 
-        this.fattoriRischio = fattoriRischio;
-        this.comorbita = comorbita;
-        this.patologiePregresse = patologiePregresse;
-        this.ruolo="ROLE_PAZIENTE";
-
-    }
+  }
 
 }

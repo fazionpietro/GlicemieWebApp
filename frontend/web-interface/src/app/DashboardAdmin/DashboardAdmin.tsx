@@ -1,52 +1,177 @@
 import {
-    Container,
-    FloatingIndicator,
-    Grid,
-    Paper,
-    Text,
-    UnstyledButton,
+  Container,
+  Grid,
+  Paper,
+  Text,
+  Title,
+  ScrollArea,
+  Card,
+  Box,
+  FloatingIndicator,
+  UnstyledButton,
+  useMantineTheme,
 } from "@mantine/core";
 import { HeaderMegaMenu } from "../CommonFile/Header";
 import classes from "../CommonFile/StatsCard.module.css";
 import { FiUsers, FiActivity, FiAlignRight } from "react-icons/fi";
 import { FaUserMd } from "react-icons/fa";
-import floatingcss from "./AdminFloatingIndicator.module.css";
 import { useEffect, useState } from "react";
-import TablePazienti from "./TablePazienti";
 import axios from "axios";
 import type { Medico, Paziente } from "../type/DataType";
-import {  TableMedici } from "./TableMedici";
+import TablePazienti from "./TablePazienti";
+import { TableMedici } from "./TableMedici";
+import floatingcss from "./AdminFloatingIndicator.module.css";
+import { useMediaQuery } from "@mantine/hooks";
 
-const PRIMARY_COL_HEIGHT = "50vh";
 
-const data = ["Gestione pazienti", "Gestione medici", "Logs report"];
+type Log = {
+  id: string;        // UUID
+  tipo: string;
+  descrizione: string;
+  timestamp: string; // ISO-8601
+};
+
+
+
+const data = ["Gestione pazienti", "Gestione medici"];
+
+
+
 function DashboardAdmin() {
-    const [rootRef, setRootRef] = useState<HTMLDivElement | null>(null);
-    const [active, setActive] = useState(0);
-    const [controlsRefs, setControlsRefs] = useState<
-        Record<string, HTMLButtonElement | null>
-    >({});
-    const [didFetch, setDidFetch] = useState(false);
+  const theme = useMantineTheme();
+  const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`);
+  const isTablet = useMediaQuery(`(max-width: ${theme.breakpoints.md})`);
+  const [logs, setLogs] = useState<Log[]>([])
 
-    const [pazienti, setPazienti] = useState<Paziente[] | null>(null);
-    const [medici, setMedici] = useState<Medico[] | null>(null);
+  const [rootRef, setRootRef] = useState<HTMLDivElement | null>(null);
+  const [active, setActive] = useState(0);
+  const [controlsRefs, setControlsRefs] = useState<
+    Record<string, HTMLButtonElement | null>
+  >({});
+  const [didFetch, setDidFetch] = useState(false);
+  const [ws, setWs] = useState<WebSocket | null>(null);
 
-    const setControlRef = (index: number) => (node: HTMLButtonElement) => {
-        controlsRefs[index] = node;
-        setControlsRefs(controlsRefs);
+  const [pazienti, setPazienti] = useState<Paziente[] | null>(null);
+  const [medici, setMedici] = useState<Medico[] | null>(null);
+
+  const setControlRef = (index: number) => (node: HTMLButtonElement) => {
+    controlsRefs[index] = node;
+    setControlsRefs(controlsRefs);
+  };
+
+  const controls = data.map((item, index) => (
+    <UnstyledButton
+      key={item}
+      className={floatingcss.control}
+      ref={setControlRef(index)}
+      onClick={() => setActive(index)}
+      mod={{ active: active === index }}
+    >
+      <span className={floatingcss.controlLabel}>{item}</span>
+    </UnstyledButton>
+  ));
+
+  async function fetchPazienti() {
+    await axios({
+      method: "GET",
+      url: `${import.meta.env.VITE_API_KEY}api/pazienti/all`,
+      headers: {
+        "Content-Type": "application/json",
+        withCredentials: true,
+      },
+    })
+      .then((res) => {
+        setPazienti(res.data);
+        console.log(pazienti);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }
+
+  async function fetchMedici() {
+    await axios({
+      method: "GET",
+      url: `${import.meta.env.VITE_API_KEY}api/utenti/medici/all`,
+      headers: {
+        "Content-Type": "application/json",
+        withCredentials: true,
+      },
+    })
+      .then((res) => {
+        setMedici(res.data);
+        console.log(medici);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }
+
+  useEffect(() => {
+    if (!didFetch) {
+      fetchPazienti();
+      fetchMedici();
+      setDidFetch(true);
+    }
+  }, []);
+
+
+
+
+
+
+  useEffect(() => {
+    const websocket = new WebSocket('ws://localhost:8080/ws/logs');
+    setWs(websocket);
+
+    websocket.onopen = () => console.log('Connected to WebSocket server');
+
+    websocket.onmessage = (event) => {
+      try {
+        console.log('Received WebSocket message:', event.data);
+        const newLogs: Log[] = JSON.parse(event.data);
+
+        setLogs(prevLogs => {
+          const logMap = new Map();
+
+          prevLogs.forEach(log => logMap.set(log.id, log));
+
+          newLogs.forEach(log => logMap.set(log.id, log));
+
+          const uniqueLogs = Array.from(logMap.values()).sort((a, b) =>
+            new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+          );
+
+          return uniqueLogs;
+        });
+      } catch (error) {
+        console.error('Error parsing WebSocket message:', error);
+      }
+    };
+    websocket.onerror = (error) => {
+      console.error('WebSocket error:', error);
     };
 
-    const controls = data.map((item, index) => (
-        <UnstyledButton
-            key={item}
-            className={floatingcss.control}
-            ref={setControlRef(index)}
-            onClick={() => setActive(index)}
-            mod={{ active: active === index }}
-        >
-            <span className={floatingcss.controlLabel}>{item}</span>
-        </UnstyledButton>
-    ));
+    websocket.onclose = () => console.log('Disconnected from WebSocket server');
+
+    // Gestione della chiusura della pagina/componente
+    const handleBeforeUnload = () => {
+      if (websocket.readyState === WebSocket.OPEN) {
+        websocket.close();
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    // Cleanup function
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+
+      if (websocket.readyState === WebSocket.OPEN) {
+        websocket.close();
+      }
+    };
+  }, []);
 
     async function fetchPazienti() {
         await axios({
@@ -92,120 +217,145 @@ function DashboardAdmin() {
         }
     }, []);
 
-    return (
-        <div>
-            <HeaderMegaMenu />
-            <Container fluid my={40}>
-                <Grid gutter="md" mb={100}>
-                    {/* Le tue card statistiche */}
-                    <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
-                        <Paper className={classes.stat} radius="md" shadow="md">
-                            <div className={classes.icon}>
-                                <FiUsers size={48} color="#4A90E2" />
-                            </div>
-                            <div>
-                                <Text className={classes.label}>
-                                    Pazienti Totali
-                                </Text>
-                                <Text fz="lg" className={classes.count}>
-                                    <span className={classes.value}>12</span>
-                                </Text>
-                            </div>
-                        </Paper>
-                    </Grid.Col>
-                    <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
-                        <Paper className={classes.stat} radius="md" shadow="md">
-                            <div className={classes.icon}>
-                                <FaUserMd size={48} color="#4ae293ff" />
-                            </div>
-                            <div>
-                                <Text className={classes.label}>
-                                    Medici Totali
-                                </Text>
-                                <Text fz="lg" className={classes.count}>
-                                    <span className={classes.value}>12</span>
-                                </Text>
-                            </div>
-                        </Paper>
-                    </Grid.Col>
-                    <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
-                        <Paper className={classes.stat} radius="md" shadow="md">
-                            <div className={classes.icon}>
-                                <FiActivity size={48} color="#e2b74aff" />
-                            </div>
-                            <div>
-                                <Text className={classes.label}>
-                                    Rilevazioni giornaliere
-                                </Text>
-                                <Text fz="lg" className={classes.count}>
-                                    <span className={classes.value}>12</span>
-                                </Text>
-                            </div>
-                        </Paper>
-                    </Grid.Col>
-                    <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
-                        <Paper className={classes.stat} radius="md" shadow="md">
-                            <div className={classes.icon}>
-                                <FiAlignRight size={48} color="#704ae2ff" />
-                            </div>
-                            <div>
-                                <Text className={classes.label}>
-                                    Log giornalieri
-                                </Text>
-                                <Text fz="lg" className={classes.count}>
-                                    <span className={classes.value}>12</span>
-                                </Text>
-                            </div>
-                        </Paper>
-                    </Grid.Col>
-                </Grid>
-
-                <Grid gutter="md" pt={60}>
-                    <Grid.Col span={12}>
-                        <div
-                            className={floatingcss.root}
-                            ref={setRootRef}
-                            style={{ marginBottom: "20px" }}
-                        >
-                            {controls}
-                            <FloatingIndicator
-                                target={controlsRefs[active]}
-                                parent={rootRef}
-                                className={floatingcss.indicator}
-                            />
-                        </div>
-                    </Grid.Col>
-
-                    
 
 
 
-                    {active == 0 ? (
-                        <Grid.Col span={12}>
-                            <TablePazienti
-                                pazienti={pazienti}
-                                fetchPazienti={fetchPazienti}
-                                medici={medici}
-                                fetchMedici={fetchMedici}
-                            ></TablePazienti>
-                        </Grid.Col>
-                    ) : ("")}
-                    
-                    {active == 1 ? (
-                        <Grid.Col span={12}>
-                            <TableMedici
-                                medici={medici}
-                                fetchMedici={fetchMedici}
-                            />
-                        </Grid.Col>
-                    ) : ("")}
-                    
 
 
-                </Grid>
-            </Container>
-        </div>
-    );
+
+
+
+  return (
+    <div>
+      <HeaderMegaMenu />
+      <Container fluid p={isMobile ? "xs" : "md"} my={{ base: 20, md: 40 }}>
+
+        {/* Stat Cards - Modifica responsive */}
+        <Grid gutter={isMobile ? "xs" : "md"} mb={{ base: 30, md: 70 }}>
+          {[
+            { icon: <FiUsers size={isMobile ? 32 : 48} color="#4A90E2" />, label: "Utenti Totali", value: "127" },
+            { icon: <FaUserMd size={isMobile ? 32 : 48} color="#4ae293ff" />, label: "Medici Attivi", value: "23" },
+            { icon: <FiActivity size={isMobile ? 32 : 48} color="#e2b74aff" />, label: "Rilevazioni/Giorno", value: "1,247" },
+            { icon: <FiAlignRight size={isMobile ? 32 : 48} color="#704ae2ff" />, label: "Uptime Sistema", value: "99.9%" },
+          ].map((stat, index) => (
+            <Grid.Col key={index} span={{ base: 6, sm: 6, md: 6, lg: 3 }}>
+              <Paper className={classes.stat} radius="md" shadow="md" p={isMobile ? "xs" : "md"}>
+                <div className={classes.icon}>
+                  {stat.icon}
+                </div>
+                <div>
+                  <Text className={classes.label} size={isMobile ? "xs" : "sm"}>
+                    {stat.label}
+                  </Text>
+                  <Box fz={isMobile ? "md" : "lg"} className={classes.count}>
+                    <span className={classes.value}>{stat.value}</span>
+                    <Text size={isMobile ? "xs" : "sm"} c="dimmed" mt={5}>
+                      {index === 0 ? "+12% dal mese scorso" :
+                        index === 1 ? "Online negli ultimi 7 giorni" :
+                          index === 2 ? "Media ultimi 30 giorni" : "Ultimi 30 giorni"}
+                    </Text>
+                  </Box>
+                </div>
+              </Paper>
+            </Grid.Col>
+          ))}
+        </Grid>
+
+        <Grid gutter={isMobile ? "md" : "xl"} align="flex-start">
+          {/* Sezione sinistra - Gestione Utenti e Tables */}
+          <Grid.Col span={{ base: 12, lg: 8 }}
+          >
+            <Card shadow="sm" padding={isMobile ? "md" : "lg"} radius="md" withBorder mb="md" h={isMobile ? "400px" : "55vh"}>
+              <Title order={isMobile ? 4 : 3} mb="md">Gestione Utenti</Title>
+              <Text size={isMobile ? "xs" : "sm"} c="dimmed" mb="xl">
+                Panoramica e gestione degli utenti del sistema
+              </Text>
+
+              <Box
+                className={floatingcss.root}
+                ref={setRootRef}
+                style={{ marginBottom: "20px" }}
+                mt={isMobile ? "md" : 45}
+              >
+                {controls}
+                <FloatingIndicator
+                  target={controlsRefs[active]}
+                  parent={rootRef}
+                  className={floatingcss.indicator}
+                />
+              </Box>
+
+              {active == 0 ? (
+                <TablePazienti
+                  pazienti={pazienti}
+                  fetchPazienti={fetchPazienti}
+                  medici={medici}
+                  fetchMedici={fetchMedici}
+                />
+              ) : (
+                <TableMedici
+                  medici={medici}
+                  fetchMedici={fetchMedici}
+                />
+              )}
+            </Card>
+          </Grid.Col>
+
+          {/* Sezione destra - Logs */}
+          <Grid.Col span={{ base: 12, lg: 4 }}>
+            <Card
+              shadow="sm"
+              padding={isMobile ? "md" : "lg"}
+              radius="md"
+              withBorder
+              h={isMobile ? "400px" : "55vh"}
+            >
+              <Title order={isMobile ? 4 : 3} mb="md">Logs</Title>
+              <ScrollArea h="100%">
+                {logs.length === 0 ? (
+                  <Text key="no-logs" size="sm" c="dimmed" style={{ textAlign: 'center', padding: '20px' }}>
+                    Nessun log disponibile
+                  </Text>
+                ) : (
+                  logs.map((item) => {
+                    const formattedTime = new Date(item.timestamp).toLocaleString();
+
+                    return (
+                      <Box key={item.id} style={{
+                        marginBottom: '10px',
+                        textAlign: 'left',
+                        borderLeft: `3px solid ${item.tipo === 'INFO' ? '#4A90E2' :
+                          item.tipo === 'WARN' ? '#e2b74aff' :
+                            '#ff6b6b'
+                          }`,
+                        paddingLeft: '10px',
+                        backgroundColor: 'rgba(0, 0, 0, 0.02)',
+                        borderRadius: '4px',
+                        padding: '8px'
+                      }}>
+                        <Text size="xs" c="dimmed">
+                          {formattedTime}
+                        </Text>
+                        <Text size="sm">
+                          <Text span fw={700} c={
+                            item.tipo === 'INFO' ? 'blue' :
+                              item.tipo === 'WARN' ? 'yellow' :
+                                'red'
+                          }>
+                            {item.tipo}
+                          </Text> - {item.descrizione}
+                        </Text>
+                      </Box>
+                    );
+                  })
+                )}
+              </ScrollArea>
+            </Card>
+          </Grid.Col>
+        </Grid>
+      </Container>
+    </div>
+  );
 }
 
 export default DashboardAdmin;
