@@ -9,6 +9,7 @@ import {
   Box,
   FloatingIndicator,
   UnstyledButton,
+  useMantineTheme,
 } from "@mantine/core";
 import { HeaderMegaMenu } from "../CommonFile/Header";
 import classes from "./StatsCard.module.css";
@@ -20,6 +21,8 @@ import type { Medico, Paziente } from "../type/DataType";
 import TablePazienti from "./TablePazienti";
 import { TableMedici } from "./TableMedici";
 import floatingcss from "./AdminFloatingIndicator.module.css";
+import { useMediaQuery } from "@mantine/hooks";
+
 
 type Log = {
   id: string;        // UUID
@@ -35,6 +38,9 @@ const data = ["Gestione pazienti", "Gestione medici"];
 
 
 function DashboardAdmin() {
+  const theme = useMantineTheme();
+  const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`);
+  const isTablet = useMediaQuery(`(max-width: ${theme.breakpoints.md})`);
   const [logs, setLogs] = useState<Log[]>([])
 
   const [rootRef, setRootRef] = useState<HTMLDivElement | null>(null);
@@ -112,8 +118,10 @@ function DashboardAdmin() {
 
 
 
+
+
   useEffect(() => {
-    const websocket = new WebSocket('ws://localhost:8080/ws/greet');
+    const websocket = new WebSocket('ws://localhost:8080/ws/logs');
     setWs(websocket);
 
     websocket.onopen = () => console.log('Connected to WebSocket server');
@@ -132,13 +140,30 @@ function DashboardAdmin() {
         console.error('Error parsing WebSocket message:', error);
       }
     };
+
     websocket.onerror = (error) => {
       console.error('WebSocket error:', error);
     };
 
     websocket.onclose = () => console.log('Disconnected from WebSocket server');
 
-    return () => websocket.close();
+    // Gestione della chiusura della pagina/componente
+    const handleBeforeUnload = () => {
+      if (websocket.readyState === WebSocket.OPEN) {
+        websocket.close();
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    // Cleanup function
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+
+      if (websocket.readyState === WebSocket.OPEN) {
+        websocket.close();
+      }
+    };
   }, []);
 
 
@@ -154,111 +179,54 @@ function DashboardAdmin() {
   return (
     <div>
       <HeaderMegaMenu />
-      <Container fluid my={40}>
+      <Container fluid p={isMobile ? "xs" : "md"} my={{ base: 20, md: 40 }}>
 
-
-        {/* Statistiche principali */}
-        <Grid gutter="md" mb={70}>
-          <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
-            <Paper className={classes.stat} radius="md" shadow="md">
-              <div className={classes.icon}>
-                <FiUsers size={48} color="#4A90E2" />
-              </div>
-              <div>
-                <Text className={classes.label}>
-                  Utenti Totali
-                </Text>
-                <Box fz="lg" className={classes.count}>
-                  <span className={classes.value}>127</span>
-                  <Text size="sm" c="green" mt={5}>+12% dal mese scorso</Text>
-                </Box>
-              </div>
-            </Paper>
-          </Grid.Col>
-          <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
-            <Paper className={classes.stat} radius="md" shadow="md">
-              <div className={classes.icon}>
-                <FaUserMd size={48} color="#4ae293ff" />
-              </div>
-              <div>
-                <Text className={classes.label}>
-                  Medici Attivi
-                </Text>
-                <Box fz="lg" className={classes.count}>
-                  <span className={classes.value}>23</span>
-                  <Text size="sm" c="dimmed" mt={5}>Online negli ultimi 7 giorni</Text>
-                </Box>
-              </div>
-            </Paper>
-          </Grid.Col>
-          <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
-            <Paper className={classes.stat} radius="md" shadow="md">
-              <div className={classes.icon}>
-                <FiActivity size={48} color="#e2b74aff" />
-              </div>
-              <div>
-                <Text className={classes.label}>
-                  Rilevazioni/Giorno
-                </Text>
-                <Box fz="lg" className={classes.count}>
-                  <span className={classes.value}>1,247</span>
-                  <Text size="sm" c="dimmed" mt={5}>Media ultimi 30 giorni</Text>
-                </Box>
-              </div>
-            </Paper>
-          </Grid.Col>
-          <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
-            <Paper className={classes.stat} radius="md" shadow="md">
-              <div className={classes.icon}>
-                <FiAlignRight size={48} color="#704ae2ff" />
-              </div>
-              <div>
-                <Text className={classes.label}>
-                  Uptime Sistema
-                </Text>
-                <Box fz="lg" className={classes.count}>
-                  <span className={classes.value}>99.9%</span>
-                  <Text size="sm" c="dimmed" mt={5}>Ultimi 30 giorni</Text>
-                </Box>
-              </div>
-            </Paper>
-          </Grid.Col>
+        {/* Stat Cards - Modifica responsive */}
+        <Grid gutter={isMobile ? "xs" : "md"} mb={{ base: 30, md: 70 }}>
+          {[
+            { icon: <FiUsers size={isMobile ? 32 : 48} color="#4A90E2" />, label: "Utenti Totali", value: "127" },
+            { icon: <FaUserMd size={isMobile ? 32 : 48} color="#4ae293ff" />, label: "Medici Attivi", value: "23" },
+            { icon: <FiActivity size={isMobile ? 32 : 48} color="#e2b74aff" />, label: "Rilevazioni/Giorno", value: "1,247" },
+            { icon: <FiAlignRight size={isMobile ? 32 : 48} color="#704ae2ff" />, label: "Uptime Sistema", value: "99.9%" },
+          ].map((stat, index) => (
+            <Grid.Col key={index} span={{ base: 6, sm: 6, md: 6, lg: 3 }}>
+              <Paper className={classes.stat} radius="md" shadow="md" p={isMobile ? "xs" : "md"}>
+                <div className={classes.icon}>
+                  {stat.icon}
+                </div>
+                <div>
+                  <Text className={classes.label} size={isMobile ? "xs" : "sm"}>
+                    {stat.label}
+                  </Text>
+                  <Box fz={isMobile ? "md" : "lg"} className={classes.count}>
+                    <span className={classes.value}>{stat.value}</span>
+                    <Text size={isMobile ? "xs" : "sm"} c="dimmed" mt={5}>
+                      {index === 0 ? "+12% dal mese scorso" :
+                        index === 1 ? "Online negli ultimi 7 giorni" :
+                          index === 2 ? "Media ultimi 30 giorni" : "Ultimi 30 giorni"}
+                    </Text>
+                  </Box>
+                </div>
+              </Paper>
+            </Grid.Col>
+          ))}
         </Grid>
 
-        <Grid gutter="xl">
+        <Grid gutter={isMobile ? "md" : "xl"} align="flex-start">
           {/* Sezione sinistra - Gestione Utenti e Tables */}
-          <Grid.Col span={{ base: 12, lg: 8 }}>
-            <Card shadow="sm" padding="lg" radius="md" withBorder mb="md">
-              <Title order={3} mb="md">Gestione Utenti</Title>
-              <Text size="sm" c="dimmed" mb="lg">
+          <Grid.Col span={{ base: 12, lg: 8 }}
+          >
+            <Card shadow="sm" padding={isMobile ? "md" : "lg"} radius="md" withBorder mb="md" h={isMobile ? "400px" : "55vh"}>
+              <Title order={isMobile ? 4 : 3} mb="md">Gestione Utenti</Title>
+              <Text size={isMobile ? "xs" : "sm"} c="dimmed" mb="xl">
                 Panoramica e gestione degli utenti del sistema
               </Text>
 
-              <Grid>
-                <Grid.Col span={4}>
-                  <Box style={{ textAlign: 'center' }}>
-                    <Text size="xl" fw={700}>89</Text>
-                    <Text size="sm">Pazienti</Text>
-                  </Box>
-                </Grid.Col>
-                <Grid.Col span={4}>
-                  <Box style={{ textAlign: 'center' }}>
-                    <Text size="xl" fw={700}>23</Text>
-                    <Text size="sm">Medici</Text>
-                  </Box>
-                </Grid.Col>
-                <Grid.Col span={4}>
-                  <Box style={{ textAlign: 'center' }}>
-                    <Text size="xl" fw={700}>3</Text>
-                    <Text size="sm">Admin</Text>
-                  </Box>
-                </Grid.Col>
-              </Grid>
               <Box
                 className={floatingcss.root}
                 ref={setRootRef}
                 style={{ marginBottom: "20px" }}
-                mt={45}
+                mt={isMobile ? "md" : 45}
               >
                 {controls}
                 <FloatingIndicator
@@ -267,33 +235,33 @@ function DashboardAdmin() {
                   className={floatingcss.indicator}
                 />
               </Box>
+
               {active == 0 ? (
-                <Grid.Col span={12}>
-                  <TablePazienti
-                    pazienti={pazienti}
-                    fetchPazienti={fetchPazienti}
-                    medici={medici}
-                    fetchMedici={fetchMedici}
-                  ></TablePazienti>
-                </Grid.Col>
+                <TablePazienti
+                  pazienti={pazienti}
+                  fetchPazienti={fetchPazienti}
+                  medici={medici}
+                  fetchMedici={fetchMedici}
+                />
               ) : (
-                <Grid.Col span={12}>
-                  <TableMedici
-                    medici={medici}
-                    fetchMedici={fetchMedici}
-                  />
-                </Grid.Col>
+                <TableMedici
+                  medici={medici}
+                  fetchMedici={fetchMedici}
+                />
               )}
-
             </Card>
-
-
           </Grid.Col>
 
-          {/* Sezione destra - Logs con testo allineato a sinistra */}
+          {/* Sezione destra - Logs */}
           <Grid.Col span={{ base: 12, lg: 4 }}>
-            <Card shadow="sm" padding="lg" radius="md" withBorder style={{ height: '52vh' }}>
-              <Title order={3} mb="md">Logs</Title>
+            <Card
+              shadow="sm"
+              padding={isMobile ? "md" : "lg"}
+              radius="md"
+              withBorder
+              h={isMobile ? "400px" : "55vh"}
+            >
+              <Title order={isMobile ? 4 : 3} mb="md">Logs</Title>
               <ScrollArea h="100%">
                 {logs.length === 0 ? (
                   <Text key="no-logs" size="sm" c="dimmed" style={{ textAlign: 'center', padding: '20px' }}>
@@ -301,7 +269,6 @@ function DashboardAdmin() {
                   </Text>
                 ) : (
                   logs.map((item) => {
-                    // Format the timestamp to a more readable format
                     const formattedTime = new Date(item.timestamp).toLocaleString();
 
                     return (
@@ -338,7 +305,7 @@ function DashboardAdmin() {
           </Grid.Col>
         </Grid>
       </Container>
-    </div >
+    </div>
   );
 }
 

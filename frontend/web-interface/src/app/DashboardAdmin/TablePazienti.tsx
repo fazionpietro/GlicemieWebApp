@@ -92,7 +92,7 @@ export default function TablePazienti({
       <Paper
 
         radius="md"
-        style={{ overflow: "hidden", height: "30vh" }}
+        style={{ overflow: "hidden", height: "38vh" }}
       >
         <ScrollArea style={{ height: "100%" }}>
           <Table

@@ -1,6 +1,5 @@
 package it.univr.glicemiewebapp.controller;
 
-import it.univr.glicemiewebapp.dto.PazienteUtenteDTO;
 import it.univr.glicemiewebapp.dto.UtenteDTO;
 import it.univr.glicemiewebapp.entity.Utente;
 import it.univr.glicemiewebapp.repository.UtenteRepository;
@@ -27,73 +26,80 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/utenti")
 public class UtenteController {
-    @Autowired
-    private UtenteRepository repository;
+  @Autowired
+  private UtenteRepository repository;
 
-    @Autowired
-    private UtenteService utenteService;
-    @Autowired
-    private LogService logger;
+  @Autowired
+  private UtenteService utenteService;
+  @Autowired
+  private LogService logger;
 
-    @GetMapping
-    public List<Utente> getAllUtenti() {
-        return repository.findAll();
+  @GetMapping
+  public List<Utente> getAllUtenti() {
+    return repository.findAll();
+  }
+
+  @GetMapping("/id/{id}")
+  public ResponseEntity<Utente> getUtenteById(@PathVariable UUID id) {
+    Optional<Utente> result = repository.findById(id);
+    return result.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+  }
+
+  @GetMapping("/email/{email}")
+  public ResponseEntity<Utente> getUtenteByEmail(@PathVariable String email) {
+    Optional<Utente> result = repository.findByEmailAddress(email);
+    return result.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+  }
+
+  @GetMapping("/medici/all")
+  public ResponseEntity<String> getAll() {
+
+    try {
+      return utenteService.getMedici();
+    } catch (ResponseStatusException e) {
+      log.error(e.getReason(), e.getStatusCode());
+      return new ResponseEntity<>(e.getReason(), e.getStatusCode());
     }
+  }
 
-    @GetMapping("/id/{id}")
-    public ResponseEntity<Utente> getUtenteById(@PathVariable UUID id) {
-        Optional<Utente> result = repository.findById(id);
-        return result.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-    }
+  @DeleteMapping("/delete/{id}")
+  public ResponseEntity<String> delete(@PathVariable UUID id) {
+    try {
+      return utenteService.deleteByID(id);
 
-    @GetMapping("/email/{email}")
-    public ResponseEntity<Utente> getUtenteByEmail(@PathVariable String email) {
-        Optional<Utente> result = repository.findByEmailAddress(email);
-        return result.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-    }
+    } catch (ResponseStatusException e) {
 
-    @GetMapping("/medici/all")
-    public ResponseEntity<String> getAll() {
-        logger.info("Attempt to get all the meds");
-
-        try {
-            return utenteService.getMedici();
-        } catch (ResponseStatusException e) {
-            log.error(e.getReason(), e.getStatusCode());
-            return new ResponseEntity<>(e.getReason(), e.getStatusCode());
-        }
-    }
-
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> delete(@PathVariable UUID id) {
-        logger.info("Aattempt to delete a user");
-        try {
-            return utenteService.deleteByID(id);
-
-        } catch (ResponseStatusException e) {
-
-            log.error(e.getReason(), e.getStatusCode());
-            return new ResponseEntity<>(e.getReason(), e.getStatusCode());
-
-        }
+      log.error(e.getReason(), e.getStatusCode());
+      return new ResponseEntity<>(e.getReason(), e.getStatusCode());
 
     }
 
-    @PutMapping("/update")
-    public ResponseEntity<String> putMethodName(@RequestBody UtenteDTO entity) {
+  }
 
-        logger.info("Attempt to update user data");
+  @PutMapping("/update")
+  public ResponseEntity<String> putMethodName(@RequestBody UtenteDTO entity) {
 
-        try {
-            return utenteService.update(entity);
+    try {
+      return utenteService.update(entity);
 
-        } catch (ResponseStatusException e) {
+    } catch (ResponseStatusException e) {
 
-            log.error(e.getReason(), e.getStatusCode());
-            return new ResponseEntity<>(e.getReason(), e.getStatusCode());
-
-        }
+      log.error(e.getReason(), e.getStatusCode());
+      return new ResponseEntity<>(e.getReason(), e.getStatusCode());
 
     }
 
+  }
+
+  @GetMapping("/medici/number")
+  public ResponseEntity<String> numeroMedici() {
+    try {
+      return utenteService.getStats();
+    } catch (ResponseStatusException e) {
+
+      log.error(e.getReason(), e.getStatusCode());
+      return new ResponseEntity<>(e.getReason(), e.getStatusCode());
+
+    }
+  }
 }

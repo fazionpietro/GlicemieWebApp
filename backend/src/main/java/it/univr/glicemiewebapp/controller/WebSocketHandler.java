@@ -1,4 +1,4 @@
-package it.univr.glicemiewebapp.service;
+package it.univr.glicemiewebapp.controller;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -13,6 +13,9 @@ import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
+
+import it.univr.glicemiewebapp.service.LogService;
+import it.univr.glicemiewebapp.service.NewLogEvent;
 
 @Service
 public class WebSocketHandler extends TextWebSocketHandler {
