@@ -2,9 +2,6 @@ package it.univr.glicemiewebapp.service;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import java.util.UUID;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
@@ -16,7 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import it.univr.glicemiewebapp.dto.PazienteUtenteDTO;
 import it.univr.glicemiewebapp.entity.Paziente;
-import it.univr.glicemiewebapp.entity.Utente;
+
 import it.univr.glicemiewebapp.repository.PazienteRepository;
 import it.univr.glicemiewebapp.repository.UtenteRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +26,8 @@ public class PazienteService {
     private final PazienteRepository pazienteRepository;
     private final UtenteRepository utenteRepository;
     private final ObjectMapper mapper;
+    @Autowired
+    private LogService logger;
 
     public PazienteService(PasswordEncoder passwordEncoder,
             PazienteRepository pazienteRepository,
@@ -45,6 +44,7 @@ public class PazienteService {
             return new ResponseEntity<>(mapper.writeValueAsString(pazienteRepository.findAllComplete()), HttpStatus.OK);
 
         } catch (Exception e) {
+            logger.error(e.getMessage());
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "FAILED TO RETRIVE DATA");
         }
     }
@@ -60,7 +60,7 @@ public class PazienteService {
         
 
         try {
-            
+             logger.info("Modifing data of: "+p.toString());
 
             p.setEmail(up.getEmail());
             p.setNome(up.getNome());
@@ -84,6 +84,7 @@ public class PazienteService {
             return new ResponseEntity<>("USER UPDATED", HttpStatus.OK);
 
         } catch (Exception e) {
+            logger.error(e.getMessage());
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "ERROR DURING UPDATE");
         }
 

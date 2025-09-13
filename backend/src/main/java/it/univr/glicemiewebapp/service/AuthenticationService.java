@@ -25,20 +25,10 @@ import it.univr.glicemiewebapp.forms.UtenteForm;
 import it.univr.glicemiewebapp.repository.UtenteRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseCookie;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Optional;
-import java.util.UUID;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseCookie;
 
 @Service
 @RequiredArgsConstructor
@@ -52,15 +42,16 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
-   
+    @Autowired
+    private final LogService logger;
 
     public ResponseEntity<String> register(UtenteForm req) throws ResponseStatusException {
-        log.info("Tentativo di registrazione per email: {}", req.getEmail());
+        logger.info("Tentativo di registrazione per email: " + req.getEmail());
 
         try {
             // Verifica se l'email esiste già
             if (utenteRepository.findByEmailAddress(req.getEmail()).isPresent()) {
-                log.warn("Tentativo di registrazione con email già esistente: {}", req.getEmail());
+                logger.warn("Tentativo di registrazione con email già esistente: " + req.getEmail());
                 throw new ResponseStatusException(HttpStatus.CONFLICT, "EMAIL EXIST");
             }
 
@@ -71,21 +62,22 @@ public class AuthenticationService {
             } else if (req instanceof MedicoForm medicoForm) {
                 return handleMedicoRegistration(medicoForm);
             } else {
-                log.error("Tipo di form non riconosciuto: {}", req.getClass().getSimpleName());
+                logger.error("Tipo di form non riconosciuto: " + req.getClass().getSimpleName());
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "UNSUPPORTED FORM TYPE");
             }
 
         } catch (ResponseStatusException e) {
-            log.error("Errore durante la registrazione per email {}: {}", req.getEmail(), e.getReason(), e);
+            logger.error("Errore durante la registrazione per email " + req.getEmail() + ": " + e.getReason());
             throw e;
         } catch (Exception e) {
-            log.error("Errore imprevisto durante la registrazione per email {}: {}", req.getEmail(), e.getMessage(), e);
+            logger.error(
+                    "Errore imprevisto durante la registrazione per email " + req.getEmail() + ": " + e.getMessage());
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "AN ERROR OCCURRED");
         }
     }
 
     private ResponseEntity<String> handlePazienteRegistration(PazienteForm pazienteForm) {
-        log.info("Registrazione paziente per email: {}", pazienteForm.getEmail());
+        logger.info("Registrazione paziente per email: " + pazienteForm.getEmail());
 
         try {
             Paziente newPaziente = new Paziente(
@@ -99,18 +91,19 @@ public class AuthenticationService {
                     pazienteForm.getPatologiePregresse());
 
             utenteRepository.save(newPaziente);
-            log.info("Paziente registrato con successo: {}", newPaziente.getId().toString());
+            logger.info("Paziente registrato con successo: " + newPaziente.getId().toString());
 
             return createSuccessResponse(newPaziente, newPaziente.getId().toString(), newPaziente.getRuolo());
 
         } catch (Exception e) {
-            log.error("Errore durante il salvataggio del paziente {}: {}", pazienteForm.getEmail(), e.getMessage(), e);
+            logger.error(
+                    "Errore durante il salvataggio del paziente " + pazienteForm.getEmail() + ": " + e.getMessage());
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "FAILED TO REGISTER PAZIENTE");
         }
     }
 
     private ResponseEntity<String> handleAdminRegistration(AdminForm adminForm) {
-        log.info("Registrazione admin per email: {}", adminForm.getEmail());
+        logger.info("Registrazione admin per email: " + adminForm.getEmail());
 
         try {
             Utente newAdmin = new Utente(null,
@@ -122,18 +115,18 @@ public class AuthenticationService {
                     adminForm.getRuolo());
 
             utenteRepository.save(newAdmin);
-            log.info("Admin registrato con successo: {}", adminForm.getEmail());
+            logger.info("Admin registrato con successo: " + adminForm.getEmail());
 
             return createSuccessResponse(newAdmin, newAdmin.getId().toString(), newAdmin.getRuolo());
 
         } catch (Exception e) {
-            log.error("Errore durante il salvataggio dell'admin {}: {}", adminForm.getEmail(), e.getMessage(), e);
+            logger.error("Errore durante il salvataggio dell'admin " + adminForm.getEmail() + ": " + e.getMessage());
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "FAILED TO REGISTER ADMIN");
         }
     }
 
     private ResponseEntity<String> handleMedicoRegistration(MedicoForm medicoForm) {
-        log.info("Registrazione medico per email: {}", medicoForm.getEmail());
+        logger.info("Registrazione medico per email: " + medicoForm.getEmail());
 
         try {
             Utente newMedico = new Utente(null,
@@ -145,12 +138,12 @@ public class AuthenticationService {
                     medicoForm.getRuolo());
 
             utenteRepository.save(newMedico);
-            log.info("Medico registrato con successo: {}", medicoForm.getEmail());
+            logger.info("Medico registrato con successo: " + medicoForm.getEmail());
 
             return createSuccessResponse(newMedico, newMedico.getId().toString(), newMedico.getRuolo());
 
         } catch (Exception e) {
-            log.error("Errore durante il salvataggio del medico {}: {}", medicoForm.getEmail(), e.getMessage(), e);
+            logger.error("Errore durante il salvataggio del medico " + medicoForm.getEmail() + ": " + e.getMessage());
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "FAILED TO REGISTER MEDICO");
         }
     }
@@ -167,34 +160,32 @@ public class AuthenticationService {
     }
 
     public ResponseEntity<String> authentication(SignInForm signInForm) throws ResponseStatusException {
-        log.info("Tentativo di autenticazione per email: {}", signInForm.getEmail());
+        logger.info("Tentativo di autenticazione per email: " + signInForm.getEmail());
 
         try {
             Optional<Utente> userOpt = utenteRepository.findByEmailAddress(signInForm.getEmail());
 
             if (userOpt.isEmpty()) {
-                log.warn("Tentativo di login con email non esistente: {}", signInForm.getEmail());
+                logger.warn("Tentativo di login con email non esistente: " + signInForm.getEmail());
                 throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "INCORRECT EMAIL");
             }
 
             Utente user = userOpt.get();
 
             if (!passwordEncoder.matches(signInForm.getPassword(), user.getPasswordHash())) {
-                log.warn("Tentativo di login con password errata per email: {}", signInForm.getEmail());
+                logger.warn("Tentativo di login con password errata per email: " + signInForm.getEmail());
                 throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "INCORRECT PASSWORD");
             }
 
-            
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(signInForm.getEmail(), signInForm.getPassword()));
-                    
 
             UUID id = userOpt.get().getId();
             String token = jwtService.generateToken(user);
 
             ResponseCookie cookie = ResponseCookie.from("token", token)
                     .httpOnly(true)
-                    .secure(false) 
+                    .secure(false)
                     .sameSite("Strict")
                     .path("/")
                     .maxAge(expirationTimeMs)
@@ -208,49 +199,45 @@ public class AuthenticationService {
             body.put("id", id.toString());
             body.put("role", userOpt.get().getRuolo());
 
-            log.info("Autenticazione completata con successo per email: {}", signInForm.getEmail());
+            logger.info("Autenticazione completata con successo per email: " + signInForm.getEmail());
             return new ResponseEntity<>(body.toString(), headers, HttpStatus.ACCEPTED);
 
         } catch (ResponseStatusException e) {
-            log.error("Errore durante l'autenticazione per email {}: {}", signInForm.getEmail(), e.getReason(), e);
+            logger.error("Errore durante l'autenticazione per email " + signInForm.getEmail() + ": " + e.getReason());
             throw e;
         } catch (Exception e) {
-            log.error("Errore imprevisto durante l'autenticazione per email {}: {}", signInForm.getEmail(),
-                    e.getMessage(), e);
-            log.error("Errore imprevisto durante l'autenticazione per email {}: {}", signInForm.getEmail(),
-                    e.getMessage(), e);
+            logger.error("Errore imprevisto durante l'autenticazione per email " + signInForm.getEmail() + ": "
+                    + e.getMessage());
+            logger.error("Errore imprevisto durante l'autenticazione per email " + signInForm.getEmail() + ": "
+                    + e.getMessage());
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "AUTHENTICATION ERROR");
         }
     }
 
     public Boolean validateToken(String token) {
-        log.debug("Validazione token richiesta");
 
         try {
             boolean isValid = jwtService.checkValidity(token);
-            log.debug("Risultato validazione token: {}", isValid);
+
             return isValid;
 
         } catch (Exception e) {
-            log.error("Errore durante la validazione del token: {}", e.getMessage(), e);
+            logger.error("Errore durante la validazione del token: " + e.getMessage());
             return false;
         }
     }
 
-   
-
     public ResponseEntity<String> logout(String token) {
-        log.debug("logout di " + token);
+
         try {
 
             if (!jwtService.checkValidity(token)) {
                 return new ResponseEntity<>("INVALID TOKEN", HttpStatus.UNAUTHORIZED);
             }
 
-            
             jwtService.addToBlacklist(token);
 
-            log.info("Logout successful for token: {}", token.substring(0, 10) + "...");
+            logger.info("Logout successful for token: " + token.substring(0, 10) + "...");
 
             JSONObject response = new JSONObject();
             response.put("message", "LOGOUT SUCCESSFUL");
@@ -258,9 +245,9 @@ public class AuthenticationService {
             return new ResponseEntity<>(response.toString(), HttpStatus.OK);
 
         } catch (Exception e) {
-            log.error("Errore durante il logout: {}", e.getMessage(), e);
+            logger.error("Errore durante il logout: " + e.getMessage());
             return new ResponseEntity<>("LOGOUT ERROR", HttpStatus.INTERNAL_SERVER_ERROR);
-            
+
         }
 
     }
