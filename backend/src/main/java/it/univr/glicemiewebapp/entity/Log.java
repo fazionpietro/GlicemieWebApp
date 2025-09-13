@@ -12,44 +12,65 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ToString
-
 public class Log {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id_log", nullable = false)
-    private UUID id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  @Column(name = "id_log", nullable = false)
+  private UUID id;
 
-    @NotNull
-    @Column(name = "descrizione", nullable = false, length = Integer.MAX_VALUE)
-    private String descrizione;
+  @NotNull
+  @Column(name = "tipo", nullable = false)
+  private String tipo;
 
-    @NotNull
-    @Column(name = "\"timestamp\"", nullable = false)
-    private Instant timestamp;
+  @NotNull
+  @Column(name = "descrizione", nullable = false, length = Integer.MAX_VALUE)
+  private String descrizione;
 
-    public UUID getId() {
-        return id;
-    }
+  @NotNull
+  @Column(name = "\"timestamp\"", nullable = false)
+  private Instant timestamp;
 
-    private void setId(UUID id) {
-        this.id = id;
-    }
+  public UUID getId() {
+    return id;
+  }
 
-    public String getDescrizione() {
-        return descrizione;
-    }
+  private void setId(UUID id) {
+    this.id = id;
+  }
 
-    private void setDescrizione(String descrizione) {
-        this.descrizione = descrizione;
-    }
+  public String getDescrizione() {
+    return descrizione;
+  }
 
-    public Instant getTimestamp() {
-        return timestamp;
-    }
+  private void setTipo(String tipo) {
+    this.tipo = tipo;
+  }
 
-    private void setTimestamp(Instant timestamp) {
-        this.timestamp = timestamp;
-    }
+  public String getTipo() {
+    return this.tipo;
+  }
+
+  private void setDescrizione(String descrizione) {
+    this.descrizione = descrizione;
+  }
+
+  public Instant getTimestamp() {
+    return timestamp;
+  }
+
+  private void setTimestamp(Instant timestamp) {
+    this.timestamp = timestamp;
+  }
+
+  @Override
+  public String toString() {
+
+    return "{" +
+        "\"id\":\"" + id + "\"," +
+        "\"tipo\":\"" + tipo + "\"," +
+        "\"descrizione\":\"" + descrizione.replace("\"", "\\\"") + "\"," +
+        "\"timestamp\":\"" + timestamp + "\"" +
+        "}";
+  }
 
 }

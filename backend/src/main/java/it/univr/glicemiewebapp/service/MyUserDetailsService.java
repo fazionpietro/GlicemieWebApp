@@ -14,17 +14,18 @@ import java.util.Optional;
 public class MyUserDetailsService implements UserDetailsService {
     @Autowired
     private UtenteRepository userRepository;
-
+    @Autowired
+    private LogService logger;
 
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Optional<Utente> user = userRepository.findByEmailAddress(email);
         if (user.isEmpty()) {
+            logger.error("User Not Found with username: " + email);
             throw new UsernameNotFoundException("User Not Found with username: " + email);
         }
         return new org.springframework.security.core.userdetails.User(
                 user.get().getEmail(),
                 user.get().getPasswordHash(),
-                user.get().getAuthorities()
-        );
+                user.get().getAuthorities());
     }
 }
