@@ -15,25 +15,23 @@ import java.util.UUID;
 @Getter(AccessLevel.PUBLIC)
 @Setter(AccessLevel.PRIVATE)
 @ToString
-
 public class Rilevazione {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id_rilevazione", nullable = false)
-    private UUID id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  @Column(name = "id_rilevazione", nullable = false)
+  private UUID id;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "id_paziente", nullable = false)
-    private Paziente idPaziente;
+  @NotNull
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(name = "id_paziente", nullable = false)
+  private Paziente idPaziente;
 
-    @NotNull
-    @Column(name = "valore", nullable = false)
-    private Double valore;
+  @NotNull
+  @Column(name = "valore", nullable = false)
+  private Double valore;
 
-    @NotNull
-    @Column(name = "\"timestamp\"", nullable = false)
-    private Instant timestamp;
-
+  @NotNull
+  @Column(name = "\"timestamp\"", nullable = false)
+  private Instant timestamp;
 
 }

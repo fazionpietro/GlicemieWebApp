@@ -40,7 +40,6 @@ const data = ["Gestione pazienti", "Gestione medici"];
 function DashboardAdmin() {
   const theme = useMantineTheme();
   const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`);
-  const isTablet = useMediaQuery(`(max-width: ${theme.breakpoints.md})`);
   const [logs, setLogs] = useState<Log[]>([])
 
   const [rootRef, setRootRef] = useState<HTMLDivElement | null>(null);
@@ -49,7 +48,7 @@ function DashboardAdmin() {
     Record<string, HTMLButtonElement | null>
   >({});
   const [didFetch, setDidFetch] = useState(false);
-  const [ws, setWs] = useState<WebSocket | null>(null);
+  const [_ws, setWs] = useState<WebSocket | null>(null);
 
   const [pazienti, setPazienti] = useState<Paziente[] | null>(null);
   const [medici, setMedici] = useState<Medico[] | null>(null);
@@ -218,15 +217,13 @@ function DashboardAdmin() {
           ))}
         </Grid>
 
-        <Grid gutter={isMobile ? "md" : "xl"} align="flex-start">
+        <Grid gutter={isMobile ? "md" : "xl"} align="flex-start" ta={"left"}>
           {/* Sezione sinistra - Gestione Utenti e Tables */}
           <Grid.Col span={{ base: 12, lg: 8 }}
           >
-            <Card shadow="sm" padding={isMobile ? "md" : "lg"} radius="md" withBorder mb="md" h={isMobile ? "400px" : "55vh"}>
-              <Title order={isMobile ? 4 : 3} mb="md">Gestione Utenti</Title>
-              <Text size={isMobile ? "xs" : "sm"} c="dimmed" mb="xl">
-                Panoramica e gestione degli utenti del sistema
-              </Text>
+            <Card shadow="sm" padding={"40"} radius="md" withBorder mb="md" h={isMobile ? "400px" : "55vh"}>
+              <Title size={"2rem"} order={isMobile ? 4 : 3} mb="md">Gestione Utenti</Title>
+
 
               <Box
                 className={floatingcss.root}

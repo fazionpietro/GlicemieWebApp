@@ -7,16 +7,20 @@ import it.univr.glicemiewebapp.repository.PazienteRepository;
 import it.univr.glicemiewebapp.dto.*;
 
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class RilevazioneService {
+  @Autowired
   private LogService log;
   private final RilevazioneRepository rilevazioni;
   private final PazienteRepository pazienti;
@@ -36,7 +40,7 @@ public class RilevazioneService {
         .timestamp(Instant.now())
         .build();
 
-    log.info("Aggiunta una nuova rilevazione: " + nrilevazione);
+    log.info("Paziente id: " + paziente.getId() + " ha inserito una rilevazione: " + valore);
     return rilevazioni.save(nrilevazione);
   }
 
@@ -59,4 +63,11 @@ public class RilevazioneService {
         .map(RilevazioneUtenteDTO::new)
         .collect(Collectors.toList());
   }
+
+  public long getRilevazioniOfDay() {
+
+    return rilevazioni.findAll().stream()
+        .filter((i) -> !i.getTimestamp().isBefore(Instant.now().minus(24, ChronoUnit.HOURS))).count();
+  }
+
 }

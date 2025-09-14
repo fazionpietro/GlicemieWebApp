@@ -3,6 +3,7 @@ package it.univr.glicemiewebapp.service;
 import it.univr.glicemiewebapp.dto.UtenteDTO;
 import it.univr.glicemiewebapp.entity.Utente;
 import it.univr.glicemiewebapp.forms.UtenteForm;
+import it.univr.glicemiewebapp.repository.RilevazioneRepository;
 import it.univr.glicemiewebapp.repository.UtenteRepository;
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,6 +30,8 @@ public class UtenteService {
   @Autowired
   private UtenteRepository repository;
 
+  @Autowired
+  private RilevazioneService rilevazioneService;
   @Autowired
   private ObjectMapper mapper;
   @Autowired
@@ -127,8 +130,9 @@ public class UtenteService {
   public ResponseEntity<String> getStats() {
     try {
 
-      String res = "{\"medici\": \"" + repository.count("ROLE_MEDICO") + "\"\n\"pazienti\": \""
-          + repository.count("ROLE_PAZIENTE") + "\"}";
+      String res = "{\n\"medici\": " + repository.count("ROLE_MEDICO") + ",\n\"pazienti\": "
+          + repository.count("ROLE_PAZIENTE") + ",\n\"rilevazioni\": " + rilevazioneService.getRilevazioniOfDay()
+          + "\n}";
 
       return new ResponseEntity<>(res, HttpStatus.OK);
     } catch (Exception e) {

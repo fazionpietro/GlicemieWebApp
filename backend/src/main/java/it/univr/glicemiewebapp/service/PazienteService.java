@@ -2,6 +2,9 @@ package it.univr.glicemiewebapp.service;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
@@ -13,7 +16,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import it.univr.glicemiewebapp.dto.PazienteUtenteDTO;
 import it.univr.glicemiewebapp.entity.Paziente;
-
+import it.univr.glicemiewebapp.entity.Utente;
+import it.univr.glicemiewebapp.forms.MedicoForm;
 import it.univr.glicemiewebapp.repository.PazienteRepository;
 import it.univr.glicemiewebapp.repository.UtenteRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -49,6 +53,18 @@ public class PazienteService {
     }
   }
 
+  public ResponseEntity<String> findByMedico(UUID id) {
+    try {
+      Utente medico = utenteRepository.findById(id).get();
+
+      return new ResponseEntity<>(mapper.writeValueAsString(pazienteRepository.findByIdMedico(medico)), HttpStatus.OK);
+
+    } catch (Exception e) {
+      logger.error(e.getMessage());
+      throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+    }
+  }
+
   @Transactional
   public ResponseEntity<String> update(PazienteUtenteDTO up) {
 
@@ -56,7 +72,8 @@ public class PazienteService {
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "DATABASE ERROR"));
 
     try {
-      logger.warn("Modifing data of: " + p.toString());
+
+      logger.warn("attempt to modify: " + p.toString());
 
       p.setEmail(up.getEmail());
       p.setNome(up.getNome());
@@ -85,4 +102,5 @@ public class PazienteService {
     }
 
   }
+
 }
