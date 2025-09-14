@@ -173,49 +173,6 @@ function DashboardAdmin() {
     };
   }, []);
 
-    async function fetchPazienti() {
-        await axios({
-            method: "GET",
-            url: `${import.meta.env.VITE_API_KEY}api/pazienti/all`,
-            headers: {
-                "Content-Type": "application/json",
-                withCredentials: true,
-            },
-        })
-            .then((res) => {
-                setPazienti(res.data);
-                console.log(pazienti);
-            })
-            .catch((err) => {
-                console.error(err);
-            });
-    }
-
-    async function fetchMedici() {
-        await axios({
-            method: "GET",
-            url: `${import.meta.env.VITE_API_KEY}api/utenti/medici/all`,
-            headers: {
-                "Content-Type": "application/json",
-                withCredentials: true,
-            },
-        })
-            .then((res) => {
-                setMedici(res.data);
-                console.log(medici);
-            })
-            .catch((err) => {
-                console.error(err);
-            });
-    }
-
-    useEffect(() => {
-        if (!didFetch) {
-            fetchPazienti();
-            fetchMedici();
-            setDidFetch(true);
-        }
-    }, []);
 
 
 
