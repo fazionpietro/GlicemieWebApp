@@ -15,11 +15,16 @@ function TableGlicemia() {
   const [rilevazioni, setRilevazioni]= useState<Rilevazione[]>([]);
 
   useEffect(() => {
-    if(!user) return;
+    if(!user){
+      console.log("nessun utente loggato");
+      return;
+    }
 
     axios.get(`${import.meta.env.VITE_API_KEY}api/rilevazioni/dto/${user.id}`, { withCredentials: true })
     .then((res)=>{
-      console.log(res.data)
+      console.log("risposta: ", res);
+      console.log("dati: ", res.data);
+      console.log("tipo di dati: ", Array.isArray(res.data) ? "array" : typeof res.data);
       setRilevazioni(res.data.sort((a:Rilevazione,b:Rilevazione)=>new Date(b.timestamp).getTime()-new Date(a.timestamp).getTime()));
     })
     .catch((err)=>{
@@ -29,7 +34,8 @@ function TableGlicemia() {
 
   const rows = rilevazioni.map((r) => (
     <Table.Tr key={r.id}>
-      <Table.Td style={{textAlign: 'left'}}>{new Date(r.timestamp).toLocaleDateString()}</Table.Td>
+      <Table.Td style={{textAlign: 'left'}}> {new Date(r.timestamp).toLocaleDateString()}</Table.Td>
+      <Table.Td style={{textAlign: 'left'}}> {new Date(r.timestamp).toLocaleTimeString('it-IT',{hour:'2-digit', minute:'2-digit'})}</Table.Td>
       <Table.Td style={{textAlign: 'left'}}>{r.valore}</Table.Td>
       <Table.Td style={{textAlign: 'left'}}>{r.livello}</Table.Td>
     </Table.Tr>
@@ -40,6 +46,7 @@ function TableGlicemia() {
       <Table.Thead>
         <Table.Tr>
           <Table.Th>Data</Table.Th>
+          <Table.Th>Ora</Table.Th>
           <Table.Th>Rilevazioni</Table.Th>
           <Table.Th>Livello</Table.Th>
         </Table.Tr>

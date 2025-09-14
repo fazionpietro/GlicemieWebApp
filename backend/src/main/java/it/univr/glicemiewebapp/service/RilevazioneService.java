@@ -9,6 +9,7 @@ import it.univr.glicemiewebapp.dto.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import it.univr.glicemiewebapp.dto.RilevazioneUtenteDTO;
 
 import java.util.UUID;
@@ -16,8 +17,10 @@ import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
 @Service
 public class RilevazioneService {
+  @Autowired
   private LogService log;
   private final RilevazioneRepository rilevazioni;
   private final PazienteRepository pazienti;
