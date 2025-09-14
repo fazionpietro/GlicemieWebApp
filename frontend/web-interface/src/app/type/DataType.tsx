@@ -15,7 +15,19 @@ export type Paziente = {
   passwordHash: any | null;
 };
 
+export type PazienteMedico = {
 
+  id: string;
+  email: string;
+  nome: string;
+  cognome: string;
+  dataNascita: string;        // ISO date "YYYY-MM-DD"
+  ruolo: 'ROLE_PAZIENTE';
+  fattoriRischio: string | null;
+  comorbita: string | null;
+  patologiePregresse: string | null;
+  idMedico: string | null;
+}
 
 
 export interface User {

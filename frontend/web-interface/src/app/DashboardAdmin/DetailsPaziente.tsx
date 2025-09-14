@@ -22,7 +22,7 @@ import axios from "axios";
 
 type Props = {
   paziente: Paziente;
-  medici: Medico[] | null;
+  medici?: Medico[] | null;
   fetchMedici: () => void;
   fetchPazienti: () => void;
 };
@@ -226,58 +226,54 @@ export default function DetailsPaziente({
             }
           />
 
-          <Select label="Medico curante"
-            placeholder="Seleziona Medico"
-            searchable
-            size="md"
-            mb={60}
-            value={idMedico}
-            data={
-              medici?.map((m) => ({
-                value: m.id,
-                label: `${m.cognome} ${m.nome}`,
-              })) ?? []
-            }
-            onChange={(val) => {
-              if (val) {
-                setIdMedico(val);
-                const selected = medici?.find(
-                  (m) => m.id === val
-                );
-                setMedicoDisplay(
-                  selected
-                    ? `${selected.cognome} ${selected.nome}`
-                    : ""
-                );
-              }
-            }}
-          />
-
-          <PasswordInput
-            size="md"
-            radius="md"
-            mt={10}
-            mb={20}
-            placeholder="Nuova Password"
-            rightSection={false}
-            value={password}
-            onChange={(e) => setPassword(e.currentTarget.value)}
-          />
-          {isError && (
-            <Alert
-              variant="light"
-              color="red"
-              title="Errore"
-              ta={"left"}
-              withCloseButton
-              onClose={() => setIsError("")}
-              icon={<IconAlertTriangle size={18} stroke={1.5} />}
-              mb="md"
-            >
-              {isError}
-            </Alert>
-          )}
-
+          {medici ? (
+            <>
+              <Select
+                label="Medico curante"
+                placeholder="Seleziona Medico"
+                searchable
+                size="md"
+                mb={60}
+                value={idMedico}
+                data={medici.map((m) => ({
+                  value: m.id,
+                  label: `${m.nome} ${m.cognome}`,
+                }))}
+                onChange={(val) => {
+                  if (val) {
+                    setIdMedico(val);
+                    const selected = medici.find((m) => m.id === val);
+                    setMedicoDisplay(
+                      selected ? `${selected.cognome} ${selected.nome}` : ""
+                    );
+                  }
+                }}
+              />
+              <PasswordInput
+                size="md"
+                radius="md"
+                mb={20}
+                value={password}
+                onChange={(e) => setPassword(e.currentTarget.value)}
+                placeholder="Password"
+                label="Nuova Password"
+              />
+              {isError && (
+                <Alert
+                  variant="light"
+                  color="red"
+                  title="Errore"
+                  ta="left"
+                  withCloseButton
+                  onClose={() => setIsError("")}
+                  icon={<IconAlertTriangle size={18} stroke={1.5} />}
+                  mb="md"
+                >
+                  {isError}
+                </Alert>
+              )}
+            </>
+          ) : null}
           <Group justify="flex-end" mt="md" mb={60}>
             <Button
               variant="light"

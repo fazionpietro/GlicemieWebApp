@@ -6,10 +6,13 @@ import it.univr.glicemiewebapp.service.LogService;
 import it.univr.glicemiewebapp.service.PazienteService;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
@@ -45,11 +48,23 @@ public class PazienteController {
   public ResponseEntity<String> putMethodName(@RequestBody PazienteUtenteDTO entity) {
 
     try {
-      logger.warn("Attempt to delete: " + entity.getId());
+      logger.warn("Attempt to update: " + entity.getId());
       return pazienteService.update(entity);
 
     } catch (ResponseStatusException e) {
 
+      log.error(e.getReason(), e.getStatusCode());
+      return new ResponseEntity<>(e.getReason(), e.getStatusCode());
+
+    }
+
+  }
+
+  @GetMapping("/my/{id}")
+  public ResponseEntity<String> getPazientiMedico(@PathVariable("id") UUID idMedico) {
+    try {
+      return pazienteService.findByMedico(idMedico);
+    } catch (ResponseStatusException e) {
       log.error(e.getReason(), e.getStatusCode());
       return new ResponseEntity<>(e.getReason(), e.getStatusCode());
 

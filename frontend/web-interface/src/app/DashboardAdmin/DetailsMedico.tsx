@@ -32,7 +32,7 @@ export default function DetailsMedico({
   const [email, setEmail] = useState(medico.email);
   const [nome, setNome] = useState(medico.nome);
   const [cognome, setCognome] = useState(medico.cognome);
-  const [password, setPassword] = useState<String | null>("");
+  const [password, setPassword] = useState("");
   const [dataNascita, setDataNascita] = useState<DateValue>(
     medico.dataNascita
   );
@@ -165,12 +165,11 @@ export default function DetailsMedico({
           <PasswordInput
             size="md"
             radius="md"
-            mt={10}
             mb={20}
-            placeholder="Nuova Password"
-            rightSection={false}
-
+            value={password}
             onChange={(e) => setPassword(e.currentTarget.value)}
+            placeholder="Password"
+            label="Nuova Password"
           />
           {isError && (
             <Alert

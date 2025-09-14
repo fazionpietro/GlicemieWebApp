@@ -21,9 +21,9 @@ import DetailsPaziente from "./DetailsPaziente";
 
 type Props = {
   pazienti: Paziente[] | null;
-  medici: Medico[] | null;
+  medici?: Medico[] | null;
   fetchPazienti: () => void;
-  fetchMedici: () => void;
+  fetchMedici?: () => void;
 };
 
 export default function TablePazienti({
@@ -117,7 +117,7 @@ export default function TablePazienti({
                   Data di nascita
                 </Table.Th>
                 <Table.Th style={{ textAlign: "right" }}>
-                  <Modal
+                  {medici ? (<><Modal
                     opened={openedRegister}
                     centered
                     onClose={() => {
@@ -136,13 +136,14 @@ export default function TablePazienti({
                     />
                   </Modal>
 
-                  <Button
-                    variant="filled"
-                    onClick={openRegister}
-                    w="80%"
-                  >
-                    Aggiungi paziente
-                  </Button>
+                    <Button
+                      variant="filled"
+                      onClick={openRegister}
+                      w="80%"
+                    >
+                      Aggiungi paziente
+                    </Button>
+                  </>) : ""}
                 </Table.Th>
               </Table.Tr>
             </Table.Thead>

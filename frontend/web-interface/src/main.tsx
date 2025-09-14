@@ -8,7 +8,7 @@ import "@mantine/core/styles.css";
 import Register from "./app/RegisterPage/Register";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import AdminPage from "./app/DashboardAdmin/DashboardAdmin";
-import MedicPage from "./app/DashboardMedico/MedicPage";
+import MedicPage from "./app/DashboardMedico/DashboardMedico";
 import UserPage from "./app/DashboardUser/UserPage";
 import Unauthorized from "./routes/Unhautorized";
 import { AuthProvider } from "./context/AuthContext";
@@ -34,7 +34,7 @@ createRoot(document.getElementById("root")!).render(
             <Route
               path="/admin"
               element={
-                <ProtectedRoute requiredRole="admin">
+                <ProtectedRoute requiredRole={["admin"]}>
                   <AdminPage />
                 </ProtectedRoute>
               }

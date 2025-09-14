@@ -1,11 +1,10 @@
-import { Grid, Card} from '@mantine/core';
+import { Grid, Card } from '@mantine/core';
 import classes from "../CommonFile/StatsCard.module.css";
-import {Paper, Text} from "@mantine/core";
+import { Paper, Text } from "@mantine/core";
 import { IoIosAlert } from "react-icons/io";
 import { TbActivityHeartbeat } from "react-icons/tb";
 import { HiMiniArrowTrendingUp } from "react-icons/hi2";
 import { FiUsers } from "react-icons/fi";
-import { AlertTable ,ActivityTable } from './Tables';
 
 
 
@@ -24,67 +23,65 @@ export function LeadGrid() {
               </Text>
               <Text fz="lg" className={classes.count}>
                 <span className={classes.value}>150</span>
-                  </Text>
+              </Text>
             </div>
           </Paper>
         </Grid.Col>
-          <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
-            <Paper className={classes.stat} radius="md" shadow="md">
-              <div className={classes.icon}>
-                <IoIosAlert  size={48} color="#4ae293ff"/>
-              </div>
-              <div>
-                <Text className={classes.label}>
-                  Alert Attivi
-                </Text>
-                <Text fz="lg" className={classes.count}>
-                  <span className={classes.value}>130</span>
-                </Text>
-              </div>
-              </Paper>
-          </Grid.Col>
-          <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
-            <Paper className={classes.stat} radius="md" shadow="md">
-              <div className={classes.icon}>
-                <TbActivityHeartbeat size={48} color="#e2b74aff" />
-              </div>
-              <div>
-                <Text className={classes.label}>
-                  Rilevazioni Oggi
-                </Text>
-                <Text fz="lg" className={classes.count}>
-                  <span className={classes.value}>70%</span>
-                </Text>
-              </div>
-            </Paper>
-          </Grid.Col>
-          <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
-            <Paper className={classes.stat} radius="md" shadow="md">
-              <div className={classes.icon}>
-                <HiMiniArrowTrendingUp size={48} color="#704ae2ff"/>
-              </div>
-              <div>
-                <Text className={classes.label}>
-                  Media Controlli
-                </Text>
-                <Text fz="lg" className={classes.count}>
-                  <span className={classes.value}>5</span>
-                </Text>
-              </div>
-                </Paper>
-          </Grid.Col>
+        <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
+          <Paper className={classes.stat} radius="md" shadow="md">
+            <div className={classes.icon}>
+              <IoIosAlert size={48} color="#4ae293ff" />
+            </div>
+            <div>
+              <Text className={classes.label}>
+                Alert Attivi
+              </Text>
+              <Text fz="lg" className={classes.count}>
+                <span className={classes.value}>130</span>
+              </Text>
+            </div>
+          </Paper>
+        </Grid.Col>
+        <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
+          <Paper className={classes.stat} radius="md" shadow="md">
+            <div className={classes.icon}>
+              <TbActivityHeartbeat size={48} color="#e2b74aff" />
+            </div>
+            <div>
+              <Text className={classes.label}>
+                Rilevazioni Oggi
+              </Text>
+              <Text fz="lg" className={classes.count}>
+                <span className={classes.value}>70%</span>
+              </Text>
+            </div>
+          </Paper>
+        </Grid.Col>
+        <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
+          <Paper className={classes.stat} radius="md" shadow="md">
+            <div className={classes.icon}>
+              <HiMiniArrowTrendingUp size={48} color="#704ae2ff" />
+            </div>
+            <div>
+              <Text className={classes.label}>
+                Media Controlli
+              </Text>
+              <Text fz="lg" className={classes.count}>
+                <span className={classes.value}>5</span>
+              </Text>
+            </div>
+          </Paper>
+        </Grid.Col>
       </Grid>
 
       <Grid columns={24}>
         <Grid.Col span={12}>
           <h1>Alert Pazienti</h1>
-          <AlertTable />
         </Grid.Col>
         <Grid.Col span={12}>
           <h1>Inserimenti Recenti</h1>
-          <ActivityTable />
         </Grid.Col>
-        
+
       </Grid>
     </>
   );
