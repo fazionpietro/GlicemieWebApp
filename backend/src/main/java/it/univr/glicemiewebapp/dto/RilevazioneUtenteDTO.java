@@ -5,15 +5,16 @@ import it.univr.glicemiewebapp.entity.Rilevazione;
 import java.time.Instant;
 import java.util.UUID;
 
+import it.univr.glicemiewebapp.entity.Rilevazione;
 
 public class RilevazioneUtenteDTO {
-    private String id;
+    private UUID id;
     private double valore;
     private Instant timestamp;
     private String livello;
 
     public RilevazioneUtenteDTO(Rilevazione r){
-        this.id=r.getId().toString();
+        this.id=r.getId();
         this.valore = r.getValore();
         this.timestamp= r.getTimestamp();
         this.livello = calcoloLivello(r.getValore());
@@ -29,21 +30,24 @@ public class RilevazioneUtenteDTO {
         }
     }
 
-    public String getId() {
+  public UUID getId() {
+    return id;
+  }
+    public UUID getId() {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
+  public void setId(UUID id) {
+    this.id = id;
+  }
 
-    public double getValore() {
-        return valore;
-    }
+  public double getValore() {
+    return valore;
+  }
 
-    public void setValore(double valore) {
-        this.valore = valore;
-    }
+  public void setValore(double valore) {
+    this.valore = valore;
+  }
 
     public Instant getTimestamp() {
         return timestamp;
@@ -53,11 +57,11 @@ public class RilevazioneUtenteDTO {
         this.timestamp = timestamp;
     }
 
-    public String getLivello() {
-        return livello;
-    }
+  public String getLivello() {
+    return livello;
+  }
 
-    public void setLivello(String livello) {
-        this.livello = livello;
-    }
+  public void setLivello(String livello) {
+    this.livello = livello;
+  }
 }

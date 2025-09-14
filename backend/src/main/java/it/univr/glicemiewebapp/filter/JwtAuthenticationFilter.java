@@ -20,48 +20,48 @@ import java.io.IOException;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-    @Autowired
-    private JwtService jwtService;
-    @Autowired
-    private MyUserDetailsService myDetailsService;
+  @Autowired
+  private JwtService jwtService;
+  @Autowired
+  private MyUserDetailsService myDetailsService;
 
-    protected void doFilterInternal(@NonNull HttpServletRequest request,
-            @NonNull HttpServletResponse response,
-            @NonNull FilterChain filterChain) throws ServletException, IOException {
-        try {
-            String jwt = parseJwt(request);
-            if (jwt != null && jwtService.checkValidity(jwt)) {
-                String email = jwtService.getMailFromToken(jwt);
-                UserDetails userDetails = myDetailsService.loadUserByUsername(email);
-                System.out.println(userDetails.getAuthorities());
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                        userDetails,
-                        null,
-                        userDetails.getAuthorities());
-                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            }
-        } catch (Exception e) {
-            System.out.println("Cannot set user authentication: " + e);
+  protected void doFilterInternal(@NonNull HttpServletRequest request,
+      @NonNull HttpServletResponse response,
+      @NonNull FilterChain filterChain) throws ServletException, IOException {
+    try {
+      String jwt = parseJwt(request);
+      if (jwt != null && jwtService.checkValidity(jwt)) {
+        String email = jwtService.getMailFromToken(jwt);
+        UserDetails userDetails = myDetailsService.loadUserByUsername(email);
+
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+            userDetails,
+            null,
+            userDetails.getAuthorities());
+        authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+      }
+    } catch (Exception e) {
+      System.out.println("Cannot set user authentication: " + e);
+    }
+    filterChain.doFilter(request, response);
+  }
+
+  private String parseJwt(HttpServletRequest request) {
+    String token = null;
+    Cookie[] cookies = request.getCookies();
+    if (cookies != null) {
+      for (Cookie c : cookies) {
+        if ("token".equals(c.getName())) {
+          token = c.getValue();
+          break;
         }
-        filterChain.doFilter(request, response);
+      }
     }
 
-    private String parseJwt(HttpServletRequest request) {
-        String token = null;
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie c : cookies) {
-                if ("token".equals(c.getName())) {
-                    token = c.getValue();
-                    break;
-                }
-            }
-        }
-
-        if (token != null && jwtService.checkValidity(token)) {
-            return token;
-        }
-        return null;
+    if (token != null && jwtService.checkValidity(token)) {
+      return token;
     }
+    return null;
+  }
 }
