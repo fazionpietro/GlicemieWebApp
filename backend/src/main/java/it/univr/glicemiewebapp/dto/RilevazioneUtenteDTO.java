@@ -1,6 +1,5 @@
 package it.univr.glicemiewebapp.dto;
 
-import it.univr.glicemiawebapp.dto;
 import it.univr.glicemiewebapp.entity.Rilevazione;
 import java.time.Instant;
 import java.util.UUID;
@@ -33,9 +32,6 @@ public class RilevazioneUtenteDTO {
   public UUID getId() {
     return id;
   }
-    public UUID getId() {
-        return id;
-    }
 
   public void setId(UUID id) {
     this.id = id;

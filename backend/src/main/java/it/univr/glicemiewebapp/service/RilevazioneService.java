@@ -37,7 +37,7 @@ public class RilevazioneService {
         .timestamp(Instant.now())
         .build();
 
-    log.info("Aggiunta una nuova rilevazione: " + nrilevazione);
+    log.info("Paziente id: " + paziente.getId()+"ha inserito una rilevazione" + valore);
     return rilevazioni.save(nrilevazione);
   }
 
