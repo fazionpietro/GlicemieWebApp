@@ -1,6 +1,5 @@
 package it.univr.glicemiewebapp.repository;
 
-
 import it.univr.glicemiewebapp.entity.Utente;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.NativeQuery;
@@ -22,10 +21,5 @@ public interface UtenteRepository extends JpaRepository<Utente, UUID> {
 
   @NativeQuery("SELECT COUNT(RUOLO) AS num FROM UTENTI WHERE RUOLO = ?1")
   String count(String ruolo);
-
-
-    @Query("SELECT u FROM Utente u WHERE u.ruolo = ?1")
-    List<Utente> findByRole(String role);
-
 
 }
