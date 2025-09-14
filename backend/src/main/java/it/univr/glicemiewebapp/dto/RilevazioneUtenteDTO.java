@@ -1,19 +1,35 @@
-import java.time.LocalDateTime;
+package it.univr.glicemiewebapp.dto;
+
+import it.univr.glicemiawebapp.dto;
+import it.univr.glicemiewebapp.entity.Rilevazione;
+import java.time.Instant;
+import java.util.UUID;
 
 
 public class RilevazioneUtenteDTO {
     private String id;
     private double valore;
-    private LocalDateTime timestamp;
+    private Instant timestamp;
     private String livello;
 
     public RilevazioneUtenteDTO(Rilevazione r){
-        this.id=r.getId();
+        this.id=r.getId().toString();
         this.valore = r.getValore();
         this.timestamp= r.getTimestamp();
+        this.livello = calcoloLivello(r.getValore());
     }
 
-public String getId() {
+    private String calcoloLivello(double valore){
+        if(valore<70){
+            return "basso";
+        }else if(valore > 180){
+            return "alto";
+        }else{
+            return "normale";
+        }
+    }
+
+    public String getId() {
         return id;
     }
 
@@ -29,11 +45,11 @@ public String getId() {
         this.valore = valore;
     }
 
-    public LocalDateTime getTimestamp() {
+    public Instant getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(LocalDateTime timestamp) {
+    public void setTimestamp(Instant timestamp) {
         this.timestamp = timestamp;
     }
 

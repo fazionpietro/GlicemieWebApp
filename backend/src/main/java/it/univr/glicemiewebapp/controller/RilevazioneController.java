@@ -2,6 +2,7 @@ package it.univr.glicemiewebapp.controller;
 
 import it.univr.glicemiewebapp.entity.Rilevazione;
 import it.univr.glicemiewebapp.service.RilevazioneService;
+import it.univr.glicemiewebapp.dto.RilevazioneUtenteDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,7 +39,7 @@ public class RilevazioneController {
     }
 
     @GetMapping("/dto/{idPaziente}")
-    public List<RilevazioneUtenteDTO> getByPaziente(@PathVariable UUID idPaziente) {
+    public List<RilevazioneUtenteDTO> getByPazienteDTO(@PathVariable UUID idPaziente) {
         return rilevazioneService.getByPazienteDTO(idPaziente);
     }
 }
