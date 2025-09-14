@@ -42,7 +42,7 @@ createRoot(document.getElementById("root")!).render(
             <Route
               path="/medic"
               element={
-                <ProtectedRoute requiredRole="medico">
+                <ProtectedRoute requiredRole={["medico", "admin"]}>
                   <MedicPage />
                 </ProtectedRoute>
               }
@@ -50,7 +50,7 @@ createRoot(document.getElementById("root")!).render(
             <Route
               path="/user"
               element={
-                <ProtectedRoute requiredRole="paziente">
+                <ProtectedRoute requiredRole={["paziente", "medico", "admin"]}>
                   <UserPage />
                 </ProtectedRoute>
               }
