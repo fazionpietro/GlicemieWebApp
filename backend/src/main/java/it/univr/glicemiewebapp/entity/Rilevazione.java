@@ -7,6 +7,8 @@ import lombok.*;
 import java.time.Instant;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 @Entity
 @Table(name = "rilevazioni")
 @NoArgsConstructor
@@ -33,5 +35,10 @@ public class Rilevazione {
   @NotNull
   @Column(name = "\"timestamp\"", nullable = false)
   private Instant timestamp;
+
+  @JsonProperty("idPaziente")
+  public UUID getIdPaziente() {
+    return this.idPaziente.getId();
+  }
 
 }

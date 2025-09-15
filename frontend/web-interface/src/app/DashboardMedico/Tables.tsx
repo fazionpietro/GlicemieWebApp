@@ -23,7 +23,8 @@ type Props = {
 
 }
 function TableTerapie({ pazienti, fetchPazienti, terapie, fetchTerapie }: Props) {
-  const [opened, { open, close }] = useDisclosure(false);
+
+  const [openedTerapie, { open: openTerapie, close: closeTerapie }] = useDisclosure(false);
 
 
   const handleDelete = async (idTerapia: string) => {
@@ -52,7 +53,7 @@ function TableTerapie({ pazienti, fetchPazienti, terapie, fetchTerapie }: Props)
 
   const openDeleteModal = (idTerapia: string) =>
     modals.openConfirmModal({
-      title: "Elimina Paziente",
+      title: "Elimina Terapia",
       centered: true,
       children: (
         <Text size="sm">
@@ -63,7 +64,7 @@ function TableTerapie({ pazienti, fetchPazienti, terapie, fetchTerapie }: Props)
         </Text>
       ),
       labels: {
-        confirm: "Elimina paziente",
+        confirm: "Elimina terapia",
         cancel: "Cancella operazione",
       },
       confirmProps: { color: "red" },
@@ -80,90 +81,97 @@ function TableTerapie({ pazienti, fetchPazienti, terapie, fetchTerapie }: Props)
   return (
 
     <>
-      <ModalsProvider>
 
-        <Paper
-          radius="md"
-          style={{ overflow: "hidden", height: "38vh" }} >
-          <ScrollArea style={{ height: "100%" }}>
-            <Table
-              highlightOnHover
-              verticalSpacing="sm"
-              horizontalSpacing="md"
-              style={{
-                tableLayout: "fixed",
-                minWidth: "100%",
-              }}
-            >
-              <Table.Thead>
-                <Table.Tr>
-                  <Table.Th style={{ textAlign: "left" }}>
-                    Paziente
-                  </Table.Th>
-                  <Table.Th style={{ textAlign: "left" }}>
-                    Terapia
-                  </Table.Th><Table.Th style={{ textAlign: "left" }}>
-                    Dosaggio
+      <Paper
+        radius="md"
+        style={{ overflow: "hidden", height: "38vh" }} >
+        <ScrollArea style={{ height: "100%" }}>
+          <Table
+            highlightOnHover
+            verticalSpacing="sm"
+            horizontalSpacing="md"
+            style={{
+              tableLayout: "fixed",
+              minWidth: "100%",
+            }}
+          >
+            <Table.Thead>
+              <Table.Tr>
+                <Table.Th style={{ textAlign: "left" }}>
+                  Paziente
+                </Table.Th>
+                <Table.Th style={{ textAlign: "left" }}>
+                  Terapia
+                </Table.Th><Table.Th style={{ textAlign: "left" }}>
+                  Dosaggio
 
-                  </Table.Th>
+                </Table.Th>
 
-                  <Table.Th style={{ textAlign: "left" }}>
-                    Assunzioni Giornaliere
+                <Table.Th style={{ textAlign: "left" }}>
+                  Assunzioni Giornaliere
 
-                  </Table.Th>
-                  <Table.Th style={{ textAlign: "right" }}>
-                    <Modal
-                      opened={opened}
-                      centered
-                      onClose={close}
-                      radius={"md"}
-                      size="auto"
-                    >
-                      <RegisterTerapia pazienti={pazienti} fetchTerapie={fetchTerapie} onSuccess={close} />
+                </Table.Th>
+                <Table.Th style={{ textAlign: "left" }}>
+                  stato
 
-                    </Modal>
+                </Table.Th>
+                <Table.Th style={{ textAlign: "right" }}>
+                  <Modal
+                    opened={openedTerapie}
+                    centered
+                    onClose={close}
+                    radius={"md"}
+                    size="auto"
+                  >
+                    <RegisterTerapia pazienti={pazienti} fetchTerapie={fetchTerapie} onSuccess={closeTerapie} />
 
-                    <Button variant="filled" w="80%" onClick={open}>
-                      Aggiungi Terapia
-                    </Button>
-                  </Table.Th>
-                </Table.Tr>
-              </Table.Thead>
-              <Table.Tbody>
-                {terapie?.map((item) => (
-                  < Table.Tr key={item.id}>
-                    <Table.Td style={{ textAlign: "left" }}>
-                      <Group gap="sm">
-                        <Text fz="sm" fw={500}>
-                          {pazienti?.find((i) => i.id === item.idPaziente)?.nome + " " + pazienti?.find((i) => i.id === item.idPaziente)?.cognome}
-                        </Text>
-                      </Group>
-                    </Table.Td>
-                    <Table.Td style={{ textAlign: "left" }}>
-                      <Group gap="sm">
-                        <Text fz="sm" fw={500}>
-                          {item.farmaco}
-                        </Text>
-                      </Group>
-                    </Table.Td>
-                    <Table.Td style={{ textAlign: "left" }}>
-                      <Group gap="sm">
-                        <Text fz="sm" fw={500}>
-                          {item.dosaggio}
-                        </Text>
-                      </Group>
-                    </Table.Td>
+                  </Modal>
 
-                    <Table.Td style={{ textAlign: "left" }}>
-                      <Group gap="sm">
-                        <Text fz="sm" fw={500}>
-                          {item.numAssunzioni}
-                        </Text>
-                      </Group>
-                    </Table.Td>
-                    <Table.Td style={{ textAlign: "left" }}>
-                      <Group gap={0} justify="flex-end">
-                        <DetailsTerapia terapia={item} fetchTerapie={fetchTerapie} />
+                  <Button variant="filled" w="91%" onClick={openTerapie}>
+                    Aggiungi Terapia
+                  </Button>
+                </Table.Th>
+              </Table.Tr>
+            </Table.Thead>
+            <Table.Tbody>
+              {terapie?.map((item) => (
+                < Table.Tr key={item.id}>
+                  <Table.Td style={{ textAlign: "left" }}>
+                    <Group gap="sm">
+                      <Text fz="sm" fw={500}>
+                        {pazienti?.find((i) => i.id === item.idPaziente)?.nome + " " + pazienti?.find((i) => i.id === item.idPaziente)?.cognome}
+                      </Text>
+                    </Group>
+                  </Table.Td>
+                  <Table.Td style={{ textAlign: "left" }}>
+                    <Group gap="sm">
+                      <Text fz="sm" fw={500}>
+                        {item.farmaco}
+                      </Text>
+                    </Group>
+                  </Table.Td>
+                  <Table.Td style={{ textAlign: "left" }}>
+                    <Group gap="sm">
+                      <Text fz="sm" fw={500}>
+                        {item.dosaggio}
+                      </Text>
+                    </Group>
+                  </Table.Td>
+
+                  <Table.Td style={{ textAlign: "left" }}>
+                    <Group gap="sm">
+                      <Text fz="sm" fw={500}>
+                        {item.numAssunzioni}
+                      </Text>
+                    </Group>
+                  </Table.Td>
+                  <Table.Td></Table.Td>
+                  <Table.Td style={{ textAlign: "left" }}>
+                    <Group gap={0} justify="flex-end">
+
+                      <DetailsTerapia terapia={item} fetchTerapie={fetchTerapie} />
+                      <div>
+
                         <ActionIcon
                           variant="subtle"
                           color="red"
@@ -176,19 +184,19 @@ function TableTerapie({ pazienti, fetchPazienti, terapie, fetchTerapie }: Props)
                             stroke={1.5}
                           />
                         </ActionIcon>
+                      </div>
 
-                      </Group>
-                    </Table.Td>
+                    </Group>
+                  </Table.Td>
 
 
-                  </Table.Tr>
-                ))}
-              </Table.Tbody>
-            </Table>
-          </ScrollArea>
-        </Paper>
+                </Table.Tr>
+              ))}
+            </Table.Tbody>
+          </Table>
+        </ScrollArea>
+      </Paper>
 
-      </ModalsProvider >
 
 
 

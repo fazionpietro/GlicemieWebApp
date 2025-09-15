@@ -1,4 +1,4 @@
-import { Button, Group, SimpleGrid, Textarea, TextInput, Title } from '@mantine/core';
+import { Button, Group, Textarea, TextInput, Title } from '@mantine/core';
 import { useForm } from '@mantine/form';
 
 export function ContactMedic() {
@@ -13,7 +13,7 @@ export function ContactMedic() {
   });
 
   return (
-    <form onSubmit={form.onSubmit(() => {})}>
+    <form onSubmit={form.onSubmit(() => { })}>
       <Title
         order={2}
         size="h1"

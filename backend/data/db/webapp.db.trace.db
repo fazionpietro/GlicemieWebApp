@@ -13,3 +13,6 @@ insert into logs (descrizione,"timestamp",tipo,id_log) values (?,?,?,?) [42102-2
 2025-09-15 14:37:31.056025+02:00 jdbc[56]: exception
 org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "LOGS" not found; SQL statement:
 insert into logs (descrizione,"timestamp",tipo,id_log) values (?,?,?,?) [42102-232]
+2025-09-15 21:19:57.797943+02:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "DELETE [*]* FROM LOGS"; expected "identifier"; SQL statement:
+DELETE * FROM LOGS [42001-232]

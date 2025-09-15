@@ -13,8 +13,8 @@ import {
   ActionIcon,
 } from "@mantine/core";
 import { IconAlertTriangle, IconPencil } from "@tabler/icons-react";
-import "../CommonFile/App.css";
-import type { Paziente, Terapia } from "../type/DataType";
+import "../Components/App.css";
+import type { Terapia } from "../type/DataType";
 import { useDisclosure } from "@mantine/hooks";
 import axios from "axios";
 

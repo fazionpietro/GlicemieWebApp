@@ -16,6 +16,7 @@ import it.univr.glicemiewebapp.entity.Utente;
 import it.univr.glicemiewebapp.repository.PazienteRepository;
 import it.univr.glicemiewebapp.repository.TerapiaRepository;
 import it.univr.glicemiewebapp.repository.UtenteRepository;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -68,6 +69,7 @@ public class TerapiaService {
     }
   }
 
+  @Transactional
   public ResponseEntity<String> update(TerapiaDTO t, UUID id) {
     try {
       Terapia existingTerapia = terapiaRepository.findById(id)

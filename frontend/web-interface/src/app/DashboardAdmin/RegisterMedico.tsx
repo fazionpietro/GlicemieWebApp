@@ -19,8 +19,8 @@ import { useInputState } from "@mantine/hooks";
 
 import axios, { AxiosError } from "axios";
 
-import "../CommonFile/App.css";
-import emailcss from "../CommonFile/InvalidEmail.module.css";
+import "../Components/App.css";
+import emailcss from "../Components/InvalidEmail.module.css";
 
 
 const requirements = [

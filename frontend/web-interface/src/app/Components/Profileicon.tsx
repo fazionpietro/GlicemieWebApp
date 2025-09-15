@@ -1,5 +1,4 @@
-import { IconAt, IconPhoneCall } from '@tabler/icons-react';
-import { Avatar, Group, Text } from '@mantine/core';
+import { Group, Text } from '@mantine/core';
 import classes from './ProfileIcon.module.css';
 
 export function UserInfoIcons() {

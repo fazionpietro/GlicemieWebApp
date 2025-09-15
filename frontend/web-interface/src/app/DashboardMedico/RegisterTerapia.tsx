@@ -13,10 +13,10 @@ import {
   Select,
 
 } from "@mantine/core";
-import { IconAlertTriangle, IconCheck, IconX } from "@tabler/icons-react";
+import { IconAlertTriangle } from "@tabler/icons-react";
 
 
-import "../CommonFile/App.css";
+import "../Components/App.css";
 import type { Paziente } from "../type/DataType";
 import axios from "axios";
 
@@ -98,6 +98,7 @@ export function RegisterTerapia({ pazienti, fetchTerapie, onSuccess }: Props) {
           value={numAssunzioni}
           onChange={setNumAssunzioni}
           w="26%"
+          min={0}
         />
 
       </Group>

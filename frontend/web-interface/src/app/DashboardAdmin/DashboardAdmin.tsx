@@ -11,14 +11,14 @@ import {
   UnstyledButton,
   useMantineTheme,
 } from "@mantine/core";
-import { HeaderMegaMenu } from "../CommonFile/Header";
-import classes from "../CommonFile/StatsCard.module.css";
+import { HeaderMegaMenu } from "../Components/Header";
+import classes from "../Components/StatsCard.module.css";
 import { FiUsers, FiActivity, FiAlignRight } from "react-icons/fi";
 import { FaUserMd } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import type { Medico, Paziente } from "../type/DataType";
-import TablePazienti from "./TablePazienti";
+import TablePazienti from "../Components/TablePazienti";
 import { TableMedici } from "./TableMedici";
 import floatingcss from "./AdminFloatingIndicator.module.css";
 import { useMediaQuery } from "@mantine/hooks";
@@ -127,7 +127,6 @@ function DashboardAdmin() {
 
     websocket.onmessage = (event) => {
       try {
-        console.log('Received WebSocket message:', event.data);
         const newLogs: Log[] = JSON.parse(event.data);
 
         setLogs(prevLogs => {
@@ -185,8 +184,6 @@ function DashboardAdmin() {
     <div>
       <HeaderMegaMenu />
       <Container fluid p={isMobile ? "xs" : "md"} my={{ base: 20, md: 40 }}>
-
-        {/* Stat Cards - Modifica responsive */}
         <Grid gutter={isMobile ? "xs" : "md"} mb={{ base: 30, md: 70 }}>
           {[
             { icon: <FiUsers size={isMobile ? 32 : 48} color="#4A90E2" />, label: "Utenti Totali", value: "127" },
@@ -216,7 +213,6 @@ function DashboardAdmin() {
             </Grid.Col>
           ))}
         </Grid>
-
         <Grid gutter={isMobile ? "md" : "xl"} align="flex-start" ta={"left"}>
           {/* Sezione sinistra - Gestione Utenti e Tables */}
           <Grid.Col span={{ base: 12, lg: 8 }}

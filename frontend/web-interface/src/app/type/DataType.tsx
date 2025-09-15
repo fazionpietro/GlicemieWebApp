@@ -64,3 +64,12 @@ export type Terapia = {
   idPaziente: string
   medicoCurante: string
 }
+
+export type Rilevazione = {
+
+  id: string,
+  idPaziente: string,
+  valore: number,
+  timestamp: string,
+  livello: number
+}
