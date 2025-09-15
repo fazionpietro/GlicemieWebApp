@@ -7,7 +7,7 @@ import { GiMedicines } from "react-icons/gi";
 import { TbActivityHeartbeat } from "react-icons/tb";
 import { IoIosAlert } from "react-icons/io";
 import { PiPercentFill } from "react-icons/pi";
-import classes from "../CommonFile/StatsCard.module.css";
+import classes from "../Components/StatsCard.module.css";
 import { Paper, Text } from "@mantine/core";
 
 export function LeadGrid() {

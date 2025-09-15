@@ -16,7 +16,7 @@ import { ProtectedRoute } from "./routes/ProtectedRoute";
 
 // Axios global config
 import axios from "axios";
-import DetailsPaziente from "./app/DashboardAdmin/DetailsPaziente";
+import DetailsPaziente from "./app/Components/DetailsPaziente";
 axios.defaults.withCredentials = true;
 
 createRoot(document.getElementById("root")!).render(

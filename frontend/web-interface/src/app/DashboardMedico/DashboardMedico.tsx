@@ -1,19 +1,14 @@
 import { Grid, Card, Skeleton, Title, useMantineTheme } from '@mantine/core';
-import classes from "../CommonFile/StatsCard.module.css";
-import { Paper, Text } from "@mantine/core";
-import { IoIosAlert } from "react-icons/io";
-import { TbActivityHeartbeat } from "react-icons/tb";
-import { HiMiniArrowTrendingUp } from "react-icons/hi2";
-import { FiUsers } from "react-icons/fi";
-import { HeaderMegaMenu } from '../CommonFile/Header';
+
+import { HeaderMegaMenu } from '../Components/Header';
 
 import { useMediaQuery } from "@mantine/hooks";
 import { TableTerapie } from './Tables';
-import TablePazienti from '../DashboardAdmin/TablePazienti';
-import type { Paziente, PazienteMedico, Terapia, User } from '../type/DataType';
+import TablePazienti from '../Components/TablePazienti';
+import type { Paziente, Terapia, User } from '../type/DataType';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-const PRIMARY_COL_HEIGHT = '45vh';
+const PRIMARY_COL_HEIGHT = '40vh';
 
 
 function MedicPage() {
@@ -80,82 +75,20 @@ function MedicPage() {
   return (
     <div>
       <HeaderMegaMenu />
-      <Grid gutter="md" mb={100}>
-        <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
-          <Paper className={classes.stat} radius="md" shadow="md">
-            <div className={classes.icon}>
-              <FiUsers size={48} color="#4A90E2" />
-            </div>
-            <div>
-              <Text className={classes.label}>
-                Pazienti Totali
-              </Text>
-              <Text fz="lg" className={classes.count}>
-                <span className={classes.value}>150</span>
-              </Text>
-            </div>
-          </Paper>
-        </Grid.Col>
-        <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
-          <Paper className={classes.stat} radius="md" shadow="md">
-            <div className={classes.icon}>
-              <IoIosAlert size={48} color="#4ae293ff" />
-            </div>
-            <div>
-              <Text className={classes.label}>
-                Alert Attivi
-              </Text>
-              <Text fz="lg" className={classes.count}>
-                <span className={classes.value}>130</span>
-              </Text>
-            </div>
-          </Paper>
-        </Grid.Col>
-        <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
-          <Paper className={classes.stat} radius="md" shadow="md">
-            <div className={classes.icon}>
-              <TbActivityHeartbeat size={48} color="#e2b74aff" />
-            </div>
-            <div>
-              <Text className={classes.label}>
-                Rilevazioni Oggi
-              </Text>
-              <Text fz="lg" className={classes.count}>
-                <span className={classes.value}>70%</span>
-              </Text>
-            </div>
-          </Paper>
-        </Grid.Col>
-        <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
-          <Paper className={classes.stat} radius="md" shadow="md">
-            <div className={classes.icon}>
-              <HiMiniArrowTrendingUp size={48} color="#704ae2ff" />
-            </div>
-            <div>
-              <Text className={classes.label}>
-                Media Controlli
-              </Text>
-              <Text fz="lg" className={classes.count}>
-                <span className={classes.value}>5</span>
-              </Text>
-            </div>
-          </Paper>
-        </Grid.Col>
-      </Grid>
 
       <Grid gutter={isMobile ? "md" : "xl"} ta={"left"} align="flex-start">
 
-        <Grid.Col span={{ base: 12, md: 8 }}>
-          <Card p="40" radius={"md"} h="45vh" shadow='sm' w={"auto"}>
+        <Grid.Col span={{ base: 12, lg: 8 }}>
+          <Card p="40" radius={"md"} h="40vh" shadow='sm' w={"auto"}>
             <Title mb={"30"} size="2rem" order={isMobile ? 4 : 3}>Gestione Terapie</Title>
             <TableTerapie pazienti={pazienti} fetchPazienti={fetchPazienti} terapie={terapie} fetchTerapie={fetchTerapie} />
           </Card>
         </Grid.Col>
-        <Grid.Col mb={'5'} span={{ base: 12, md: 4 }}><Skeleton height={PRIMARY_COL_HEIGHT} radius="md" animate={false} /></Grid.Col>
+        <Grid.Col mb={'5'} span={{ base: 12, lg: 4 }}><Skeleton height={PRIMARY_COL_HEIGHT} radius="md" animate={false} /></Grid.Col>
 
-        <Grid.Col span={{ base: 12, md: 8 }}>
+        <Grid.Col span={{ base: 12, lg: 8 }}>
 
-          <Card p="40" radius={"md"} h="45vh" shadow='sm' w={"auto"}>
+          <Card p="40" radius={"md"} h="40vh" shadow='sm' w={"auto"}>
             <Title mb={"30"} size="2rem" order={isMobile ? 4 : 3}>Pazienti</Title>
             <TablePazienti
               pazienti={pazienti}

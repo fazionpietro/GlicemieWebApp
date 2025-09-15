@@ -1,5 +1,5 @@
 import { Grid, Card } from '@mantine/core';
-import classes from "../CommonFile/StatsCard.module.css";
+import classes from "../Components/StatsCard.module.css";
 import { Paper, Text } from "@mantine/core";
 import { IoIosAlert } from "react-icons/io";
 import { TbActivityHeartbeat } from "react-icons/tb";

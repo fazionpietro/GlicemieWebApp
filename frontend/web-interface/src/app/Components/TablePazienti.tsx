@@ -1,7 +1,6 @@
 import {
   ActionIcon,
   Button,
-  Container,
   Group,
   Modal,
   Paper,
@@ -10,7 +9,7 @@ import {
   Text,
 } from "@mantine/core";
 import { IconTrash } from "@tabler/icons-react";
-import type { Medico, Paziente } from "../type/DataType";
+import type { Medico, Paziente, Rilevazione } from "../type/DataType";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
@@ -18,6 +17,7 @@ import { modals, ModalsProvider } from "@mantine/modals";
 import RegisterPaziente from "./RegisterPaziente";
 import { useDisclosure } from "@mantine/hooks";
 import DetailsPaziente from "./DetailsPaziente";
+import { RilevazioniModal, StatusBadge } from "./DetailsRilevazione";
 
 type Props = {
   pazienti: Paziente[] | null;
@@ -31,10 +31,11 @@ export default function TablePazienti({
   medici,
   fetchPazienti,
 }: Props) {
+  const [rilevazioni, setRilevazioni] = useState<Rilevazione[] | null>(null)
   const [didFetch, setDidFetch] = useState(false);
   const [openedRegister, { open: openRegister, close: closeRegister }] =
     useDisclosure(false);
-  const [openedDel, { open: openDel, close: closeDel }] =
+  const [openedDel, { open: _openDel, close: closeDel }] =
     useDisclosure(false);
 
   const handleDelete = async (id: string) => {
@@ -56,12 +57,25 @@ export default function TablePazienti({
         console.error(err);
       });
   };
+  async function fetchRilevazioni() {
+    const user = await JSON.parse(localStorage.getItem("user") ?? "")
+    await axios.get(`${import.meta.env.VITE_API_KEY}api/rilevazioni/my/${user.id}`, { withCredentials: true })
+      .then((res) => {
+        setRilevazioni(res.data.sort((a: Rilevazione, b: Rilevazione) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()));
+      })
+      .catch((err) => {
+        console.error("Errore nel caricamento rilevazioni:", err);
+      });
+
+  }
 
   useEffect(() => {
     if (!didFetch) {
+      fetchRilevazioni();
       setDidFetch(true);
     }
   }, []);
+
 
   const openDeleteModal = (id: string) =>
     modals.openConfirmModal({
@@ -116,6 +130,10 @@ export default function TablePazienti({
                 <Table.Th style={{ textAlign: "left" }}>
                   Data di nascita
                 </Table.Th>
+                <Table.Th style={{ textAlign: "left" }}>
+                  Stato Glicemia
+                </Table.Th>
+
                 <Table.Th style={{ textAlign: "right" }}>
                   {medici ? (<><Modal
                     opened={openedRegister}
@@ -143,7 +161,7 @@ export default function TablePazienti({
                     >
                       Aggiungi paziente
                     </Button>
-                  </>) : ""}
+                  </>) : "Azioni"}
                 </Table.Th>
               </Table.Tr>
             </Table.Thead>
@@ -172,6 +190,12 @@ export default function TablePazienti({
                     </Group>
                   </Table.Td>
                   <Table.Td style={{ textAlign: "left" }}>
+                    <Group gap="sm">
+                      <StatusBadge id={item.id} rilevazioni={rilevazioni} />
+                    </Group>
+                  </Table.Td>
+
+                  <Table.Td style={{ textAlign: "left" }}>
                     <Group gap={0} justify="flex-end">
                       <DetailsPaziente
                         paziente={item}
@@ -179,7 +203,7 @@ export default function TablePazienti({
                         fetchMedici={fetchPazienti}
                         fetchPazienti={fetchPazienti}
                       />
-
+                      <RilevazioniModal id={item.id} rilevazioni={rilevazioni} fetchRilevazioni={fetchRilevazioni} />
                       <div>
                         <Modal
                           opened={openedDel}
