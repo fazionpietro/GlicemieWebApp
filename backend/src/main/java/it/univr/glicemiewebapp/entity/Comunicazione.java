@@ -8,23 +8,32 @@ import java.time.Instant;
 import java.util.UUID;
 
 @Entity
-@Table(name = "assunzioni")
+@Table(name = "segnalazioni")
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @Getter(AccessLevel.PUBLIC)
 @Setter(AccessLevel.PRIVATE)
+@Builder
 @ToString
-public class Assunzione {
+
+public class Comunicazione {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
-  @Column(name = "id_assunzione", nullable = false)
+  @Column(name = "id_comunicazione", nullable = false)
   private UUID id;
 
   @NotNull
-  @OneToOne(fetch = FetchType.LAZY, optional = false)
-  @JoinColumn(name = "id_terapia", nullable = false)
-  private Terapia idTerapia;
+  @Column(name = "priorita", nullable = false)
+  private Integer priorita;
+
+  @NotNull
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(name = "id_paziente", nullable = false)
+  private Paziente idPaziente;
+
+  @NotNull
+  @Column(name = "descrizione", nullable = false, length = Integer.MAX_VALUE)
+  private String descrizione;
 
   @NotNull
   @Column(name = "\"timestamp\"", nullable = false)

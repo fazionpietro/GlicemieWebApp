@@ -49,7 +49,7 @@ public class Paziente extends Utente {
   @JsonIgnore
   @OneToMany
   @JoinColumn(name = "id_paziente")
-  private Set<Segnalazione> segnalazioni = new LinkedHashSet<>();
+  private Set<Comunicazione> comunicazioni = new LinkedHashSet<>();
 
   @JsonIgnore
   @OneToMany
