@@ -7,6 +7,8 @@ import it.univr.glicemiewebapp.repository.PazienteRepository;
 import it.univr.glicemiewebapp.dto.*;
 
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import it.univr.glicemiewebapp.dto.RilevazioneUtenteDTO;
 
 import java.util.UUID;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -63,4 +66,11 @@ public class RilevazioneService {
         .map(RilevazioneUtenteDTO::new)
         .collect(Collectors.toList());
   }
+
+  public long getRilevazioniOfDay() {
+
+    return rilevazioni.findAll().stream()
+        .filter((i) -> !i.getTimestamp().isBefore(Instant.now().minus(24, ChronoUnit.HOURS))).count();
+  }
+
 }

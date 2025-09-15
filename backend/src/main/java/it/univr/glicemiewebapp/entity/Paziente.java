@@ -2,8 +2,12 @@ package it.univr.glicemiewebapp.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDate;
 import java.util.LinkedHashSet;
@@ -17,7 +21,6 @@ import java.util.UUID;
 @OnDelete(action = OnDeleteAction.CASCADE)
 @Getter
 @Setter
-@ToString
 public class Paziente extends Utente {
 
   @Column(name = "fattori_rischio", length = Integer.MAX_VALUE)
@@ -33,18 +36,22 @@ public class Paziente extends Utente {
   @JoinColumn(name = "id_medico", unique = false, nullable = true)
   private Utente idMedico;
 
+  @JsonIgnore
   @OneToMany
   @JoinColumn(name = "id_paziente")
   private Set<Assunzione> assunzioni = new LinkedHashSet<>();
 
+  @JsonIgnore
   @OneToMany
   @JoinColumn(name = "id_paziente")
   private Set<Rilevazione> rilevazioni = new LinkedHashSet<>();
 
+  @JsonIgnore
   @OneToMany
   @JoinColumn(name = "id_paziente")
   private Set<Segnalazione> segnalazioni = new LinkedHashSet<>();
 
+  @JsonIgnore
   @OneToMany
   @JoinColumn(name = "id_paziente")
   private Set<Terapia> terapie = new LinkedHashSet<>();
@@ -62,6 +69,17 @@ public class Paziente extends Utente {
     this.fattoriRischio = fattoriRischio;
     this.comorbita = comorbita;
     this.patologiePregresse = patologiePregresse;
+  }
+
+  public String toString() {
+
+    return super.toString() + " fattoriRischio=" + fattoriRischio + " comorbita=" + comorbita + " patologiePregresse="
+        + patologiePregresse;
+  }
+
+  @JsonProperty("idMedico")
+  public UUID getIdMedico() {
+    return idMedico != null ? idMedico.getId() : null;
   }
 
 }
