@@ -25,8 +25,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 @RestController
 @RequestMapping("/api/pazienti")
 public class PazienteController {
-  @Autowired
-  private AssunzioneRepository assunzioneRepository;
 
   @Autowired
   private PazienteService pazienteService;

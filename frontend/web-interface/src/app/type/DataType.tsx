@@ -54,3 +54,13 @@ export type Medico = {
   dataNascita: string
   ruolo: string
 }
+
+export type Terapia = {
+  id: string,
+  farmaco: string,
+  numAssunzioni: number,
+  dosaggio: string,
+  indicazioni: string,
+  idPaziente: string
+  medicoCurante: string
+}

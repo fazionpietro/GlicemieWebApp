@@ -1,9 +1,13 @@
-import { ActionIcon, Group, Modal, Paper, ScrollArea, Table } from '@mantine/core';
-import { Menu, Button, Text } from '@mantine/core';
-import { ModalsProvider } from '@mantine/modals';
-import { IconSettings, IconTrash } from '@tabler/icons-react';
-import DetailsMedico from '../DashboardAdmin/DetailsMedico';
-import { RegisterMedico } from '../DashboardAdmin/RegisterMedico';
+import { Group, Modal, Paper, Text, ScrollArea, Table, ActionIcon } from '@mantine/core';
+import { Button } from '@mantine/core';
+import { modals, ModalsProvider } from '@mantine/modals';
+
+import { useDisclosure } from '@mantine/hooks';
+import { RegisterTerapia } from './RegisterTerapia';
+import type { Paziente, Terapia } from '../type/DataType';
+import { IconTrash } from '@tabler/icons-react';
+import axios from 'axios';
+import DetailsTerapia from './DetailsTerapia';
 
 const elements = [
   { name: "Franco", data: "12-09", ora: "12:30", valore: "250 mg/dl" },
@@ -11,7 +15,68 @@ const elements = [
   { name: "Marco", data: "10-09", ora: "16:30", valore: "90 mg/dl" },
 ]
 
-function TableTerapie() {
+type Props = {
+  terapie: Terapia[] | null,
+  pazienti: Paziente[] | null,
+  fetchTerapie: () => void,
+  fetchPazienti: () => void
+
+}
+function TableTerapie({ pazienti, fetchPazienti, terapie, fetchTerapie }: Props) {
+  const [opened, { open, close }] = useDisclosure(false);
+
+
+  const handleDelete = async (idTerapia: string) => {
+    console.log("Deleting patient with ID:", idTerapia);
+
+    await axios({
+      method: "DELETE",
+      url: `${import.meta.env.VITE_API_KEY}api/terapie/delete/${idTerapia}`,
+      headers: {
+        "Content-Type": "application/json",
+        withCredentials: true,
+      },
+    })
+      .then((res) => {
+        console.log(res);
+        fetchTerapie();
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
+
+
+
+
+  const openDeleteModal = (idTerapia: string) =>
+    modals.openConfirmModal({
+      title: "Elimina Paziente",
+      centered: true,
+      children: (
+        <Text size="sm">
+          Sei sicuro di voler eliminare questo utente? Quest'azione è
+          distruttiva e nel caso di eliminazione accidentale dovrai
+          contattare gli amministratori del sistema per ripristinare i
+          dati.
+        </Text>
+      ),
+      labels: {
+        confirm: "Elimina paziente",
+        cancel: "Cancella operazione",
+      },
+      confirmProps: { color: "red" },
+      onCancel: () => modals.closeAll(),
+      onConfirm: () => {
+        handleDelete(idTerapia)
+        modals.closeAll();
+      },
+    });
+
+
+
+
   return (
 
     <>
@@ -33,29 +98,97 @@ function TableTerapie() {
               <Table.Thead>
                 <Table.Tr>
                   <Table.Th style={{ textAlign: "left" }}>
-                    Medico
+                    Paziente
                   </Table.Th>
                   <Table.Th style={{ textAlign: "left" }}>
-                    Email
+                    Terapia
+                  </Table.Th><Table.Th style={{ textAlign: "left" }}>
+                    Dosaggio
+
                   </Table.Th>
+
                   <Table.Th style={{ textAlign: "left" }}>
-                    Data di nascita
+                    Assunzioni Giornaliere
+
                   </Table.Th>
                   <Table.Th style={{ textAlign: "right" }}>
+                    <Modal
+                      opened={opened}
+                      centered
+                      onClose={close}
+                      radius={"md"}
+                      size="auto"
+                    >
+                      <RegisterTerapia pazienti={pazienti} fetchTerapie={fetchTerapie} onSuccess={close} />
 
-                    <Button variant="filled" w="80%">
+                    </Modal>
+
+                    <Button variant="filled" w="80%" onClick={open}>
                       Aggiungi Terapia
                     </Button>
                   </Table.Th>
                 </Table.Tr>
               </Table.Thead>
               <Table.Tbody>
+                {terapie?.map((item) => (
+                  < Table.Tr key={item.id}>
+                    <Table.Td style={{ textAlign: "left" }}>
+                      <Group gap="sm">
+                        <Text fz="sm" fw={500}>
+                          {pazienti?.find((i) => i.id === item.idPaziente)?.nome + " " + pazienti?.find((i) => i.id === item.idPaziente)?.cognome}
+                        </Text>
+                      </Group>
+                    </Table.Td>
+                    <Table.Td style={{ textAlign: "left" }}>
+                      <Group gap="sm">
+                        <Text fz="sm" fw={500}>
+                          {item.farmaco}
+                        </Text>
+                      </Group>
+                    </Table.Td>
+                    <Table.Td style={{ textAlign: "left" }}>
+                      <Group gap="sm">
+                        <Text fz="sm" fw={500}>
+                          {item.dosaggio}
+                        </Text>
+                      </Group>
+                    </Table.Td>
+
+                    <Table.Td style={{ textAlign: "left" }}>
+                      <Group gap="sm">
+                        <Text fz="sm" fw={500}>
+                          {item.numAssunzioni}
+                        </Text>
+                      </Group>
+                    </Table.Td>
+                    <Table.Td style={{ textAlign: "left" }}>
+                      <Group gap={0} justify="flex-end">
+                        <DetailsTerapia terapia={item} fetchTerapie={fetchTerapie} />
+                        <ActionIcon
+                          variant="subtle"
+                          color="red"
+                          onClick={() =>
+                            openDeleteModal(item.id)
+                          }
+                        >
+                          <IconTrash
+                            size={16}
+                            stroke={1.5}
+                          />
+                        </ActionIcon>
+
+                      </Group>
+                    </Table.Td>
+
+
+                  </Table.Tr>
+                ))}
               </Table.Tbody>
             </Table>
           </ScrollArea>
         </Paper>
 
-      </ModalsProvider>
+      </ModalsProvider >
 
 
 
