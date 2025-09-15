@@ -54,7 +54,7 @@ function TableGlicemia() {
       <Table.Td style={{textAlign: 'left'}}> {new Date(r.timestamp).toLocaleDateString()}</Table.Td>
       <Table.Td style={{textAlign: 'left'}}> {new Date(r.timestamp).toLocaleTimeString('it-IT',{hour:'2-digit', minute:'2-digit'})}</Table.Td>
       <Table.Td style={{textAlign: 'left'}}>{r.valore}</Table.Td>
-      <Table.Td style={{textAlign: 'left'}}><Pill size="sm" color={getColor(r.livello)}>{r.livello}</Pill></Table.Td>
+      <Table.Td style={{textAlign: 'left'}}><Pill size="sm" bg={getColor(r.livello)}>{r.livello}</Pill></Table.Td>
     </Table.Tr>
   ));
 
