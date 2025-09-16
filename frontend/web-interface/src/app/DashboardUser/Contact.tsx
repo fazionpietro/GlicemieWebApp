@@ -1,20 +1,71 @@
-import { Button, Group, Textarea, TextInput, Title, Card, Text, Checkbox, Stack } from '@mantine/core';
+import { Button, Group, Textarea, TextInput, Title, Card, Text, Checkbox, Stack, Select } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useState } from 'react';
+import axios from 'axios';
+import { useAuth } from '../../context/AuthContext';
+
+
+interface ComunicazioneData{
+  priorita: number;
+  descrizione: string;
+  idPaziente: string;
+}
+
+interface FormValues{
+    priorita: string;
+    message: string;
+}
+
+const  salvaComunicazione = async (datiComunicazione: ComunicazioneData) =>{
+    try{
+    const response = await axios.post('/api/comunicazioni', datiComunicazione,{
+      headers:{
+        'Content-Type': 'application/json',
+      } as any,
+    });
+    return response.data;
+    }catch(error){
+      console.error('errore', error);
+      throw error;
+    }
+  };
+  
 
 function ContactMedic() {
-  const form = useForm({
-    initialValues: {
-      subject: '',
-      message: '',
+
+  const {user}  = useAuth();
+ 
+  const comunicazioneForm = useForm({
+    initialValues:{
+      priorita:'1',
+      message:''
     },
     validate: {
-      subject: (value) => value.trim().length === 0,
+      message: (value) => (value.trim().length === 0 ? 'obbligatorio': null)
     },
   });
 
+  const handleSubmit= async (values: FormValues) =>{
+
+    if(!user || !user.id){
+      return;
+    }
+    try {
+      const datiComunicazione = {
+        priorita: parseInt(values.priorita),
+        descrizione: values.message,
+        idPaziente: user.id
+      };
+      const risultato = await salvaComunicazione(datiComunicazione);
+
+      comunicazioneForm.reset();
+    }catch(error){
+      console.error("errore");
+    }
+  };
+
   return (
-    <form onSubmit={form.onSubmit(() => { })}>
+    <form onSubmit={comunicazioneForm.onSubmit(handleSubmit)}>
       <Title
         order={2}
         size="h1"
@@ -24,14 +75,13 @@ function ContactMedic() {
       >
         Contact your Medic
       </Title>
-      <TextInput
-        label="Subject"
-        placeholder="Subject"
-        mt="md"
-        name="subject"
-        variant="filled"
-        {...form.getInputProps('subject')}
+      
+      <Select label="priorità messaggio" placeholder="seleziona la priorità" data={[
+        {value: '1', label:'bassa'},{value: '2', label:'media'},{value: '3', label:'alta'},
+      ]}
+      {...comunicazioneForm.getInputProps('priorita')}
       />
+
       <Textarea
         mt="md"
         label="Messaggio"
@@ -41,7 +91,7 @@ function ContactMedic() {
         autosize
         name="message"
         variant="filled"
-        {...form.getInputProps('message')}
+        {...comunicazioneForm.getInputProps('message')}
       />
 
       <Group justify="center" mt="xl">
