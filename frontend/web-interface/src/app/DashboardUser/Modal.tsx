@@ -1,5 +1,5 @@
 import { useDisclosure } from '@mantine/hooks';
-import { NumberInput, Modal, Button } from '@mantine/core';
+import { NumberInput, Modal, Button, Container, TextInput, Title } from '@mantine/core';
 import { JsonInput } from '@mantine/core';
 import { useState } from 'react';
 import axios, { AxiosError, type AxiosResponse } from 'axios';
@@ -12,7 +12,7 @@ function ModalSintomi() {
   return (
     <>
       <Modal opened={opened} onClose={close} title="Inserisci una descrizione dei sintomi" centered>
-        <JsonInput
+        <TextInput
           size="xs"
           radius="lg"
           placeholder="segnala i sintomi qui"
@@ -21,7 +21,7 @@ function ModalSintomi() {
         <button style={{ marginTop: "20px" }}>invia</button>
       </Modal>
 
-      <Button fullWidth style={{height:'60px'}} type="submit" onClick={open} mt="30">
+      <Button fullWidth style={{ height: '60px' }} type="submit" onClick={open} mt="30">
         Inserisci malattia o sintomo
       </Button>
     </>
@@ -33,7 +33,7 @@ function ModalMedicinali() {
   return (
     <>
       <Modal opened={opened} onClose={close} title="Inserisci i medicinali assunti" centered>
-        <JsonInput
+        <TextInput
           size="xs"
           radius="lg"
           placeholder="Inserisci nome e quantità delle assunzioni qui"
@@ -42,7 +42,7 @@ function ModalMedicinali() {
         <button style={{ marginTop: "20px" }}>invia</button>
       </Modal>
 
-      <Button fullWidth style={{height:'60px'}} type="submit" onClick={open} mt="30">
+      <Button fullWidth style={{ height: '60px' }} type="submit" onClick={open} mt="30">
         Inserisci Medicinali Assunti
       </Button>
     </>
@@ -98,17 +98,23 @@ function ModalGlicemia() {
 
   return (
     <>
-      <Modal opened={opened} onClose={close} title="Inserisci Glicemia" centered>
-        <NumberInput
-          size="xs"
-          radius="lg"
-          placeholder="Inserisci valore Glicemico qui"
-          w="100%"
-          min={0}
-          value={valore}
-          onChange={(v) => setValore(typeof v === "number" ? v : undefined)}
-        />
-        <Button style={{ marginTop: "20px" }} onClick={inserisciRilevazione}>invia</Button>
+      <Modal opened={opened} size={"auto"} onClose={close} centered>
+        <Container fluid w={600}>
+
+          <Title size={"xl"} mb={30} >Inserisci Glicemia</Title>
+
+          <NumberInput
+            mb={20}
+            size="md"
+            radius="md"
+            placeholder="Inserisci valore Glicemico qui"
+            w="100%"
+            min={0}
+            value={valore}
+            onChange={(v) => setValore(typeof v === "number" ? v : undefined)}
+          />
+          <Button mt={20} mb={30} onClick={inserisciRilevazione}>invia</Button>
+        </Container>
       </Modal>
 
       <Button style={{width: '30%',

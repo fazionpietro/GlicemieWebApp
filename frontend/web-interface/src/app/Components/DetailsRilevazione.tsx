@@ -13,7 +13,7 @@ import {
 } from "@mantine/core"
 import { useDisclosure } from "@mantine/hooks";
 import { FaRegEye } from "react-icons/fa";
-import { LineChart } from "@mantine/charts";
+import { ChartTooltip, LineChart } from "@mantine/charts";
 import {
   IconArrowUpRight,
   IconArrowDownRight,
@@ -78,19 +78,14 @@ export function RilevazioniModal({ id, rilevazioni, fetchRilevazioni }: Props) {
   // Filtra e ordina le rilevazioni per il paziente specifico
   const patientRilevazioni = rilevazioni
     ?.filter((r) => r.idPaziente === id)
-    .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()) || [];
+    .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()) // Ordine cronologico
+    .map((i) => ({
+      id: i.id,
+      date: `${new Date(i.timestamp).toLocaleDateString('it-IT')} ${new Date(i.timestamp).toLocaleTimeString('it-IT')}`,
+      valore: i.valore,
 
-  // Prepara i dati per il grafico
-  const chartData = patientRilevazioni
-    .map((r, idx) => ({
-      label: new Date(r.timestamp).toLocaleDateString(), // per tooltip
-      key: new Date(r.timestamp).toLocaleDateString('it-IT', {
-        day: '2-digit',
-        month: '2-digit',
-      }),                                // etichetta X
-      valore: r.valore,
-    }))
-    .reverse().slice(0, 20);
+    })) || [];
+
 
   // Funzione per determinare lo stato e il colore di una rilevazione
   const getRilevazioneStatus = (value: number) => {
@@ -112,6 +107,7 @@ export function RilevazioniModal({ id, rilevazioni, fetchRilevazioni }: Props) {
         color="gray"
         onClick={() => {
           open()
+          console.log()
           if (fetchRilevazioni)
             fetchRilevazioni()
         }}
@@ -148,25 +144,27 @@ export function RilevazioniModal({ id, rilevazioni, fetchRilevazioni }: Props) {
           </Box>
         </Group>
 
-        {/* Grafico */}
         <Box mb="lg">
           <Title order={4} mb="sm">Andamento delle misurazioni</Title>
           <Paper withBorder p="md" radius="md">
             <LineChart
               h={300}
-              data={chartData}
-              dataKey="key"
-              series={[{ name: 'valore', color: 'blue', label: 'glicemia' }]}
-              valueFormatter={(value) => `${value} mg/dL`}
+              data={patientRilevazioni}
+              dataKey="date"
+              series={[{ name: 'valore', color: 'blue', label: 'Glicemia (mg/dL)' }]}
               curveType="monotone"
               tickLine="x"
               gridAxis="x"
               gridProps={{ yAxisId: "left" }}
-              referenceLines={[{ y: 180, color: "yellow", label: 'soglia massima', strokeDasharray: '5 5' }, { y: 70, color: "yellow", label: 'soglia minima', strokeDasharray: '5 5' }]}
-
+              referenceLines={[
+                { y: 180, color: "yellow", label: 'Soglia massima', strokeDasharray: '5 5' },
+                { y: 70, color: "yellow", label: 'Soglia minima', strokeDasharray: '5 5' }
+              ]}
               yAxisProps={{
-                domain: [50, 200],
+                domain: [50, 220],
               }}
+
+
 
             />
           </Paper>
@@ -182,7 +180,7 @@ export function RilevazioniModal({ id, rilevazioni, fetchRilevazioni }: Props) {
           ) : (
             <Box>
               {patientRilevazioni.map((item) => {
-                const formattedTime = new Date(item.timestamp).toLocaleString();
+                const formattedTime = item.date;
                 const { status, color, icon } = getRilevazioneStatus(item.valore);
 
                 return (
@@ -219,7 +217,7 @@ export function RilevazioniModal({ id, rilevazioni, fetchRilevazioni }: Props) {
                     </Group>
                   </Paper>
                 );
-              })}
+              }).reverse()}
             </Box>
           )}
         </ScrollArea>

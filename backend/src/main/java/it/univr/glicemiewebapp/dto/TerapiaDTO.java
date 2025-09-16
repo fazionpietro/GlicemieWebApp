@@ -11,6 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class TerapiaDTO {
 
+  private UUID id;
   private String farmaco;
   private int numAssunzioni;
   private String dosaggio;

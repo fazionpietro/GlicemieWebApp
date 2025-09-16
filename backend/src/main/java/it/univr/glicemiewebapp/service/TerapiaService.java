@@ -1,5 +1,6 @@
 package it.univr.glicemiewebapp.service;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import it.univr.glicemiewebapp.dto.TerapiaDTO;
 import it.univr.glicemiewebapp.entity.Terapia;
 import it.univr.glicemiewebapp.entity.Utente;
+import it.univr.glicemiewebapp.exception.BusinessException;
 import it.univr.glicemiewebapp.repository.PazienteRepository;
 import it.univr.glicemiewebapp.repository.TerapiaRepository;
 import it.univr.glicemiewebapp.repository.UtenteRepository;
@@ -25,13 +27,11 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor
 public class TerapiaService {
   @Autowired
-  private TerapiaRepository terapiaRepository;
+  private final TerapiaRepository terapiaRepository;
   @Autowired
-  private UtenteRepository utenteRepository;
+  private final UtenteRepository utenteRepository;
   @Autowired
-  private PazienteRepository pazienteRepository;
-  @Autowired
-  private final ObjectMapper mapper;
+  private final PazienteRepository pazienteRepository;
 
   public ResponseEntity<String> create(TerapiaDTO t) {
     try {
@@ -42,19 +42,17 @@ public class TerapiaService {
 
       return new ResponseEntity<>("TERAPIA CREATA", HttpStatus.OK);
     } catch (Exception e) {
-      throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+      throw new BusinessException("CREATION_ERROR", "failed to create terapy");
     }
   }
 
-  public ResponseEntity<String> getAllByMedico(UUID id) {
+  public List<TerapiaDTO> getAllByMedico(UUID id) {
     try {
       Utente medico = utenteRepository.findById(id).get();
 
-      return new ResponseEntity<>(mapper.writeValueAsString(terapiaRepository.findByMedicoCurante(medico)),
-          HttpStatus.OK);
-
+      return terapiaRepository.findByMedicoCurante(medico);
     } catch (Exception e) {
-      throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+      throw new BusinessException("DATA_RETRIEVAL_ERROR", "Failed to retrieve medic data");
     }
   }
 
@@ -65,7 +63,7 @@ public class TerapiaService {
 
       return new ResponseEntity<>("TERAPIA ELIMINATA", HttpStatus.OK);
     } catch (Exception e) {
-      throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+      throw new BusinessException("DELETION_ERROR", "Failed to delete terapy");
     }
   }
 
@@ -73,7 +71,7 @@ public class TerapiaService {
   public ResponseEntity<String> update(TerapiaDTO t, UUID id) {
     try {
       Terapia existingTerapia = terapiaRepository.findById(id)
-          .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Terapia non trovata"));
+          .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "DATABASE ERROR"));
 
       // Aggiorna i campi modificabili
       existingTerapia.setFarmaco(t.getFarmaco());
@@ -83,10 +81,8 @@ public class TerapiaService {
 
       terapiaRepository.save(existingTerapia);
       return new ResponseEntity<>("TERAPIA AGGIORNATA", HttpStatus.OK);
-    } catch (ResponseStatusException e) {
-      throw e;
     } catch (Exception e) {
-      throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+      throw new BusinessException("UPDATE_ERROR", "failed to update terapy");
     }
   }
 
