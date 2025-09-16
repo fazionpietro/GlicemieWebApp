@@ -1,5 +1,6 @@
 package it.univr.glicemiewebapp.repository;
 
+import it.univr.glicemiewebapp.dto.PazienteDTO;
 import it.univr.glicemiewebapp.dto.PazienteUtenteDTO;
 import it.univr.glicemiewebapp.entity.Paziente;
 import it.univr.glicemiewebapp.entity.Utente;
@@ -7,6 +8,7 @@ import it.univr.glicemiewebapp.entity.Utente;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -37,6 +39,23 @@ public interface PazienteRepository extends JpaRepository<Paziente, UUID> {
       """)
   List<PazienteUtenteDTO> findAllComplete();
 
-  List<Paziente> findByIdMedico(Utente medico);
+  @Query("""
+      SELECT new it.univr.glicemiewebapp.dto.PazienteDTO(
+          p.id,
+          p.email,
+          p.nome,
+          p.cognome,
+          p.dataNascita,
+          p.fattoriRischio,
+          p.comorbita,
+          p.patologiePregresse,
+          p.idMedico
+      )
+      FROM Paziente p
+      WHERE p.idMedico = :idMedico
+
+
+      """)
+  List<PazienteDTO> findByIdMedico(@Param("idMedico") Utente medico);
 
 }
