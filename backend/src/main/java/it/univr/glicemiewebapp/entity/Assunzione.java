@@ -16,27 +16,18 @@ import java.util.UUID;
 @Setter(AccessLevel.PRIVATE)
 @ToString
 public class Assunzione {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id_assunzione", nullable = false)
-    private UUID id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  @Column(name = "id_assunzione", nullable = false)
+  private UUID id;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "id_farmaco", nullable = false)
-    private Farmaco idFarmaco;
+  @NotNull
+  @OneToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(name = "id_terapia", nullable = false)
+  private Terapia idTerapia;
 
-    @NotNull
-    @Column(name = "quantita", nullable = false)
-    private Double quantita;
-
-    @NotNull
-    @Column(name = "\"timestamp\"", nullable = false)
-    private Instant timestamp;
-
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "id_paziente", nullable = false)
-    private Paziente idPaziente;
+  @NotNull
+  @Column(name = "\"timestamp\"", nullable = false)
+  private Instant timestamp;
 
 }

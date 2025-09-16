@@ -8,15 +8,12 @@ import {
   Table,
   Text,
 } from "@mantine/core";
-import { IconPencil, IconTrash } from "@tabler/icons-react";
-import type { Medico, Paziente } from "../type/DataType";
-import { useEffect, useState } from "react";
+import { IconTrash } from "@tabler/icons-react";
+import type { Medico } from "../type/DataType";
 import axios from "axios";
 
 import { modals, ModalsProvider } from "@mantine/modals";
-import RegisterPaziente from "./RegisterPaziente";
 import { useDisclosure } from "@mantine/hooks";
-import DetailsPaziente from "./DetailsPaziente";
 import { RegisterMedico } from "./RegisterMedico";
 import DetailsMedico from "./DetailsMedico";
 
@@ -27,11 +24,9 @@ type Props = {
 
 export function TableMedici({ medici, fetchMedici }: Props) {
   const [opened, { open, close }] = useDisclosure(false);
-  const [openedDel, { open: openDel, close: closeDel }] =
+  const [openedDel, { open: _openDel, close: closeDel }] =
     useDisclosure(false);
 
-  console.log(medici);
-  console.log(fetchMedici);
 
   const handleDelete = async (id: string) => {
     console.log("Deleting patient with ID:", id);

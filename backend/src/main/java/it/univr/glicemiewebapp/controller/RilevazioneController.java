@@ -5,8 +5,10 @@ import it.univr.glicemiewebapp.entity.Rilevazione;
 import it.univr.glicemiewebapp.service.RilevazioneService;
 import it.univr.glicemiewebapp.dto.RilevazioneUtenteDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
@@ -39,8 +41,21 @@ public class RilevazioneController {
     rilevazioneService.deleteRilevazione(idRilevazione);
   }
 
-    @GetMapping("/dto/{idPaziente}")
-    public List<RilevazioneUtenteDTO> getByPazienteDTO(@PathVariable UUID idPaziente) {
-        return rilevazioneService.getByPazienteDTO(idPaziente);
+  @GetMapping("/dto/{idPaziente}")
+  public List<RilevazioneUtenteDTO> getByPazienteDto(@PathVariable UUID idPaziente) {
+    return rilevazioneService.getByPazienteDTO(idPaziente);
+  }
+
+  @GetMapping("/my/{id}")
+  public ResponseEntity<String> getAllByMe(@PathVariable UUID id) {
+    try {
+
+      return rilevazioneService.getAllMyRilevazioni(id);
+    } catch (ResponseStatusException e) {
+
+      return new ResponseEntity<>(e.getReason(), e.getStatusCode());
+
     }
+
+  }
 }

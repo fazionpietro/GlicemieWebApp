@@ -3,7 +3,6 @@ import {
   Button,
   Container,
   Group,
-  Paper,
   PasswordInput,
   Progress,
   TextInput,
@@ -17,14 +16,12 @@ import {
 import { DateInput, type DateValue } from "@mantine/dates";
 import { IconAlertTriangle, IconCheck, IconX } from "@tabler/icons-react";
 import { useInputState } from "@mantine/hooks";
-import { useAuth } from "../../context/AuthContext";
 import axios, { AxiosError } from "axios";
-import type { Medico, User } from "../type/DataType";
+import type { Medico } from "../type/DataType";
 
 /* ---------- Stili CSS ---------- */
-import "../CommonFile/App.css";
-import emailcss from "../CommonFile/InvalidEmail.module.css";
-import { useNavigate } from "react-router";
+import "./App.css";
+import emailcss from "./InvalidEmail.module.css";
 
 
 type Props = {

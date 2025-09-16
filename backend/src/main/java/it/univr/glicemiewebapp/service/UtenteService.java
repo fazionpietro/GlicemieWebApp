@@ -98,7 +98,7 @@ public class UtenteService {
     Utente u = repository.findById(up.getId())
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "DATABASE ERROR"));
 
-    logger.warn("Modifing data of: " + u.toString());
+    logger.warn("Modifing data of (Terapia): " + u.toString());
 
     try {
       log.info(up.toString());

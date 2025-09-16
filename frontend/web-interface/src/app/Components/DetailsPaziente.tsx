@@ -12,8 +12,8 @@ import {
   ActionIcon,
   Alert,
 } from "@mantine/core";
-import "../CommonFile/App.css";
-import emailcss from "../CommonFile/InvalidEmail.module.css";
+import "./App.css";
+import emailcss from "./InvalidEmail.module.css";
 import { IconAlertTriangle, IconPencil } from "@tabler/icons-react";
 import type { Medico, Paziente } from "../type/DataType";
 import { DateInput, type DateValue } from "@mantine/dates";

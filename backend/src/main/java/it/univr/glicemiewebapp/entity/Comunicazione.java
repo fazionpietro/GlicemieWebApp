@@ -7,21 +7,24 @@ import lombok.*;
 import java.time.Instant;
 import java.util.UUID;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 @Entity
-@Table(name = "rilevazioni")
+@Table(name = "segnalazioni")
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @Getter(AccessLevel.PUBLIC)
 @Setter(AccessLevel.PRIVATE)
+@Builder
 @ToString
-public class Rilevazione {
+
+public class Comunicazione {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
-  @Column(name = "id_rilevazione", nullable = false)
+  @Column(name = "id_comunicazione", nullable = false)
   private UUID id;
+
+  @NotNull
+  @Column(name = "priorita", nullable = false)
+  private Integer priorita;
 
   @NotNull
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -29,16 +32,11 @@ public class Rilevazione {
   private Paziente idPaziente;
 
   @NotNull
-  @Column(name = "valore", nullable = false)
-  private Double valore;
+  @Column(name = "descrizione", nullable = false, length = Integer.MAX_VALUE)
+  private String descrizione;
 
   @NotNull
   @Column(name = "\"timestamp\"", nullable = false)
   private Instant timestamp;
-
-  @JsonProperty("idPaziente")
-  public UUID getIdPaziente() {
-    return this.idPaziente.getId();
-  }
 
 }
