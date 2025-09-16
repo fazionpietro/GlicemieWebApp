@@ -111,7 +111,7 @@ function ModalGlicemia() {
         <Button style={{ marginTop: "20px" }} onClick={inserisciRilevazione}>invia</Button>
       </Modal>
 
-      <Button style={{width: '150px',
+      <Button style={{width: '30%',
         height: '40px',
         fontSize: '14px',
         right: '5px'
