@@ -1,7 +1,7 @@
 import { Grid } from '@mantine/core';
 import LineC from './LineChart';
-import ContactMedic from './Contact';
-import { ModalSintomi, ModalMedicinali } from './Modal';
+import { ContactMedic, SegnalaSintomi } from './Contact';
+import { ModalSintomi, ModalMedicinali, ModalGlicemia } from './Modal';
 import TableGlicemia from './TableGlicemia';
 
 export function LeadGrid() {
@@ -26,20 +26,13 @@ export function LeadGrid() {
         </Grid.Col>
       </Grid>
       <Grid columns={24} mt={100}>
-        <Grid.Col span={15}>
-          <div style={{
-            height: "300px",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: "30px"
-          }}>
-            <ModalMedicinali />
-            <ModalSintomi />
-          </div>
+        <Grid.Col span={8}>
+          <SegnalaSintomi/>
         </Grid.Col>
-        <Grid.Col span={9}>
+        <Grid.Col span={8}>
+          <ModalMedicinali/>
+        </Grid.Col>
+        <Grid.Col span={8}>
           <div style={{ height: "300px" }}>
             <ContactMedic />
           </div>

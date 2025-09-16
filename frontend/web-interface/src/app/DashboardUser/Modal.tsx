@@ -117,8 +117,7 @@ function ModalGlicemia() {
         </Container>
       </Modal>
 
-      <Button style={{
-        width: '15%',
+      <Button style={{width: '30%',
         height: '40px',
         fontSize: '14px',
         right: '5px'
