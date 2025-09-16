@@ -3,7 +3,7 @@ import { Grid, Card, Skeleton, Title, useMantineTheme } from '@mantine/core';
 import { HeaderMegaMenu } from '../Components/Header';
 
 import { useMediaQuery } from "@mantine/hooks";
-import { TableTerapie } from './Tables';
+import { TableTerapie } from './TableTerapie.tsx';
 import TablePazienti from '../Components/TablePazienti';
 import type { Paziente, Terapia, User } from '../type/DataType';
 import { useEffect, useState } from 'react';

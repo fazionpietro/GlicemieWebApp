@@ -65,7 +65,7 @@ public class UtenteController {
   }
 
   @PutMapping("/update")
-  public ResponseEntity<String> updateuser(@RequestBody UtenteDTO entity) {
+  public ResponseEntity<String> update(@RequestBody UtenteDTO entity) {
 
     return utenteService.update(entity);
 

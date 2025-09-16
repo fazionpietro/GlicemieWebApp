@@ -61,7 +61,7 @@ export default function TablePazienti({
     const user = await JSON.parse(localStorage.getItem("user") ?? "")
     await axios.get(`${import.meta.env.VITE_API_KEY}api/rilevazioni/my/${user.id}`, { withCredentials: true })
       .then((res) => {
-        setRilevazioni(res.data.sort((a: Rilevazione, b: Rilevazione) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()));
+        setRilevazioni(res.data);
       })
       .catch((err) => {
         console.error("Errore nel caricamento rilevazioni:", err);

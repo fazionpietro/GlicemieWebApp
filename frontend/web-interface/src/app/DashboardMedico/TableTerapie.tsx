@@ -39,8 +39,7 @@ function TableTerapie({ pazienti, fetchPazienti, terapie, fetchTerapie }: Props)
       },
     })
       .then((res) => {
-        console.log(res);
-        fetchTerapie();
+        console.log(res)
       })
       .catch((err) => {
         console.error(err);
@@ -112,7 +111,7 @@ function TableTerapie({ pazienti, fetchPazienti, terapie, fetchTerapie }: Props)
 
                 </Table.Th>
                 <Table.Th style={{ textAlign: "left" }}>
-                  stato
+                  Ultima Assunzione
 
                 </Table.Th>
                 <Table.Th style={{ textAlign: "right" }}>

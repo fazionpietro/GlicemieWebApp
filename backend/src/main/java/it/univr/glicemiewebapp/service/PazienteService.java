@@ -29,16 +29,16 @@ public class PazienteService {
   private final PasswordEncoder passwordEncoder;
   private final PazienteRepository pazienteRepository;
   private final UtenteRepository utenteRepository;
-  private final ObjectMapper mapper;
+  private final LogService logger;
 
   public PazienteService(PasswordEncoder passwordEncoder,
       PazienteRepository pazienteRepository,
       UtenteRepository utenteRepository,
-      ObjectMapper mapper, LogService logger) {
+      LogService logger) {
     this.passwordEncoder = passwordEncoder;
     this.pazienteRepository = pazienteRepository;
     this.utenteRepository = utenteRepository;
-    this.mapper = mapper;
+    this.logger = logger;
   }
 
   public List<PazienteUtenteDTO> findAllComplete() {
@@ -67,6 +67,7 @@ public class PazienteService {
     Paziente paziente = pazienteRepository.findById(request.getId())
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "DATABASE ERROR"));
 
+    logger.warn("attempt to modify user: " + paziente.toString());
     try {
 
       Optional.ofNullable(request.getEmail()).ifPresent(paziente::setEmail);
