@@ -155,12 +155,8 @@ export default function TablePazienti({
                     />
                   </Modal>
 
-                    <Button
-                      variant="filled"
-                      onClick={openRegister}
-                      w="80%"
-                    >
-                      Aggiungi paziente
+                    <Button variant="filled" w="100%" onClick={openRegister}>
+                      <Text fw={700} truncate="end">Nuovo paziente</Text>
                     </Button>
                   </>) : "Azioni"}
                 </Table.Th>

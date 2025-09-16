@@ -171,11 +171,6 @@ function Login() {
             </Alert>
           )}
 
-          <Group justify="space-between" mt="lg">
-            <Anchor component="button" size="sm">
-              Forgot password?
-            </Anchor>
-          </Group>
 
 
           <Button

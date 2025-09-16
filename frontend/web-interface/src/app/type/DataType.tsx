@@ -73,3 +73,10 @@ export type Rilevazione = {
   timestamp: string,
   livello: number
 }
+
+export type Assunzione = {
+  id: string,
+  idTerapia: string,
+  latestTimestamp: string,
+  giaAssunto: number
+}
