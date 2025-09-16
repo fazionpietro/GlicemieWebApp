@@ -5,6 +5,7 @@ import it.univr.glicemiewebapp.repository.AssunzioneRepository;
 import it.univr.glicemiewebapp.service.LogService;
 import it.univr.glicemiewebapp.service.TerapiaService;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,44 +31,30 @@ public class TerapiaController {
 
   @PostMapping("/new")
   public ResponseEntity<String> create(@RequestBody TerapiaDTO t) {
-    try {
-      return terapiaService.create(t);
-    } catch (ResponseStatusException e) {
-      logger.error(e.getReason() + " " + e.getStatusCode());
-      return new ResponseEntity<>(e.getReason(), e.getStatusCode());
-    }
+    logger.info("attempt to create a terapy");
+    return terapiaService.create(t);
   }
 
   @GetMapping("/medico/{id}")
-  public ResponseEntity<String> getByMedico(@PathVariable("id") UUID id) {
-    try {
-      return terapiaService.getAllByMedico(id);
-    } catch (ResponseStatusException e) {
-      logger.error(e.getReason() + " " + e.getStatusCode());
-      return new ResponseEntity<>(e.getReason(), e.getStatusCode());
-    }
+  public ResponseEntity<List<TerapiaDTO>> getByMedico(@PathVariable("id") UUID id) {
+
+    logger.info("attempt to get patients of: " + id);
+    return ResponseEntity.ok(terapiaService.getAllByMedico(id));
 
   }
 
   @DeleteMapping("/delete/{id}")
   public ResponseEntity<String> delete(@PathVariable UUID id) {
-    try {
-      return terapiaService.delete(id);
-    } catch (ResponseStatusException e) {
-      logger.error(e.getReason() + " " + e.getStatusCode());
-      return new ResponseEntity<>(e.getReason(), e.getStatusCode());
-    }
+    logger.info("attempt to delete terapy: " + id);
+
+    return terapiaService.delete(id);
 
   }
 
   @PutMapping("/update/{id}")
   public ResponseEntity<String> update(@PathVariable("id") UUID id, @RequestBody TerapiaDTO t) {
-    try {
-      return terapiaService.update(t, id);
-    } catch (ResponseStatusException e) {
-      logger.error(e.getReason() + " " + e.getStatusCode());
-      return new ResponseEntity<>(e.getReason(), e.getStatusCode());
-    }
+    logger.info("attempt to update terapy: " + id);
+    return terapiaService.update(t, id);
 
   }
 }
