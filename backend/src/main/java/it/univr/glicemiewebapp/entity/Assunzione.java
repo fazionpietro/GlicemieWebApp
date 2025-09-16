@@ -12,8 +12,8 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Getter(AccessLevel.PUBLIC)
-@Setter(AccessLevel.PRIVATE)
+@Getter
+@Setter
 @ToString
 public class Assunzione {
   @Id
@@ -22,7 +22,7 @@ public class Assunzione {
   private UUID id;
 
   @NotNull
-  @OneToOne(fetch = FetchType.LAZY, optional = false)
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @JoinColumn(name = "id_terapia", nullable = false)
   private Terapia idTerapia;
 

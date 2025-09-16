@@ -7,14 +7,15 @@ import { MantineProvider } from "@mantine/core";
 import "@mantine/core/styles.css";
 import Register from "./app/RegisterPage/Register";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
-import AdminPage from "./app/DashboardAdmin/DashboardAdmin";
-import { LeadGrid } from "./app/DashboardMedico/LeadGrid";
+import DashboardAdmin from "./app/DashboardAdmin/DashboardAdmin";
 import UserPage from "./app/DashboardUser/UserPage";
 import Unauthorized from "./routes/Unhautorized";
 import { AuthProvider } from "./context/AuthContext";
 import { ProtectedRoute } from "./routes/ProtectedRoute";
+import DashboardMedico from './app/DashboardMedico/DashboardMedico.tsx'
 
 import axios from "axios";
+import { Assunzioni } from "./app/DashboardUser/Assunzioni.tsx";
 axios.defaults.withCredentials = true;
 
 createRoot(document.getElementById("root")!).render(
@@ -26,6 +27,7 @@ createRoot(document.getElementById("root")!).render(
             {/* Public routes that need AuthProvider */}
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/prova" element={<Assunzioni />} />
             <Route path="/unauthorized" element={<Unauthorized />} />
 
             {/* Private routes with ProtectedRoute */}
@@ -33,7 +35,7 @@ createRoot(document.getElementById("root")!).render(
               path="/admin"
               element={
                 <ProtectedRoute requiredRole={["admin"]}>
-                  <AdminPage />
+                  <DashboardAdmin />
                 </ProtectedRoute>
               }
             />
@@ -41,7 +43,7 @@ createRoot(document.getElementById("root")!).render(
               path="/medic"
               element={
                 <ProtectedRoute requiredRole={["medico", "admin"]}>
-                  <LeadGrid />
+                  <DashboardMedico />
                 </ProtectedRoute>
               }
             />

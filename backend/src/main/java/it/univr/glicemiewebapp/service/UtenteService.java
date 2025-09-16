@@ -2,8 +2,6 @@ package it.univr.glicemiewebapp.service;
 
 import it.univr.glicemiewebapp.dto.UtenteDTO;
 import it.univr.glicemiewebapp.entity.Utente;
-import it.univr.glicemiewebapp.forms.UtenteForm;
-import it.univr.glicemiewebapp.repository.RilevazioneRepository;
 import it.univr.glicemiewebapp.repository.UtenteRepository;
 import it.univr.glicemiewebapp.exception.*;
 import lombok.extern.slf4j.Slf4j;
@@ -14,9 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,7 +23,6 @@ public class UtenteService {
 
   private final PasswordEncoder passwordEncoder;
 
-  @Autowired
   private UtenteRepository repository;
 
   @Autowired

@@ -119,8 +119,8 @@ export function TableMedici({ medici, fetchMedici }: Props) {
                     />
                   </Modal>
 
-                  <Button variant="filled" onClick={open} w="80%">
-                    Aggiungi medico
+                  <Button variant="filled" w="78%" onClick={open}>
+                    <Text fw={700} truncate="end">Nuovo medico</Text>
                   </Button>
                 </Table.Th>
               </Table.Tr>

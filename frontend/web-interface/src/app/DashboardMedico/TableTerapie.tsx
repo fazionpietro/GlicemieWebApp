@@ -40,6 +40,7 @@ function TableTerapie({ pazienti, fetchPazienti, terapie, fetchTerapie }: Props)
     })
       .then((res) => {
         console.log(res)
+        fetchTerapie();
       })
       .catch((err) => {
         console.error(err);
@@ -126,8 +127,8 @@ function TableTerapie({ pazienti, fetchPazienti, terapie, fetchTerapie }: Props)
 
                   </Modal>
 
-                  <Button variant="filled" w="91%" onClick={openTerapie}>
-                    Aggiungi Terapia
+                  <Button variant="filled" w="100%" onClick={openTerapie}>
+                    <Text fw={700} truncate="end">Nuova Terapia</Text>
                   </Button>
                 </Table.Th>
               </Table.Tr>
