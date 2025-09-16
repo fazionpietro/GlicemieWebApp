@@ -2,6 +2,10 @@ import { Table } from '@mantine/core';
 import {useAuth} from "../../context/AuthContext";
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Pill } from '@mantine/core';
+import {Box,Text} from '@mantine/core';
+import '@mantine/core/styles.css';
+
 
 type Rilevazione = {
   id:string;
@@ -15,11 +19,19 @@ function TableGlicemia() {
   const [rilevazioni, setRilevazioni]= useState<Rilevazione[]>([]);
 
   useEffect(() => {
-    if(!user) return;
+    if(!user){
+      console.log("nessun utente loggato");
+      return;
+    }
 
     axios.get(`${import.meta.env.VITE_API_KEY}api/rilevazioni/dto/${user.id}`, { withCredentials: true })
     .then((res)=>{
-      console.log(res.data)
+      console.log("risposta: ", res);
+      console.log("dati: ", res.data);
+      console.log("tipo di dati: ", Array.isArray(res.data) ? "array" : typeof res.data);
+      res.data.forEach((item: Rilevazione, index: number) => {
+        console.log(`Rilevazione ${index}: livello = "${item.livello}", tipo = ${typeof item.livello}`);
+      });
       setRilevazioni(res.data.sort((a:Rilevazione,b:Rilevazione)=>new Date(b.timestamp).getTime()-new Date(a.timestamp).getTime()));
     })
     .catch((err)=>{
@@ -27,26 +39,45 @@ function TableGlicemia() {
     });
   },[user]);
 
-  const rows = rilevazioni.map((r) => (
-    <Table.Tr key={r.id}>
-      <Table.Td style={{textAlign: 'left'}}>{new Date(r.timestamp).toLocaleDateString()}</Table.Td>
-      <Table.Td style={{textAlign: 'left'}}>{r.valore}</Table.Td>
-      <Table.Td style={{textAlign: 'left'}}>{r.livello}</Table.Td>
-    </Table.Tr>
-  ));
+  const getColor= (livello: string) => {
+    switch(livello.toLowerCase().trim()){
+      case 'alto':
+        return 'red';
+      case 'basso':
+        return 'yellow';
+      case 'normale':
+        return 'green';
+    }
+  }
+  return(
+    <div>
+    {rilevazioni.slice(0, 5).map((r) => {
+        const dataFormattata= new Date(r.timestamp).toLocaleDateString();
+        const oraFormattata= new Date(r.timestamp).toLocaleTimeString('it-IT',{hour:'2-digit', minute:'2-digit'});
 
-  return (
-    <Table>
-      <Table.Thead>
-        <Table.Tr>
-          <Table.Th>Data</Table.Th>
-          <Table.Th>Rilevazioni</Table.Th>
-          <Table.Th>Livello</Table.Th>
-        </Table.Tr>
-      </Table.Thead>
-      <Table.Tbody>{rows}</Table.Tbody>
-    </Table>
-  );
+    return(
+      <Box key={r.id} style={{
+        marginBottom: '10px',
+        textAlign: 'left',
+        borderLeft: `3px solid ${getColor(r.livello)}`,
+        paddingLeft: '10px',
+        backgroundColor: 'rgba(0, 0, 0, 0.02)',
+        borderRadius: '4px',
+        padding: '8px'
+      }}>
+        <Text size="xs" c="dimmed">
+          {dataFormattata}-{oraFormattata}
+        </Text>
+        <Text size="sm">
+          <Text span fw={700} c={getColor(r.livello)}>
+            {r.livello.toUpperCase()}
+          </Text> - {r.valore} mg/dL;
+        </Text>
+      </Box>
+    );
+  })}
+  </div>
+  )
 }
 
 export default TableGlicemia;

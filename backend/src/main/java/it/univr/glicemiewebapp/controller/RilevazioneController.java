@@ -3,6 +3,7 @@ package it.univr.glicemiewebapp.controller;
 import it.univr.glicemiewebapp.dto.RilevazioneUtenteDTO;
 import it.univr.glicemiewebapp.entity.Rilevazione;
 import it.univr.glicemiewebapp.service.RilevazioneService;
+import it.univr.glicemiewebapp.dto.RilevazioneUtenteDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;

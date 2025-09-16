@@ -25,6 +25,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
 @Service
 public class RilevazioneService {
   @Autowired
@@ -52,7 +53,7 @@ public class RilevazioneService {
         .timestamp(Instant.now())
         .build();
 
-    log.info("Paziente id: " + paziente.getId() + " ha inserito una rilevazione: " + valore);
+    log.info("Paziente id: " + paziente.getId()+"ha inserito una rilevazione" + valore);
     return rilevazioni.save(nrilevazione);
   }
 

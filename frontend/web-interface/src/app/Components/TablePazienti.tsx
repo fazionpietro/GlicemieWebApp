@@ -1,3 +1,4 @@
+
 import {
   ActionIcon,
   Button,
@@ -236,3 +237,4 @@ export default function TablePazienti({
     </ModalsProvider>
   );
 }
+

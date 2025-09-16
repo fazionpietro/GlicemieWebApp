@@ -76,36 +76,39 @@ export function LeadGrid() {
         </Grid.Col>
       </Grid>
 
-      <Grid columns={24}>
-        <Grid.Col span={12}>
-          <LineC />
+      <Grid columns={24} mb={100}>
+        <Grid.Col span={15}>
+          <div style={{height: "300px"}}>
+            <LineC />
+          </div>
         </Grid.Col>
 
-        <Grid.Col span={12}>
+        <Grid.Col span={9}>
           <Grid>
-            {/*blocco grande*/}
-            <Grid.Col span={12}>
+            <Grid.Col mt={50}>
               <div style={{ height: "300px" }}>
                 <TableGlicemia />
               </div>
             </Grid.Col>
-
-
-            {/*due blocchi piccoli*/}
-            <Grid.Col span={6}>
-              <div style={{ height: "300px" }}>
-                <ModalGlicemia />
-                <ModalMedicinali />
-                <ModalSintomi />
-              </div>
-            </Grid.Col>
-            <Grid.Col span={6}>
-              <div style={{ height: "300px" }}>
-                <ContactMedic />
-              </div>
-            </Grid.Col>
-
           </Grid>
+        </Grid.Col>
+      </Grid>
+      <Grid columns={24} mt={100}>
+        <Grid.Col span={15}>
+          <div style={{  height: "300px",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "30px"}}>
+            <ModalMedicinali />
+            <ModalSintomi />
+          </div>
+        </Grid.Col>
+        <Grid.Col span={9}>
+          <div style={{ height: "300px" }}>
+            <ContactMedic />
+          </div>
         </Grid.Col>
       </Grid>
     </>
