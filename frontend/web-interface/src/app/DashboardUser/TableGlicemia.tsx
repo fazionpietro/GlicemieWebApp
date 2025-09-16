@@ -3,6 +3,7 @@ import {useAuth} from "../../context/AuthContext";
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Pill } from '@mantine/core';
+import {Box,Text} from '@mantine/core';
 import '@mantine/core/styles.css';
 
 
@@ -48,30 +49,35 @@ function TableGlicemia() {
         return 'green';
     }
   }
+  return(
+    <div>
+    {rilevazioni.slice(0, 5).map((r) => {
+        const dataFormattata= new Date(r.timestamp).toLocaleDateString();
+        const oraFormattata= new Date(r.timestamp).toLocaleTimeString('it-IT',{hour:'2-digit', minute:'2-digit'});
 
-  const rows = rilevazioni.slice(0, 8).map((r) => (
-    <Table.Tr key={r.id}>
-      <Table.Td style={{textAlign: 'left'}}> {new Date(r.timestamp).toLocaleDateString()}</Table.Td>
-      <Table.Td style={{textAlign: 'left'}}> {new Date(r.timestamp).toLocaleTimeString('it-IT',{hour:'2-digit', minute:'2-digit'})}</Table.Td>
-      <Table.Td style={{textAlign: 'left'}}>{r.valore}</Table.Td>
-      <Table.Td style={{textAlign: 'left'}}><Pill size="sm" bg={getColor(r.livello)}>{r.livello}</Pill></Table.Td>
-    </Table.Tr>
-  ));
-
-
-  return (
-    <Table>
-      <Table.Thead>
-        <Table.Tr>
-          <Table.Th>Data</Table.Th>
-          <Table.Th>Ora</Table.Th>
-          <Table.Th>Rilevazioni</Table.Th>
-          <Table.Th>Livello</Table.Th>
-        </Table.Tr>
-      </Table.Thead>
-      <Table.Tbody>{rows}</Table.Tbody>
-    </Table>
-  );
+    return(
+      <Box key={r.id} style={{
+        marginBottom: '10px',
+        textAlign: 'left',
+        borderLeft: `3px solid ${getColor(r.livello)}`,
+        paddingLeft: '10px',
+        backgroundColor: 'rgba(0, 0, 0, 0.02)',
+        borderRadius: '4px',
+        padding: '8px'
+      }}>
+        <Text size="xs" c="dimmed">
+          {dataFormattata}-{oraFormattata}
+        </Text>
+        <Text size="sm">
+          <Text span fw={700} c={getColor(r.livello)}>
+            {r.livello.toUpperCase()}
+          </Text> - {r.valore} mg/dL;
+        </Text>
+      </Box>
+    );
+  })}
+  </div>
+  )
 }
 
 export default TableGlicemia;

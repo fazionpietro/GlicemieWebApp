@@ -77,15 +77,15 @@ export function LeadGrid() {
       </Grid>
 
       <Grid columns={24} mb={100}>
-        <Grid.Col span={12}>
+        <Grid.Col span={15}>
           <div style={{height: "300px"}}>
             <LineC />
           </div>
         </Grid.Col>
 
-        <Grid.Col span={12}>
+        <Grid.Col span={9}>
           <Grid>
-            <Grid.Col span={12} mt={50}>
+            <Grid.Col mt={50}>
               <div style={{ height: "300px" }}>
                 <TableGlicemia />
               </div>
@@ -94,7 +94,7 @@ export function LeadGrid() {
         </Grid.Col>
       </Grid>
       <Grid columns={24} mt={100}>
-        <Grid.Col span={12}>
+        <Grid.Col span={15}>
           <div style={{  height: "300px",
             display: "flex",
             flexDirection: "column",
@@ -105,7 +105,7 @@ export function LeadGrid() {
             <ModalSintomi />
           </div>
         </Grid.Col>
-        <Grid.Col span={12}>
+        <Grid.Col span={9}>
           <div style={{ height: "300px" }}>
             <ContactMedic />
           </div>
