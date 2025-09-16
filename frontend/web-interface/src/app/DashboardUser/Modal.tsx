@@ -21,7 +21,7 @@ function ModalSintomi() {
         <button style={{ marginTop: "20px" }}>invia</button>
       </Modal>
 
-      <Button fullWidth variant="default" onClick={open} mt="30">
+      <Button fullWidth style={{height:'60px'}} type="submit" onClick={open} mt="30">
         Inserisci malattia o sintomo
       </Button>
     </>
@@ -42,7 +42,7 @@ function ModalMedicinali() {
         <button style={{ marginTop: "20px" }}>invia</button>
       </Modal>
 
-      <Button fullWidth variant="default" onClick={open} mt="30">
+      <Button fullWidth style={{height:'60px'}} type="submit" onClick={open} mt="30">
         Inserisci Medicinali Assunti
       </Button>
     </>
@@ -111,8 +111,12 @@ function ModalGlicemia() {
         <Button style={{ marginTop: "20px" }} onClick={inserisciRilevazione}>invia</Button>
       </Modal>
 
-      <Button fullWidth variant="default" onClick={open} mt="30">
-        Inserisci Valore Glicemia
+      <Button style={{width: '150px',
+        height: '40px',
+        fontSize: '14px',
+        right: '5px'
+      }} type="submit" onClick={open} mt="30">
+        Nuova Rilevazione
       </Button>
     </>
   );
