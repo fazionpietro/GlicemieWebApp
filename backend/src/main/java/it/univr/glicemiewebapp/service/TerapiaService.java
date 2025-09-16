@@ -71,7 +71,7 @@ public class TerapiaService {
   public ResponseEntity<String> update(TerapiaDTO t, UUID id) {
     try {
       Terapia existingTerapia = terapiaRepository.findById(id)
-          .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Terapia non trovata"));
+          .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "DATABASE ERROR"));
 
       // Aggiorna i campi modificabili
       existingTerapia.setFarmaco(t.getFarmaco());
