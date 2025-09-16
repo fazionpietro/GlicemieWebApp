@@ -8,15 +8,13 @@ import "@mantine/core/styles.css";
 import Register from "./app/RegisterPage/Register";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import AdminPage from "./app/DashboardAdmin/DashboardAdmin";
-import {LeadGrid} from "./app/DashboardMedico/LeadGrid";
+import { LeadGrid } from "./app/DashboardMedico/LeadGrid";
 import UserPage from "./app/DashboardUser/UserPage";
 import Unauthorized from "./routes/Unhautorized";
 import { AuthProvider } from "./context/AuthContext";
 import { ProtectedRoute } from "./routes/ProtectedRoute";
 
-// Axios global config
 import axios from "axios";
-import DetailsPaziente from "./app/Components/DetailsPaziente";
 axios.defaults.withCredentials = true;
 
 createRoot(document.getElementById("root")!).render(
