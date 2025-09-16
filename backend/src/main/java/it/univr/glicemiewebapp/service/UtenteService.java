@@ -5,6 +5,7 @@ import it.univr.glicemiewebapp.entity.Utente;
 import it.univr.glicemiewebapp.forms.UtenteForm;
 import it.univr.glicemiewebapp.repository.RilevazioneRepository;
 import it.univr.glicemiewebapp.repository.UtenteRepository;
+import it.univr.glicemiewebapp.exception.*;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,10 +31,6 @@ public class UtenteService {
   @Autowired
   private UtenteRepository repository;
 
-  @Autowired
-  private RilevazioneService rilevazioneService;
-  @Autowired
-  private ObjectMapper mapper;
   @Autowired
   private LogService logger;
 
@@ -66,16 +63,14 @@ public class UtenteService {
     return repository.findByEmailAddress(email);
   }
 
-  public ResponseEntity<String> getMedici() {
+  public List<UtenteDTO> getMedici() {
 
     try {
-      return new ResponseEntity<>(mapper.writeValueAsString(repository.findByRole("ROLE_MEDICO")), HttpStatus.OK);
+      return repository.findByRole("ROLE_MEDICO");
 
     } catch (Exception e) {
-      logger.error(e.getMessage());
-      throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "FAILED TO RETRIVE DATA");
+      throw new BusinessException("DATA_RETRIEVAL_ERROR", "Failed to retrieve medic data");
     }
-
   }
 
   public ResponseEntity<String> deleteByID(UUID id) {
@@ -85,59 +80,37 @@ public class UtenteService {
       return new ResponseEntity<>("{message: \"UTENTE ELIMINATO\" }", HttpStatus.OK);
 
     } catch (Exception e) {
-      logger.error(e.getMessage());
 
-      throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL SERVER ERROR");
+      throw new BusinessException("DELETION_ERROR", "Failed to delete user");
     }
 
   }
 
   @Transactional
-  public ResponseEntity<String> update(UtenteDTO up) {
+  public ResponseEntity<String> update(UtenteDTO request) {
 
-    Utente u = repository.findById(up.getId())
+    Utente utente = repository.findById(request.getId())
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "DATABASE ERROR"));
 
-    logger.warn("Modifing data of (Terapia): " + u.toString());
+    logger.warn("Modifing data of (Terapia): " + utente.toString());
 
     try {
-      log.info(up.toString());
+      Optional.ofNullable(request.getEmail()).ifPresent(email -> {
+        if (!email.equals(utente.getEmail()) && repository.existsByEmail(email)) {
+          throw new ValidationException("Email already exists");
+        }
+        utente.setEmail(email);
+      });
 
-      if (up.getEmail() != null)
-        u.setEmail(up.getEmail());
-
-      if (up.getPasswordHash() != null)
-        u.setPasswordHash(passwordEncoder.encode(up.getPasswordHash()));
-
-      if (up.getNome() != null)
-        u.setNome(up.getNome());
-
-      if (up.getCognome() != null)
-        u.setCognome(up.getCognome());
-
-      if (up.getDataNascita() != null)
-        u.setDataNascita(up.getDataNascita());
-
+      Optional.ofNullable(request.getNome()).ifPresent(utente::setNome);
+      Optional.ofNullable(request.getCognome()).ifPresent(utente::setCognome);
+      Optional.ofNullable(request.getDataNascita()).ifPresent(utente::setDataNascita);
+      if (request.getPasswordHash() != null)
+        utente.setPasswordHash(passwordEncoder.encode(request.getPasswordHash()));
       return new ResponseEntity<>("USER UPDATED", HttpStatus.OK);
 
     } catch (Exception e) {
-      logger.error(e.getMessage());
-
-      throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
-    }
-  }
-
-  public ResponseEntity<String> getStats() {
-    try {
-
-      String res = "{\n\"medici\": " + repository.count("ROLE_MEDICO") + ",\n\"pazienti\": "
-          + repository.count("ROLE_PAZIENTE") + ",\n\"rilevazioni\": " + rilevazioneService.getRilevazioniOfDay()
-          + "\n}";
-
-      return new ResponseEntity<>(res, HttpStatus.OK);
-    } catch (Exception e) {
-
-      throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+      throw new BusinessException("DATA_RETRIEVAL_ERROR", "Failed to retrieve patients for medico");
     }
 
   }

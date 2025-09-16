@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -52,55 +51,24 @@ public class UtenteController {
   }
 
   @GetMapping("/medici/all")
-  public ResponseEntity<String> getAll() {
+  public ResponseEntity<List<UtenteDTO>> getAll() {
 
-    try {
-      return utenteService.getMedici();
-    } catch (ResponseStatusException e) {
-      log.error(e.getReason(), e.getStatusCode());
-      return new ResponseEntity<>(e.getReason(), e.getStatusCode());
-    }
+    logger.info("attempt to get all the medics");
+    return ResponseEntity.ok(utenteService.getMedici());
   }
 
   @DeleteMapping("/delete/{id}")
   public ResponseEntity<String> delete(@PathVariable UUID id) {
-    try {
-      logger.warn("Attempt to delete: " + id);
-      return utenteService.deleteByID(id);
-
-    } catch (ResponseStatusException e) {
-
-      log.error(e.getReason(), e.getStatusCode());
-      return new ResponseEntity<>(e.getReason(), e.getStatusCode());
-
-    }
+    logger.info("attemmpt to delete: " + id);
+    return utenteService.deleteByID(id);
 
   }
 
   @PutMapping("/update")
-  public ResponseEntity<String> putMethodName(@RequestBody UtenteDTO entity) {
+  public ResponseEntity<String> updateuser(@RequestBody UtenteDTO entity) {
 
-    try {
-      return utenteService.update(entity);
-
-    } catch (ResponseStatusException e) {
-
-      log.error(e.getReason(), e.getStatusCode());
-      return new ResponseEntity<>(e.getReason(), e.getStatusCode());
-
-    }
+    return utenteService.update(entity);
 
   }
 
-  @GetMapping("/medici/number")
-  public ResponseEntity<String> numeroMedici() {
-    try {
-      return utenteService.getStats();
-    } catch (ResponseStatusException e) {
-
-      log.error(e.getReason(), e.getStatusCode());
-      return new ResponseEntity<>(e.getReason(), e.getStatusCode());
-
-    }
-  }
 }

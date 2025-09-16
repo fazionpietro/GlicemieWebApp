@@ -1,11 +1,12 @@
 package it.univr.glicemiewebapp.controller;
 
+import it.univr.glicemiewebapp.dto.PazienteDTO;
 import it.univr.glicemiewebapp.dto.PazienteUtenteDTO;
-import it.univr.glicemiewebapp.repository.AssunzioneRepository;
 import it.univr.glicemiewebapp.service.LogService;
 import it.univr.glicemiewebapp.service.PazienteService;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,17 +34,14 @@ public class PazienteController {
 
   @CrossOrigin
   @GetMapping("/all")
-  public ResponseEntity<String> getAll() {
-    try {
-      return pazienteService.findAllComplete();
-    } catch (ResponseStatusException e) {
-      log.error(e.getReason(), e.getStatusCode());
-      return new ResponseEntity<>(e.getReason(), e.getStatusCode());
-    }
+  public ResponseEntity<List<PazienteUtenteDTO>> getAll() {
+
+    return ResponseEntity.ok(pazienteService.findAllComplete());
+
   }
 
   @PutMapping("/update")
-  public ResponseEntity<String> putMethodName(@RequestBody PazienteUtenteDTO entity) {
+  public ResponseEntity<String> update(@RequestBody PazienteUtenteDTO entity) {
 
     try {
       logger.warn("Attempt to update: " + entity.getId());
@@ -51,7 +49,6 @@ public class PazienteController {
 
     } catch (ResponseStatusException e) {
 
-      log.error(e.getReason(), e.getStatusCode());
       return new ResponseEntity<>(e.getReason(), e.getStatusCode());
 
     }
@@ -59,15 +56,9 @@ public class PazienteController {
   }
 
   @GetMapping("/my/{id}")
-  public ResponseEntity<String> getPazientiMedico(@PathVariable("id") UUID idMedico) {
-    try {
-      return pazienteService.findByMedico(idMedico);
-    } catch (ResponseStatusException e) {
-      log.error(e.getReason(), e.getStatusCode());
-      return new ResponseEntity<>(e.getReason(), e.getStatusCode());
-
-    }
-
+  public ResponseEntity<List<PazienteDTO>> getPazientiMedico(@PathVariable("id") UUID idMedico) {
+    logger.info("attempt to get patients of " + idMedico);
+    return ResponseEntity.ok(pazienteService.findByMedico(idMedico));
   }
 
 }
