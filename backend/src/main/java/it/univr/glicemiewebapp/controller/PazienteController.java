@@ -43,15 +43,8 @@ public class PazienteController {
   @PutMapping("/update")
   public ResponseEntity<String> update(@RequestBody PazienteUtenteDTO entity) {
 
-    try {
-      logger.warn("Attempt to update: " + entity.getId());
-      return pazienteService.update(entity);
-
-    } catch (ResponseStatusException e) {
-
-      return new ResponseEntity<>(e.getReason(), e.getStatusCode());
-
-    }
+    logger.warn("Attempt to update: " + entity.getId());
+    return pazienteService.update(entity);
 
   }
 

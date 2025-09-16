@@ -1,3 +1,4 @@
+
 import { LineChart} from '@mantine/charts';
 import { ReferenceLine } from 'recharts';
 import '@mantine/core/styles.css';
@@ -104,3 +105,4 @@ function LineC() {
 }
 
 export default LineC;
+

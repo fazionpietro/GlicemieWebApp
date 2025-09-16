@@ -90,9 +90,9 @@ public class UtenteService {
   public ResponseEntity<String> update(UtenteDTO request) {
 
     Utente utente = repository.findById(request.getId())
-        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "DATABASE ERROR"));
+        .orElseThrow(() -> new BusinessException("DATA_RETRIEVAL_ERROR", "Failed to retrieve patients for medico"));
 
-    logger.warn("Modifing data of (Terapia): " + utente.toString());
+    logger.warn("Modifing data of user: " + utente.toString());
 
     try {
       Optional.ofNullable(request.getEmail()).ifPresent(email -> {
