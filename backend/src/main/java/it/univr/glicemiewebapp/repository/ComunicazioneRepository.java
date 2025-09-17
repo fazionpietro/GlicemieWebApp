@@ -1,11 +1,13 @@
 package it.univr.glicemiewebapp.repository;
 
-import it.univr.glicemiewebapp.entity.Comunicazione;
+import java.util.UUID;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.UUID;
+import it.univr.glicemiewebapp.entity.Comunicazione;
 
 @Repository
-public interface ComunicazioneRepository extends JpaRepository<Comunicazione, UUID> {
-}
+public interface ComunicazioneRepository extends JpaRepository<Comunicazione, UUID>{
+    
+};
