@@ -12,9 +12,7 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { HeaderMegaMenu } from "../Components/Header";
-import classes from "../Components/StatsCard.module.css";
-import { FiUsers, FiActivity, FiAlignRight } from "react-icons/fi";
-import { FaUserMd } from "react-icons/fa";
+
 import { useEffect, useState } from "react";
 import axios from "axios";
 import type { Medico, Paziente } from "../type/DataType";

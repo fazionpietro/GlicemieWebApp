@@ -9,13 +9,13 @@ import Register from "./app/RegisterPage/Register";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import DashboardAdmin from "./app/DashboardAdmin/DashboardAdmin";
 import UserPage from "./app/DashboardUser/UserPage";
-import Unauthorized from "./routes/Unhautorized";
 import { AuthProvider } from "./context/AuthContext";
 import { ProtectedRoute } from "./routes/ProtectedRoute";
 import DashboardMedico from './app/DashboardMedico/DashboardMedico.tsx'
 
 import axios from "axios";
-import { Assunzioni } from "./app/DashboardUser/Assunzioni.tsx";
+import { Unhautorized } from "./routes/Unhautorized.tsx";
+import { PageNotFound } from "./routes/PageNotFound.tsx";
 axios.defaults.withCredentials = true;
 
 createRoot(document.getElementById("root")!).render(
@@ -27,12 +27,14 @@ createRoot(document.getElementById("root")!).render(
             {/* Public routes that need AuthProvider */}
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/prova" element={<Assunzioni />} />
-            <Route path="/unauthorized" element={<Unauthorized />} />
+            <Route path="/unauthorized" element={<Unhautorized />} />
+            <Route path="/notfound" element={<PageNotFound />} />
+
+
 
             {/* Private routes with ProtectedRoute */}
             <Route
-              path="/admin"
+              path="/dashboard"
               element={
                 <ProtectedRoute requiredRole={["admin"]}>
                   <DashboardAdmin />
@@ -40,17 +42,17 @@ createRoot(document.getElementById("root")!).render(
               }
             />
             <Route
-              path="/medic"
+              path="/dashdoard"
               element={
-                <ProtectedRoute requiredRole={["medico", "admin"]}>
+                <ProtectedRoute requiredRole={["medico"]}>
                   <DashboardMedico />
                 </ProtectedRoute>
               }
             />
             <Route
-              path="/user"
+              path="/dashboard"
               element={
-                <ProtectedRoute requiredRole={["paziente", "medico", "admin"]}>
+                <ProtectedRoute requiredRole={["paziente"]}>
                   <UserPage />
                 </ProtectedRoute>
               }
@@ -58,7 +60,7 @@ createRoot(document.getElementById("root")!).render(
 
             {/* Default redirects */}
             <Route path="/" element={<Navigate to="/login" replace />} />
-            <Route path="*" element={<Navigate to="/login" replace />} />
+            <Route path="*" element={<Navigate to="/notfound" replace />} />
           </Routes>
         </AuthProvider>
       </BrowserRouter>

@@ -3,6 +3,9 @@ package it.univr.glicemiewebapp.dto;
 import java.time.Instant;
 import java.util.UUID;
 
+import lombok.ToString;
+
+@ToString
 public class AlertTerapia {
   private final String farmaco;
   private final String nome;

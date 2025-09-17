@@ -12,11 +12,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const checkAuth = async (): Promise<void> => {
     try {
       setIsLoading(true);
-      
+
       // Chiamata al backend per verificare il token nel cookie
       const response = await axios.get(
         `${import.meta.env.VITE_API_KEY}api/auth/verify`,
-        { 
+        {
           withCredentials: true,
           timeout: 5000
         }
@@ -41,7 +41,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const login = (userData: User) => {
     setUser(userData);
-    // Salva i dati utente in localStorage per persistenza (opzionale)
     localStorage.setItem('user', JSON.stringify(userData));
   };
 
@@ -61,7 +60,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   };
 
-  
+
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
     if (storedUser) {

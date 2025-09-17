@@ -8,16 +8,18 @@ import TablePazienti from '../Components/TablePazienti';
 import type { Paziente, Terapia, User } from '../type/DataType';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useAuth } from '../../context/AuthContext.tsx';
 const PRIMARY_COL_HEIGHT = '40vh';
 
 
 function MedicPage() {
-  const [user, setUser] = useState<User | null>(null)
+  //const [user, setUser] = useState<User | null>(null)
   const theme = useMantineTheme();
   const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`);
   const [pazienti, setPazienti] = useState<Paziente[] | null>(null);
   const [didFetch, setDidFetch] = useState(false);
   const [terapie, setTerapie] = useState<Terapia[] | null>(null)
+  const { user } = useAuth()
 
   async function fetchPazienti() {
     await axios({
@@ -59,10 +61,7 @@ function MedicPage() {
 
 
   useEffect(() => {
-    if (user === null) {
 
-      setUser(JSON.parse(localStorage.getItem("user") ?? "{}"));
-    }
     if (!didFetch && user !== null) {
 
       fetchTerapie()
