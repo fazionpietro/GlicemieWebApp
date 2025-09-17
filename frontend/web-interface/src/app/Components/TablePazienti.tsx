@@ -19,6 +19,7 @@ import RegisterPaziente from "./RegisterPaziente";
 import { useDisclosure } from "@mantine/hooks";
 import DetailsPaziente from "./DetailsPaziente";
 import { RilevazioniModal, StatusBadge } from "./DetailsRilevazione";
+import { useAuth } from "../../context/AuthContext";
 
 type Props = {
   pazienti: Paziente[] | null;
@@ -38,6 +39,7 @@ export default function TablePazienti({
     useDisclosure(false);
   const [openedDel, { open: _openDel, close: closeDel }] =
     useDisclosure(false);
+  const { user } = useAuth()
 
   const handleDelete = async (id: string) => {
     console.log("Deleting patient with ID:", id);
@@ -59,8 +61,8 @@ export default function TablePazienti({
       });
   };
   async function fetchRilevazioni() {
-    const user = await JSON.parse(localStorage.getItem("user") ?? "")
-    await axios.get(`${import.meta.env.VITE_API_KEY}api/rilevazioni/my/${user.id}`, { withCredentials: true })
+
+    await axios.get(`${import.meta.env.VITE_API_KEY}api/rilevazioni/my/${user?.id}`, { withCredentials: true })
       .then((res) => {
         setRilevazioni(res.data);
       })

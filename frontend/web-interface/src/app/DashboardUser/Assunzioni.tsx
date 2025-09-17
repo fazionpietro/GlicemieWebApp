@@ -36,14 +36,7 @@ interface Props {
 
 
 export function Assunzioni({ terapie, assunzioni }: Props) {
-  const todayIntakes = {
-    count: 6,
-    lastTime: '12:52',
-    items: [
-      { name: 'Om fa', taken: true },
-      { name: 'Om fa', taken: true }
-    ]
-  };
+
 
   return (
     <Box p="md" w={600}>

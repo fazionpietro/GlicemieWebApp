@@ -98,7 +98,9 @@ public class TerapiaService {
       Instant threeDaysAgo = Instant.now().minus(Duration.ofDays(3));
       List<AlertTerapia> list = terapiaRepository.findPazientiInadempienti(threeDaysAgo);
 
-      log.info(list.toString());
+      for (AlertTerapia a : list) {
+        log.info(a.toString());
+      }
 
     } catch (Exception e) {
       throw new BusinessException("DATA_RETRIEVAL_ERROR", "Failed to retreive data");
