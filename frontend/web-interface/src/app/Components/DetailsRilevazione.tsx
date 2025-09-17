@@ -9,7 +9,8 @@ import {
   Paper,
   Group,
   useMantineTheme,
-  Pill
+  Pill,
+  Container
 } from "@mantine/core"
 import { useDisclosure } from "@mantine/hooks";
 import { FaRegEye } from "react-icons/fa";
@@ -206,6 +207,7 @@ export function RilevazioniModal({ id, rilevazioni, fetchRilevazioni }: Props) {
                       <Group gap="xs">
                         {icon}
                         <Pill
+                          w="100%"
                           bg={color}
                           c="white"
                           fw={600}

@@ -10,30 +10,28 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
 
 @RestController
 @RequestMapping("/api/comunicazioni")
 @RequiredArgsConstructor
-
 public class ComunicazioneController {
-    
-    private final ComunicazioneService comunicazioneService;
 
-    @PostMapping
-    public ResponseEntity<ComunicazioneDTO> createComunicazione(@Valid @RequestBody ComunicazioneDTO comunicazioneDTO){
-        Comunicazione comunicazione = Comunicazione.builder().priorita(comunicazioneDTO.getPriorita()).descrizione(comunicazioneDTO.getDescrizione())
+  private final ComunicazioneService comunicazioneService;
+
+  @PostMapping
+  public ResponseEntity<ComunicazioneDTO> createComunicazione(@Valid @RequestBody ComunicazioneDTO comunicazioneDTO) {
+    Comunicazione comunicazione = Comunicazione.builder().priorita(comunicazioneDTO.getPriorita())
+        .descrizione(comunicazioneDTO.getDescrizione())
         .timestamp(Instant.now()).build();
 
-        Comunicazione comunicazioneSalvata = comunicazioneService.salvaComunicazione(comunicazione, comunicazioneDTO.getIdPaziente());
-        return ResponseEntity.status(HttpStatus.CREATED).body(toDTO(comunicazioneSalvata));
-    }
+    Comunicazione comunicazioneSalvata = comunicazioneService.salvaComunicazione(comunicazione,
+        comunicazioneDTO.getIdPaziente());
+    return ResponseEntity.status(HttpStatus.CREATED).body(toDTO(comunicazioneSalvata));
+  }
 
-    private ComunicazioneDTO toDTO(Comunicazione comunicazione){
-        return ComunicazioneDTO.builder().id(comunicazione.getId()).priorita(comunicazione.getPriorita()).idPaziente(comunicazione.getIdPaziente().getId())
+  private ComunicazioneDTO toDTO(Comunicazione comunicazione) {
+    return ComunicazioneDTO.builder().id(comunicazione.getId()).priorita(comunicazione.getPriorita())
+        .idPaziente(comunicazione.getIdPaziente().getId())
         .descrizione(comunicazione.getDescrizione()).timestamp(comunicazione.getTimestamp()).build();
-    }
+  }
 }

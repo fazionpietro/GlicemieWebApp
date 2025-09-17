@@ -15,10 +15,9 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class ComunicazioneService{
-    private final ComunicazioneRepository comunicazioneRepository;
-    private final PazienteRepository pazienteRepository;
-    
+public class ComunicazioneService {
+  private final ComunicazioneRepository comunicazioneRepository;
+  private final PazienteRepository pazienteRepository;
 
     @Transactional
     public Comunicazione salvaComunicazione(Comunicazione comunicazione, UUID idPaziente){

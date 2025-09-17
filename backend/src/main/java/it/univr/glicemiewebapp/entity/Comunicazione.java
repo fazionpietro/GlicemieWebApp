@@ -11,11 +11,10 @@ import java.util.UUID;
 @Table(name = "comunicazioni")
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter(AccessLevel.PUBLIC)
-@Setter(AccessLevel.PRIVATE)
+@Getter
+@Setter
 @Builder
 @ToString
-
 public class Comunicazione {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)

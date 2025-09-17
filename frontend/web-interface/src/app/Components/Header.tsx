@@ -1,68 +1,117 @@
+import { useState } from 'react';
 import {
-  IconBook,
-  IconChartPie3,
-  IconChevronDown,
-  IconCode,
-  IconCoin,
-  IconFingerprint,
-  IconNotification,
-} from '@tabler/icons-react';
-import {
-  Anchor,
-  Box,
-  Burger,
-  Button,
-  Center,
-  Collapse,
-  Divider,
-  Drawer,
+  AppShell,
   Group,
-  HoverCard,
-  ScrollArea,
-  SimpleGrid,
   Text,
-  ThemeIcon,
+  Button,
+  Avatar,
+  Menu,
   UnstyledButton,
-  useMantineTheme,
+  rem,
+  Loader
 } from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
+import {
+  IconDroplet,
+  IconUser,
+  IconLogout,
+  IconSettings,
+  IconChevronDown,
+  IconLogin
+} from '@tabler/icons-react';
 import classes from './HeaderTabs.module.css'
-import { UserInfoIcons } from './Profileicon';
+import { useAuth } from '../../context/AuthContext';
+
 
 export function HeaderMegaMenu() {
-  const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] = useDisclosure(false);
+  const { user, isAuthenticated, isLoading, logout } = useAuth();
 
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } catch (error) {
+      console.error('Errore durante il logout:', error);
+    }
+  };
 
-  /* inserisci nome cognome e profilo al posto di mantine logo */
+  const handleLogin = () => {
+
+    console.log('Redirect to login page');
+  };
+
   return (
-    <Box pt={60} pb={120}>
+    <Group h="100%" px="md" justify="space-between" mb={80} >
       <header className={classes.header}>
-        <Group justify="space-between" align="center" h="100%">
-          <UserInfoIcons/>
-          
-          <Group visibleFrom="sm" >
-            <Button color='red'>Log out</Button>
-          </Group>
-
-          <Burger opened={drawerOpened} onClick={toggleDrawer} hiddenFrom="sm" />
+        {/* Logo e Nome App a Sinistra */}
+        <Group gap="sm" w="100%" pl={30}>
+          <Avatar
+            size={40}
+            radius="md"
+            color="blue"
+            variant="filled"
+          >
+            <IconDroplet size={24} />
+          </Avatar>
+          <div>
+            <Text size="lg" fw={700} c="blue">
+              GlycoTracker
+            </Text>
+            <Text size="xs" c="dimmed">
+              Monitoraggio Glicemico
+            </Text>
+          </div>
         </Group>
-      </header>
 
-      <Drawer
-        opened={drawerOpened}
-        onClose={closeDrawer}
-        size="100%"
-        padding="md"
-        title="Navigation"
-        hiddenFrom="sm"
-        zIndex={1000000}
-      >
-        <ScrollArea h="calc(100vh - 80px" mx="-md">
-          <Group justify="center" grow pb="xl" px="md">
-            <Button color='red'>Log out</Button>
-          </Group>
-        </ScrollArea>
-      </Drawer>
-    </Box>
-  );
+        <Group gap="sm" justify='flex-end' w='100%'>
+          {isLoading ? (
+            <Loader size="sm" />
+          ) : !isAuthenticated ? (
+            <Button
+              variant="filled"
+              size="sm"
+              leftSection={<IconLogin size={16} />}
+              onClick={handleLogin}
+            >
+              Accedi
+            </Button>
+          ) : (
+            <Menu shadow="md" width={200} position="bottom-end">
+              <Menu.Target>
+                <UnstyledButton>
+                  <Group gap="xs">
+                    <Avatar size={32} radius="xl" color="blue" variant="light">
+                      <IconUser size={18} />
+                    </Avatar>
+                    <div style={{ flex: 1, textAlign: 'left' }}>
+                      <Text size="sm" fw={500}>
+                        {user?.email || 'Utente'}
+                      </Text>
+                    </div>
+                    <IconChevronDown size={16} />
+                  </Group>
+                </UnstyledButton>
+              </Menu.Target>
+
+              <Menu.Dropdown>
+                <Menu.Label>Account</Menu.Label>
+                <Menu.Item
+                  leftSection={<IconSettings style={{ width: rem(14), height: rem(14) }} />}
+                >
+                  Impostazioni
+                </Menu.Item>
+
+                <Menu.Divider />
+
+                <Menu.Item
+                  color="red"
+                  leftSection={<IconLogout style={{ width: rem(14), height: rem(14) }} />}
+                  onClick={handleLogout}
+                >
+                  Disconnetti
+                </Menu.Item>
+              </Menu.Dropdown>
+            </Menu>
+          )}
+        </Group>
+      </header >
+    </Group >);
 }
