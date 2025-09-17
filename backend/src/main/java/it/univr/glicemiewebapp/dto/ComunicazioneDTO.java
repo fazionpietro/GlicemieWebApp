@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
@@ -23,11 +24,11 @@ public class ComunicazioneDTO {
   @NotNull(message = "priorità obbligatoria")
   private Integer priorita;
 
-  @NotNull(message = "id paziente obbligatorio")
-  private UUID idPaziente;
+    @NotNull(message = "id paziente obbligatorio")
+    private UUID idPaziente;
 
-  @NotNull(message = "descrizione obbligatoria")
-  private String descrizione;
+    @NotNull(message = "descrizione obbligatoria")
+    private String descrizione;
 
-  private Instant timestamp;
+    private Instant timestamp;
 }
