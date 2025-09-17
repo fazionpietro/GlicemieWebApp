@@ -27,7 +27,7 @@ public class ComunicazioneService{
             comunicazione.setIdPaziente(paziente);
             return comunicazioneRepository.save(comunicazione);
         }catch(Exception e){
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,"errore: ")
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,"errore: ");
         }
     }
 }

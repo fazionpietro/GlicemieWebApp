@@ -1,7 +1,7 @@
 package it.univr.glicemiewebapp.dto;
 
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstuctor;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,10 +21,10 @@ public class ComunicazioneDTO{
     private Integer priorita;
 
     @NotNull(message = "id paziente obbligatorio")
-    private UUID idpaziente;
+    private UUID idPaziente;
 
     @NotNull(message = "descrizione obbligatoria")
-    private string descrizione;
+    private String descrizione;
 
-    private instant timestamp;
+    private Instant timestamp;
 }

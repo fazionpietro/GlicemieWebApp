@@ -18,10 +18,10 @@ interface FormValues{
 
 const  salvaComunicazione = async (datiComunicazione: ComunicazioneData) =>{
     try{
-    const response = await axios.post('/api/comunicazioni', datiComunicazione,{
+    const response = await axios.post(`${import.meta.env.VITE_API_KEY}api/comunicazioni`, JSON.stringify(datiComunicazione),{
       headers:{
         'Content-Type': 'application/json',
-      } as any,
+      },
     });
     return response.data;
     }catch(error){
