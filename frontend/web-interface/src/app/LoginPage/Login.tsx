@@ -31,7 +31,7 @@ function Login() {
   const [errorMessage, setErrorMessage] = useState("");
 
   // Ottieni la pagina da cui l'utente è stato reindirizzato
-  const from = location.state?.from?.pathname || "/user";
+  const from = location.state?.from?.pathname || "/dashboard";
 
   const isValidEmail = (value: string) =>
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);

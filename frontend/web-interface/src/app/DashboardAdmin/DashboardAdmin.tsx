@@ -12,9 +12,7 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { HeaderMegaMenu } from "../Components/Header";
-import classes from "../Components/StatsCard.module.css";
-import { FiUsers, FiActivity, FiAlignRight } from "react-icons/fi";
-import { FaUserMd } from "react-icons/fa";
+
 import { useEffect, useState } from "react";
 import axios from "axios";
 import type { Medico, Paziente } from "../type/DataType";
@@ -183,37 +181,11 @@ function DashboardAdmin() {
   return (
     <div>
       <HeaderMegaMenu />
+      <Title ta={"left"} mb="8vh" fz="4rem">Dashboard Admin</Title>
       <Container fluid p={isMobile ? "xs" : "md"} my={{ base: 20, md: 40 }}>
-        <Grid gutter={isMobile ? "xs" : "md"} mb={{ base: 30, md: 70 }}>
-          {[
-            { icon: <FiUsers size={isMobile ? 32 : 48} color="#4A90E2" />, label: "Utenti Totali", value: "127" },
-            { icon: <FaUserMd size={isMobile ? 32 : 48} color="#4ae293ff" />, label: "Medici Attivi", value: "23" },
-            { icon: <FiActivity size={isMobile ? 32 : 48} color="#e2b74aff" />, label: "Rilevazioni/Giorno", value: "1,247" },
-            { icon: <FiAlignRight size={isMobile ? 32 : 48} color="#704ae2ff" />, label: "Uptime Sistema", value: "99.9%" },
-          ].map((stat, index) => (
-            <Grid.Col key={index} span={{ base: 6, sm: 6, md: 6, lg: 3 }}>
-              <Paper className={classes.stat} radius="md" shadow="md" p={isMobile ? "xs" : "md"}>
-                <div className={classes.icon}>
-                  {stat.icon}
-                </div>
-                <div>
-                  <Text className={classes.label} size={isMobile ? "xs" : "sm"}>
-                    {stat.label}
-                  </Text>
-                  <Box fz={isMobile ? "md" : "lg"} className={classes.count}>
-                    <span className={classes.value}>{stat.value}</span>
-                    <Text size={isMobile ? "xs" : "sm"} c="dimmed" mt={5}>
-                      {index === 0 ? "+12% dal mese scorso" :
-                        index === 1 ? "Online negli ultimi 7 giorni" :
-                          index === 2 ? "Media ultimi 30 giorni" : "Ultimi 30 giorni"}
-                    </Text>
-                  </Box>
-                </div>
-              </Paper>
-            </Grid.Col>
-          ))}
-        </Grid>
+
         <Grid gutter={isMobile ? "md" : "xl"} align="flex-start" ta={"left"}>
+
           {/* Sezione sinistra - Gestione Utenti e Tables */}
           <Grid.Col span={{ base: 12, lg: 8 }}
           >

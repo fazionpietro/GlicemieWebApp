@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 import java.util.UUID;
 
 @Repository
-pubblic interface ComunicazioneRepository extends JpaRepository<Comunicazione, UUID>{
+public interface ComunicazioneRepository extends JpaRepository<Comunicazione, UUID> {
 }
