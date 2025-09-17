@@ -8,9 +8,6 @@ import it.univr.glicemiewebapp.repository.UtenteRepository;
 import it.univr.glicemiewebapp.repository.PazienteRepository;
 import it.univr.glicemiewebapp.dto.*;
 
-import lombok.extern.slf4j.Slf4j;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -25,22 +22,24 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
 @Service
 public class RilevazioneService {
-  @Autowired
-  private LogService log;
+  private final LogService log;
   private final RilevazioneRepository rilevazioni;
   private final PazienteRepository pazienti;
   private final UtenteRepository utenti;
   private ObjectMapper mapper;
 
-  public RilevazioneService(RilevazioneRepository rilevazioni, PazienteRepository pazienti, UtenteRepository utenti,
-      ObjectMapper mapper) {
+  public RilevazioneService(RilevazioneRepository rilevazioni,
+      PazienteRepository pazienti,
+      UtenteRepository utenti,
+      ObjectMapper mapper,
+      LogService log) { // <-- aggiunto
     this.rilevazioni = rilevazioni;
     this.pazienti = pazienti;
     this.utenti = utenti;
     this.mapper = mapper;
+    this.log = log; // <-- aggiunto
   }
 
   public Rilevazione addRilevazione(UUID idPaziente, Double valore) {
@@ -53,7 +52,7 @@ public class RilevazioneService {
         .timestamp(Instant.now())
         .build();
 
-    log.info("Paziente id: " + paziente.getId()+"ha inserito una rilevazione" + valore);
+    log.info("Paziente id: " + paziente.getId() + "hai inserito una rilevazione" + valore);
     return rilevazioni.save(nrilevazione);
   }
 
