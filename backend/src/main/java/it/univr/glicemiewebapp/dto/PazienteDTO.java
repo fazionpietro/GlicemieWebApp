@@ -6,8 +6,10 @@ import java.util.UUID;
 import it.univr.glicemiewebapp.entity.Utente;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class PazienteDTO {
   private UUID id;
   private String email;

@@ -34,7 +34,7 @@ createRoot(document.getElementById("root")!).render(
 
             {/* Private routes with ProtectedRoute */}
             <Route
-              path="/dashboard"
+              path="/DashboardAdmin"
               element={
                 <ProtectedRoute requiredRole={["admin"]}>
                   <DashboardAdmin />
@@ -42,7 +42,7 @@ createRoot(document.getElementById("root")!).render(
               }
             />
             <Route
-              path="/dashdoard"
+              path="/DashboardMedico"
               element={
                 <ProtectedRoute requiredRole={["medico"]}>
                   <DashboardMedico />
@@ -50,7 +50,7 @@ createRoot(document.getElementById("root")!).render(
               }
             />
             <Route
-              path="/dashboard"
+              path="/DashboardPaziente"
               element={
                 <ProtectedRoute requiredRole={["paziente"]}>
                   <UserPage />

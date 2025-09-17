@@ -46,8 +46,8 @@ export function HeaderMegaMenu() {
           <Avatar
             size={40}
             radius="md"
-            color="blue"
-            variant="filled"
+            variant="gradient"
+            gradient={{ from: 'blue', to: 'cyan', deg: 90 }}
           >
             <IconDroplet size={24} />
           </Avatar>
@@ -92,12 +92,8 @@ export function HeaderMegaMenu() {
               </Menu.Target>
 
               <Menu.Dropdown>
-                <Menu.Label>Account</Menu.Label>
-                <Menu.Item
-                  leftSection={<IconSettings style={{ width: rem(14), height: rem(14) }} />}
-                >
-                  Impostazioni
-                </Menu.Item>
+
+
 
                 <Menu.Divider />
 

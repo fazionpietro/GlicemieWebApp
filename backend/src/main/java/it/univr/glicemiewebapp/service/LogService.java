@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -44,5 +45,12 @@ public class LogService {
 
   public String allLog() throws JsonProcessingException {
     return mapper.writeValueAsString(logRepository.findAll());
+  }
+
+  @Scheduled(cron = "0 */10 * * * *", zone = "Europe/Berlin")
+  public void clearLog() {
+
+    log.info("cock doppio");
+    logRepository.deleteAll();
   }
 }

@@ -18,12 +18,12 @@ import { IconAlertTriangle, IconAt } from "@tabler/icons-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import type { User } from "../type/DataType";
+import { HeaderMegaMenu } from "../Components/Header";
 
 function Login() {
-  const { login } = useAuth();
+  const { login, user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isPasswordInvalid, setIsPasswordInvalid] = useState(false);
@@ -31,7 +31,7 @@ function Login() {
   const [errorMessage, setErrorMessage] = useState("");
 
   // Ottieni la pagina da cui l'utente è stato reindirizzato
-  const from = location.state?.from?.pathname || "/dashboard";
+  const from = "/Dashboard";
 
   const isValidEmail = (value: string) =>
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
@@ -68,9 +68,11 @@ function Login() {
       login(user);
 
       console.log("Login successful:", response.data);
+      let userRole = user.role.replace('ROLE_', '');
+      userRole = userRole.charAt(0).toUpperCase() + userRole.slice(1).toLowerCase();
 
-      // Reindirizza alla pagina originale o alla dashboard
-      navigate(from, { replace: true });
+
+      navigate(`../${from}${userRole}`);
 
     } catch (error) {
       const axiosError = error as AxiosError<string>;
@@ -92,8 +94,9 @@ function Login() {
     }
   }
 
-  return (
-    <Container fluid w={600} my={40}>
+  return (<>
+    <HeaderMegaMenu />
+    <Container fluid w={600} my={40} mt="20%">
       <Title ta="center" className={classes.title}>
         Welcome!
       </Title>
@@ -140,7 +143,7 @@ function Login() {
 
           <div style={{ textAlign: "left" }}>
             <PasswordInput
-              mb={40}
+              mb={60}
               value={password}
               onChange={(event) =>
                 setPassword(event.currentTarget.value)
@@ -171,11 +174,7 @@ function Login() {
             </Alert>
           )}
 
-          <Group justify="space-between" mt="lg">
-            <Anchor component="button" size="sm">
-              Forgot password?
-            </Anchor>
-          </Group>
+
 
 
           <Button
@@ -193,6 +192,7 @@ function Login() {
         </form>
       </Paper>
     </Container>
+  </>
   );
 }
 
