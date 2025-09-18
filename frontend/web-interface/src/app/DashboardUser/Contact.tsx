@@ -1,4 +1,4 @@
-import { Button, Group, Textarea, TextInput, Title, Card, Text, Checkbox, Stack, Select } from '@mantine/core';
+import { Button, Group, Textarea, TextInput, Title, Card, Text, Checkbox, CheckboxGroup, Stack, Select, SimpleGrid } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useState } from 'react';
 import axios from 'axios';
@@ -12,7 +12,7 @@ interface ComunicazioneData{
 }
 
 interface FormValues{
-    priorita: string;
+    priorita: string; 
     message: string;
 }
 
@@ -103,6 +103,11 @@ function ContactMedic() {
   );
 }
 
+
+const sintomiComuni: string[]=[
+  'nausea', 'vertigini', 'mal di testa', 'stanchezza', 'sudorazione', 'tremori', 'visione offuscata', 'confusione', 'palpitazioni', 'altri sintomi'
+]
+
 function SegnalaSintomi(){
   const form = useForm({
     initialValues: {
@@ -120,8 +125,16 @@ function SegnalaSintomi(){
         Segnala Sintomi
       </Title>
 
-      <TextInput label="Subject" placeholder="Subject" mt="md" name="subject"
-      variant="filled" {...form.getInputProps('subject')}/>
+    <SimpleGrid cols={2} spacing="xs">
+      {sintomiComuni.map((sintomo)=>(
+        <Checkbox
+          key={sintomo}
+          label={sintomo}
+          size="sm"
+          color="blue"
+        />
+      ))}
+    </SimpleGrid>
 
       <Textarea mt="md" label="messaggio" placeholder="Inserisci il messaggio"
       maxRows={10} minRows={5} autosize name="message" variant="filled" {...form.getInputProps('message')}/>
