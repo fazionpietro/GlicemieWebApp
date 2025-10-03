@@ -4,10 +4,13 @@ import { useState } from 'react';
 import axios, { AxiosError, type AxiosResponse } from 'axios';
 import { useAuth } from "../../context/AuthContext";
 
-function ModalGlicemia() {
+interface Props{
+  onRilevazione?: ()=>void;
+}
+
+function ModalGlicemia({onRilevazione}: Props) {
   const [opened, { open, close }] = useDisclosure(false);
   const [valore, setValore] = useState<number | undefined>(undefined);
-  const [isLoading, setIsLoading] = useState(false);
   const { user } = useAuth();
 
   async function inserisciRilevazione() {
@@ -20,7 +23,6 @@ function ModalGlicemia() {
       return;
     }
 
-    setIsLoading(true);
     try {
       const response: AxiosResponse = await axios({
         method: "post",
@@ -30,8 +32,10 @@ function ModalGlicemia() {
       });
       
       setValore(undefined);
+      if(onRilevazione) {
+        onRilevazione();
+      }
       close();
-      window.location.reload();
     } catch (error) {
       const axiosError = error as AxiosError<string>;
       console.error("Errore nell'inserimento della rilevazione:", axiosError);
@@ -43,8 +47,6 @@ function ModalGlicemia() {
         } else {
           alert("Si è verificato un errore durante l'inserimento della rilevazione");
         }
-      } finally {
-        setIsLoading(false);
       }
   }
 

@@ -8,6 +8,9 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Badge, Paper, Text } from '@mantine/core';
 
+interface Props{
+  onRilevazione?:() => void;
+}
 
 type Rilevazione = {
   id: string;
@@ -23,7 +26,7 @@ type ChartData = {
   fullTimeStamp: string
 }
 
-function LineC() {
+function LineC({onRilevazione}: Props) {
 
   const { user } = useAuth();
   const [rilevazioni, setRilevazioni] = useState<Rilevazione[]>([]);
@@ -79,7 +82,7 @@ function LineC() {
         alignItems: 'center',
         marginBottom: '20px',
       }}>
-        <ModalGlicemia />
+        <ModalGlicemia onRilevazione={onRilevazione}/>
       </div>
       <LineChart
         h="100%"

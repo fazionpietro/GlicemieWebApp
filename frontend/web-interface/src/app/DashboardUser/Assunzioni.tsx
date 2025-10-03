@@ -16,7 +16,7 @@ import {
 import { IconAlertTriangle, IconCheck, IconClock, IconReportMedical } from '@tabler/icons-react';
 import { LiaPillsSolid } from "react-icons/lia";
 import type { Assunzione } from '../type/DataType';
-import {useState, useEffect } from 'react';
+import {useState, useEffect, useMemo} from 'react';
 
 interface Terapia {
   id: string;
@@ -31,15 +31,13 @@ interface Terapia {
 interface Props {
   terapie: Terapia[],
   assunzioni: Assunzione[],
-
-
+  refreshComponente: () =>void;
 }
 
 
-function Assunzioni({ terapie, assunzioni }: Props) {
+function Assunzioni({ terapie, assunzioni, refreshComponente}: Props) {
 
   const [selezionaTerapia , setSelezionaTerapia] = useState<string[]>([]);
-  const [refresh, setRefresh] = useState(0);
 
   const handleCheck = (terapiaId: string) =>{
     setSelezionaTerapia(pri => pri.includes(terapiaId)?pri.filter(id => id !== terapiaId): [...pri, terapiaId]);
@@ -62,7 +60,10 @@ function Assunzioni({ terapie, assunzioni }: Props) {
 
       if(response.ok){
         setSelezionaTerapia([]);
-        setRefresh(c => c+1);
+        setTimeout(()=>{
+          refreshComponente();
+        }, 500);
+        console.log("gustor");
       }else{
         console.error("Errore HTTP", response.status);
       }
@@ -70,6 +71,18 @@ function Assunzioni({ terapie, assunzioni }: Props) {
       console.error("errore durante l'invio: ", error)
     }
   };
+
+  const noAssunzioni= useMemo(()=>{
+    if (terapie.length === 0) return false;
+
+    const giorniSA = Date.now() - (2*24*60* 60*1000);
+    const assunzioniMappate =new Map(assunzioni.map(a=> [a.idTerapia, a]));
+
+    return terapie.every(terapia=>{
+      const assunzione= assunzioniMappate.get(terapia.id);
+      return !assunzione?.latestTimestamp || new Date(assunzione.latestTimestamp).getTime() < giorniSA;
+    });
+  },[terapie,assunzioni]);
 
   return (
     <Box p="md" w="100%">
@@ -112,7 +125,8 @@ function Assunzioni({ terapie, assunzioni }: Props) {
                   align="center"
                   pr={20}
                 >
-                  <Chip color="green" size="lg" radius="md" variant='light' icon={<LiaPillsSolid />} onClick={() => handleCheck(terapia.id)} >Assunto</Chip>
+                  <Chip color="green" size="lg" radius="md" variant='light' icon={<LiaPillsSolid />}
+                  checked={selezionaTerapia.includes(terapia.id)} onClick={() => handleCheck(terapia.id)} >Assunto</Chip>
 
                 </Flex>
                 <Flex
@@ -120,12 +134,6 @@ function Assunzioni({ terapie, assunzioni }: Props) {
                   align={"self-end"}
                   justify="flex-end"
                 >
-
-                  {/*{console.log((assunzioni.filter(assunzioni => assunzioni.idTerapia === terapia.id).map(assunzione => assunzione.giaAssunto)))};*/}
-                  {console.log((assunzioni.find(assunzione => assunzione.idTerapia === terapia.id)?.giaAssunte))}
-                  {console.log("assunzioni: ",assunzioni)}
-                  {console.log("assunzione.idTerapia: ", assunzioni.map(a=>a.idTerapia))}
-                  {console.log("assunzione.giaAssunte: ", assunzioni.map(a=>a.giaAssunte))}
                   <Text>{(assunzioni.find(assunzione => assunzione.idTerapia === terapia.id)?.giaAssunte??0)}/{terapia.numAssunzioni}</Text>
 
                 </Flex>
@@ -140,7 +148,8 @@ function Assunzioni({ terapie, assunzioni }: Props) {
       </Stack>
 
       <Divider my="xl" />
-      <Alert
+      { noAssunzioni &&(
+        <Alert
         icon={<IconAlertTriangle size="1rem" />}
         title="Errore"
         color="red"
@@ -150,6 +159,7 @@ function Assunzioni({ terapie, assunzioni }: Props) {
         <Text mb={20} fw={500}>Non assumi farmaci da 2 giorni
         </Text>
       </Alert>
+      )}
 
       <Button
         mt={20}

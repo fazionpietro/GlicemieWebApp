@@ -4,6 +4,9 @@ import axios from 'axios';
 import { Box, Text } from '@mantine/core';
 import '@mantine/core/styles.css';
 
+interface Props{
+  key?: number;
+}
 
 type Rilevazione = {
   id: string;
@@ -12,7 +15,7 @@ type Rilevazione = {
   livello: string;
 }
 
-function TableGlicemia() {
+function TableGlicemia({key}: Props) {
   const { user } = useAuth();
   const [rilevazioni, setRilevazioni] = useState<Rilevazione[]>([]);
 
@@ -30,7 +33,7 @@ function TableGlicemia() {
       .catch((err) => {
         console.error("Errore nel caricamento rilevazioni:", err);
       });
-  }, [user]);
+  }, [user,key]);
 
   const getColor = (livello: string) => {
     switch (livello.toLowerCase().trim()) {
