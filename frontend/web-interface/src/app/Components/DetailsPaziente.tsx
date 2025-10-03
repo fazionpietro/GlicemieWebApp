@@ -87,7 +87,7 @@ export default function DetailsPaziente({
       },
     })
       .then((res) => {
-        console.log(res);
+        
         closeEdit();
         fetchPazienti();
       })
@@ -122,7 +122,7 @@ export default function DetailsPaziente({
   useEffect(() => {
     if (medicoDisplay == null) {
       fetchMedici();
-      console.log("fetchiammo");
+      
     }
   }, []);
 
@@ -190,7 +190,7 @@ export default function DetailsPaziente({
             value={dataNascita}
             onChange={(d) => {
               setDataNascita(d);
-              console.log(d);
+              
               setIsError("");
             }}
           />

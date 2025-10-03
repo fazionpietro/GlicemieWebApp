@@ -108,7 +108,7 @@ export function RilevazioniModal({ id, rilevazioni, fetchRilevazioni }: Props) {
         color="gray"
         onClick={() => {
           open()
-          console.log()
+          
           if (fetchRilevazioni)
             fetchRilevazioni()
         }}

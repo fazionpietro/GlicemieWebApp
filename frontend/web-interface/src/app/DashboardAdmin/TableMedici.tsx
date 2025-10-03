@@ -29,7 +29,6 @@ export function TableMedici({ medici, fetchMedici }: Props) {
 
 
   const handleDelete = async (id: string) => {
-    console.log("Deleting patient with ID:", id);
 
     await axios({
       method: "DELETE",
@@ -40,7 +39,6 @@ export function TableMedici({ medici, fetchMedici }: Props) {
       },
     })
       .then((res) => {
-        console.log(res);
         fetchMedici()
       })
       .catch((err) => {

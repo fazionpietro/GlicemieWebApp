@@ -16,3 +16,4 @@ public class AssunzioneDTO {
   private final UUID idTerapia;
 
 }
+

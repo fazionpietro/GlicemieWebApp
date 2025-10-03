@@ -16,6 +16,7 @@ import {
 import { IconAlertTriangle, IconCheck, IconClock, IconReportMedical } from '@tabler/icons-react';
 import { LiaPillsSolid } from "react-icons/lia";
 import type { Assunzione } from '../type/DataType';
+import {useState, useEffect, useMemo} from 'react';
 
 interface Terapia {
   id: string;
@@ -30,16 +31,61 @@ interface Terapia {
 interface Props {
   terapie: Terapia[],
   assunzioni: Assunzione[],
-
-
+  refreshComponente: () =>void;
 }
 
 
-export function Assunzioni({ terapie, assunzioni }: Props) {
+function Assunzioni({ terapie, assunzioni, refreshComponente}: Props) {
 
+  const [selezionaTerapia , setSelezionaTerapia] = useState<string[]>([]);
+
+  const handleCheck = (terapiaId: string) =>{
+    setSelezionaTerapia(pri => pri.includes(terapiaId)?pri.filter(id => id !== terapiaId): [...pri, terapiaId]);
+  };
+
+  const handleInviaReport = async() => {
+    if(selezionaTerapia.length === 0){
+      return;
+    }
+
+    try{
+      const assunzioneDaInviare = selezionaTerapia.map(id => ({idTerapia: id}));
+
+      const response= await fetch(`${import.meta.env.VITE_API_KEY}api/assunzioni/store`, {
+        method: 'POST',
+        headers:{'Content-Type': 'application/json',},
+        credentials: 'include',
+        body:JSON.stringify(assunzioneDaInviare)
+      });
+
+      if(response.ok){
+        setSelezionaTerapia([]);
+        setTimeout(()=>{
+          refreshComponente();
+        }, 500);
+        console.log("gustor");
+      }else{
+        console.error("Errore HTTP", response.status);
+      }
+    }catch (error) {
+      console.error("errore durante l'invio: ", error)
+    }
+  };
+
+  const noAssunzioni= useMemo(()=>{
+    if (terapie.length === 0) return false;
+
+    const giorniSA = Date.now() - (2*24*60* 60*1000);
+    const assunzioniMappate =new Map(assunzioni.map(a=> [a.idTerapia, a]));
+
+    return terapie.every(terapia=>{
+      const assunzione= assunzioniMappate.get(terapia.id);
+      return !assunzione?.latestTimestamp || new Date(assunzione.latestTimestamp).getTime() < giorniSA;
+    });
+  },[terapie,assunzioni]);
 
   return (
-    <Box p="md" w={600}>
+    <Box p="md" w="100%">
       <Title order={1} mb="lg">Terapia Attuale</Title>
 
       <Title order={2} mb="md">Farmaci in Terapia</Title>
@@ -48,6 +94,7 @@ export function Assunzioni({ terapie, assunzioni }: Props) {
 
 
         {terapie.map((terapia) => (
+          
 
           <Card key={terapia.id} bdrs={"md"} withBorder shadow="sm" p="lg">
             <Grid>
@@ -78,7 +125,8 @@ export function Assunzioni({ terapie, assunzioni }: Props) {
                   align="center"
                   pr={20}
                 >
-                  <Chip color="green" size="lg" radius="md" variant='light' icon={<LiaPillsSolid />}>Assunto</Chip>
+                  <Chip color="green" size="lg" radius="md" variant='light' icon={<LiaPillsSolid />}
+                  checked={selezionaTerapia.includes(terapia.id)} onClick={() => handleCheck(terapia.id)} >Assunto</Chip>
 
                 </Flex>
                 <Flex
@@ -86,7 +134,7 @@ export function Assunzioni({ terapie, assunzioni }: Props) {
                   align={"self-end"}
                   justify="flex-end"
                 >
-                  <Text>0/3</Text>
+                  <Text>{(assunzioni.find(assunzione => assunzione.idTerapia === terapia.id)?.giaAssunte??0)}/{terapia.numAssunzioni}</Text>
 
                 </Flex>
 
@@ -100,24 +148,29 @@ export function Assunzioni({ terapie, assunzioni }: Props) {
       </Stack>
 
       <Divider my="xl" />
-      <Alert
+      { noAssunzioni &&(
+        <Alert
         icon={<IconAlertTriangle size="1rem" />}
         title="Errore"
         color="red"
         variant="light"
         mb="md"
       >
-        <Text mb={20} fw={500}>Non assumi Stagisti da 2 giorni
+        <Text mb={20} fw={500}>Non assumi farmaci da 2 giorni
         </Text>
       </Alert>
+      )}
 
       <Button
         mt={20}
         leftSection={<IconReportMedical size={16} />}
         variant="filled"
+        onClick={handleInviaReport}
       >
         Invia Report al Medico
       </Button>
     </Box >
   );
 }
+
+export default Assunzioni;

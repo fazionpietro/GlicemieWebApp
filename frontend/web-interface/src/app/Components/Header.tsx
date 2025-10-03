@@ -35,7 +35,7 @@ export function HeaderMegaMenu() {
 
   const handleLogin = () => {
 
-    console.log('Redirect to login page');
+    
   };
 
   return (

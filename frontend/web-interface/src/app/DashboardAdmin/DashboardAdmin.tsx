@@ -79,7 +79,7 @@ function DashboardAdmin() {
     })
       .then((res) => {
         setPazienti(res.data);
-        console.log(pazienti);
+       
       })
       .catch((err) => {
         console.error(err);
@@ -97,7 +97,7 @@ function DashboardAdmin() {
     })
       .then((res) => {
         setMedici(res.data);
-        console.log(medici);
+        
       })
       .catch((err) => {
         console.error(err);

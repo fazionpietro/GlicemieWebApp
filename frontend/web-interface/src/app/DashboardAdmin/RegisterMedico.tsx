@@ -126,7 +126,7 @@ export function RegisterMedico({ onSuccess }: Props) {
       dataNascita: dataNascita,
 
     };
-    console.log(body);
+    
 
     await axios
       .post(
@@ -135,7 +135,7 @@ export function RegisterMedico({ onSuccess }: Props) {
         { headers: { "Content-Type": "application/json" } }
       )
       .then((res) => {
-        console.log(res);
+        
         onSuccess();
       })
       .catch((err) => {

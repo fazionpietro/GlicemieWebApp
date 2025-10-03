@@ -19,15 +19,14 @@ public class ComunicazioneService {
   private final ComunicazioneRepository comunicazioneRepository;
   private final PazienteRepository pazienteRepository;
 
-  @Transactional
-  public Comunicazione salvaComunicazione(Comunicazione comunicazione, UUID idPaziente) {
-    try {
-      Paziente paziente = pazienteRepository.findById(idPaziente)
-          .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Paziente non trovato"));
-      comunicazione.setIdPaziente(paziente);
-      return comunicazioneRepository.save(comunicazione);
-    } catch (Exception e) {
-      throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "errore: ");
+    @Transactional
+    public Comunicazione salvaComunicazione(Comunicazione comunicazione, UUID idPaziente){
+        try{
+            Paziente paziente =pazienteRepository.findById(idPaziente).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Paziente non trovato"));
+            comunicazione.setIdPaziente(paziente);
+            return comunicazioneRepository.save(comunicazione);
+        }catch(Exception e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,"errore: ");
+        }
     }
-  }
 }

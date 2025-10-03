@@ -42,7 +42,7 @@ export default function TablePazienti({
   const { user } = useAuth()
 
   const handleDelete = async (id: string) => {
-    console.log("Deleting patient with ID:", id);
+    
 
     await axios({
       method: "DELETE",
@@ -53,7 +53,7 @@ export default function TablePazienti({
       },
     })
       .then((res) => {
-        console.log(res);
+        
         fetchPazienti();
       })
       .catch((err) => {

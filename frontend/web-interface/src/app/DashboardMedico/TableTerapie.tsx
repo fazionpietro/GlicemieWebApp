@@ -28,7 +28,6 @@ function TableTerapie({ pazienti, fetchPazienti, terapie, fetchTerapie }: Props)
 
 
   const handleDelete = async (idTerapia: string) => {
-    console.log("Deleting patient with ID:", idTerapia);
 
     await axios({
       method: "DELETE",
@@ -39,7 +38,6 @@ function TableTerapie({ pazienti, fetchPazienti, terapie, fetchTerapie }: Props)
       },
     })
       .then((res) => {
-        console.log(res)
         fetchTerapie();
       })
       .catch((err) => {

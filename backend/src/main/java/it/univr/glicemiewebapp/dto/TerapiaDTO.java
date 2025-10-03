@@ -15,10 +15,9 @@ public class TerapiaDTO {
 
   private UUID id;
   private String farmaco;
-  private int numAssunzioni;
+  private Integer numAssunzioni;
   private String dosaggio;
   private String indicazioni;
   private UUID idPaziente;
   private UUID idMedico;
-
 }

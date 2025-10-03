@@ -4,6 +4,9 @@ import axios from 'axios';
 import { Box, Text } from '@mantine/core';
 import '@mantine/core/styles.css';
 
+interface Props{
+  key?: number;
+}
 
 type Rilevazione = {
   id: string;
@@ -12,30 +15,25 @@ type Rilevazione = {
   livello: string;
 }
 
-function TableGlicemia() {
+function TableGlicemia({key}: Props) {
   const { user } = useAuth();
   const [rilevazioni, setRilevazioni] = useState<Rilevazione[]>([]);
 
   useEffect(() => {
     if (!user) {
-      console.log("nessun utente loggato");
       return;
     }
 
     axios.get(`${import.meta.env.VITE_API_KEY}api/rilevazioni/dto/${user.id}`, { withCredentials: true })
       .then((res) => {
-        console.log("risposta: ", res);
-        console.log("dati: ", res.data);
-        console.log("tipo di dati: ", Array.isArray(res.data) ? "array" : typeof res.data);
         res.data.forEach((item: Rilevazione, index: number) => {
-          console.log(`Rilevazione ${index}: livello = "${item.livello}", tipo = ${typeof item.livello}`);
         });
         setRilevazioni(res.data.sort((a: Rilevazione, b: Rilevazione) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()));
       })
       .catch((err) => {
         console.error("Errore nel caricamento rilevazioni:", err);
       });
-  }, [user]);
+  }, [user,key]);
 
   const getColor = (livello: string) => {
     switch (livello.toLowerCase().trim()) {

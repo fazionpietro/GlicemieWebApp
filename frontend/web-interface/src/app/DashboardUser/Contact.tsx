@@ -1,4 +1,4 @@
-import { Button, Group, Textarea, TextInput, Title, Card, Text, Checkbox, Stack, Select } from '@mantine/core';
+import { Button, Group, Textarea, TextInput, Title, Card, Text, Checkbox, CheckboxGroup, Stack, Select, SimpleGrid } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useState } from 'react';
 import axios from 'axios';
@@ -12,16 +12,16 @@ interface ComunicazioneData{
 }
 
 interface FormValues{
-    priorita: string;
+    priorita: string; 
     message: string;
 }
 
 const  salvaComunicazione = async (datiComunicazione: ComunicazioneData) =>{
     try{
-    const response = await axios.post('/api/comunicazioni', datiComunicazione,{
+    const response = await axios.post(`${import.meta.env.VITE_API_KEY}api/comunicazioni`, JSON.stringify(datiComunicazione),{
       headers:{
         'Content-Type': 'application/json',
-      } as any,
+      },
     });
     return response.data;
     }catch(error){
@@ -77,7 +77,7 @@ function ContactMedic() {
       </Title>
       
       <Select label="priorità messaggio" placeholder="seleziona la priorità" data={[
-        {value: '1', label:'bassa'},{value: '2', label:'media'},{value: '3', label:'alta'},
+        {value: '1', label:'Bassa'},{value: '2', label:'Media'},{value: '3', label:'Alta'},
       ]}
       {...comunicazioneForm.getInputProps('priorita')}
       />
@@ -96,44 +96,89 @@ function ContactMedic() {
 
       <Group justify="center" mt="xl">
         <Button type="submit" size="md">
-          Send message
+          Invia
         </Button>
       </Group>
     </form>
   );
 }
 
+
+const sintomiComuni: string[]=[
+  'nausea', 'vertigini', 'mal di testa', 'stanchezza', 'sudorazione', 'tremori', 'visione offuscata', 'confusione', 'palpitazioni', 'altri sintomi'
+]
+
 function SegnalaSintomi(){
+  const {user} = useAuth();
+
   const form = useForm({
     initialValues: {
-      subject: '',
+      sintomi: [] as string[],
       message: '',
     },
+
     validate: {
-      subject: (value) => value.trim().length === 0,
+      message: (value) => value.trim().length === 0,
     },
   });
 
+  const handleSubmit = async(valori: {sintomi: string[]; message: string}) => {
+    if (!user || !user.id) return;
+
+      try{
+
+        const payload = {
+          priorita: 1,
+          descrizione: `${valori.sintomi.join(', ')}. ${valori.message}`,
+          idPaziente: user.id
+        };
+
+        const response = await axios.post(`${import.meta.env.VITE_API_KEY}api/comunicazioni`, JSON.stringify(payload),{
+        headers:{
+          'Content-Type': 'application/json',
+        },
+        });
+        form.reset()
+        return response.data;
+      }catch(error){
+        console.error('errore', error);
+        throw error;
+      }
+    };
+  
+
   return(
-    <form onSubmit={form.onSubmit(()=>{})} >
+    <form onSubmit={form.onSubmit(handleSubmit)} >
       <Title order={2} size="h1" style={{fontFamily: 'Outfit, var(--mantine-font-family)'}} fw={900} ta="center">
         Segnala Sintomi
       </Title>
 
-      <TextInput label="Subject" placeholder="Subject" mt="md" name="subject"
-      variant="filled" {...form.getInputProps('subject')}/>
+      <Checkbox.Group {...form.getInputProps('sintomi')}>
+        <SimpleGrid cols={2} spacing="xs">
+          {sintomiComuni.map((sintomo) =>(
+            <Checkbox
+              key={sintomo}
+              value={sintomo}
+              label={sintomo}
+              size="sm"
+              color="blue"
 
-      <Textarea mt="md" label="messaggio" placeholder="Inserisci il messaggio"
-      maxRows={10} minRows={5} autosize name="message" variant="filled" {...form.getInputProps('message')}/>
+            />
+          ))}
+        </SimpleGrid>
+      </Checkbox.Group>
 
-      <Group justify="center" mt="xl">
-        <Button type="submit" size="md">
-          Send message
-        </Button>
-      </Group>
+        <Textarea mt="md" label="Note Aggiuntive" placeholder="Inserisci note aggiuntive"
+        maxRows={3} minRows={2} autosize name="message" variant="filled" {...form.getInputProps('message')}/>
+
+        <Group justify="center" mt="xl">
+          <Button type="submit" size="md">
+            Invia
+          </Button>
+        </Group>
 
     </form>
-  )
+  );
 }
 
 export { ContactMedic, SegnalaSintomi };
