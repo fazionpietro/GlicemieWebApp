@@ -37,7 +37,7 @@ public class AssunzioneService {
         repository.save(new Assunzione(null, t, now));
       }
 
-      return "Assumption strored correctly";
+      return "Assumption stored correctly";
     } catch (Exception e) {
       throw new BusinessException("CREATION_ERROR", "Failed to store assumption");
     }
@@ -56,5 +56,4 @@ public class AssunzioneService {
     }
 
   }
-
 }

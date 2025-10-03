@@ -2,7 +2,7 @@
 import { LineChart } from '@mantine/charts';
 import '@mantine/core/styles.css';
 import '@mantine/charts/styles.css';
-import { ModalGlicemia } from './Modal';
+import ModalGlicemia from './Modal';
 import { useAuth } from "../../context/AuthContext";
 import { useState, useEffect } from 'react';
 import axios from 'axios';
@@ -31,7 +31,6 @@ function LineC() {
 
   useEffect(() => {
     if (!user) {
-      console.log("nessun utente loggato");
       return;
     }
 
@@ -79,7 +78,6 @@ function LineC() {
         justifyContent: 'space-between',
         alignItems: 'center',
         marginBottom: '20px',
-        padding: '0 10px'
       }}>
         <ModalGlicemia />
       </div>

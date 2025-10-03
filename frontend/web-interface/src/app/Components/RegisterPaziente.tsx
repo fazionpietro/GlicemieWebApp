@@ -148,7 +148,7 @@ export default function RegisterPaziente({ onSuccess, medici }: Props) {
       patologiePregresse,
       idMedico
     };
-    console.log(body);
+    
 
 
     await axios
@@ -158,7 +158,7 @@ export default function RegisterPaziente({ onSuccess, medici }: Props) {
         { headers: { "Content-Type": "application/json" } }
       )
       .then((res) => {
-        console.log(res);
+        
         onSuccess();
       })
       .catch((err) => {
@@ -243,7 +243,7 @@ export default function RegisterPaziente({ onSuccess, medici }: Props) {
         value={dataNascita}
         onChange={(d) => {
           setDataNascita(d);
-          console.log(d);
+          
           setIsError("");
         }}
       />

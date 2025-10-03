@@ -78,5 +78,5 @@ export type Assunzione = {
   id: string,
   idTerapia: string,
   latestTimestamp: string,
-  giaAssunto: number
+  giaAssunte: number
 }

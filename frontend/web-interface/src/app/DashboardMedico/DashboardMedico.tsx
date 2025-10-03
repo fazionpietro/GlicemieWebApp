@@ -33,7 +33,6 @@ function MedicPage() {
       .then((res) => {
 
         setPazienti(res.data)
-        console.log(res.data)
       })
       .catch((err) => {
         console.error(err);
@@ -53,7 +52,6 @@ function MedicPage() {
     }).then((res) => {
 
       setTerapie(res.data)
-      console.log(res.data)
     }).catch((err) => {
       console.error(err)
     })

@@ -60,7 +60,6 @@ export function RegisterTerapia({ pazienti, fetchTerapie, onSuccess }: Props) {
         "idMedico": `${user.id}`
       }
     }).then((res) => {
-      console.log(res);
       fetchTerapie();
       onSuccess();
     })

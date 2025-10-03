@@ -16,6 +16,7 @@ import {
 import { IconAlertTriangle, IconCheck, IconClock, IconReportMedical } from '@tabler/icons-react';
 import { LiaPillsSolid } from "react-icons/lia";
 import type { Assunzione } from '../type/DataType';
+import {useState, useEffect } from 'react';
 
 interface Terapia {
   id: string;
@@ -35,11 +36,43 @@ interface Props {
 }
 
 
-export function Assunzioni({ terapie, assunzioni }: Props) {
+function Assunzioni({ terapie, assunzioni }: Props) {
 
+  const [selezionaTerapia , setSelezionaTerapia] = useState<string[]>([]);
+  const [refresh, setRefresh] = useState(0);
+
+  const handleCheck = (terapiaId: string) =>{
+    setSelezionaTerapia(pri => pri.includes(terapiaId)?pri.filter(id => id !== terapiaId): [...pri, terapiaId]);
+  };
+
+  const handleInviaReport = async() => {
+    if(selezionaTerapia.length === 0){
+      return;
+    }
+
+    try{
+      const assunzioneDaInviare = selezionaTerapia.map(id => ({idTerapia: id}));
+
+      const response= await fetch(`${import.meta.env.VITE_API_KEY}api/assunzioni/store`, {
+        method: 'POST',
+        headers:{'Content-Type': 'application/json',},
+        credentials: 'include',
+        body:JSON.stringify(assunzioneDaInviare)
+      });
+
+      if(response.ok){
+        setSelezionaTerapia([]);
+        setRefresh(c => c+1);
+      }else{
+        console.error("Errore HTTP", response.status);
+      }
+    }catch (error) {
+      console.error("errore durante l'invio: ", error)
+    }
+  };
 
   return (
-    <Box p="md" w={600}>
+    <Box p="md" w="100%">
       <Title order={1} mb="lg">Terapia Attuale</Title>
 
       <Title order={2} mb="md">Farmaci in Terapia</Title>
@@ -48,6 +81,7 @@ export function Assunzioni({ terapie, assunzioni }: Props) {
 
 
         {terapie.map((terapia) => (
+          
 
           <Card key={terapia.id} bdrs={"md"} withBorder shadow="sm" p="lg">
             <Grid>
@@ -78,7 +112,7 @@ export function Assunzioni({ terapie, assunzioni }: Props) {
                   align="center"
                   pr={20}
                 >
-                  <Chip color="green" size="lg" radius="md" variant='light' icon={<LiaPillsSolid />}>Assunto</Chip>
+                  <Chip color="green" size="lg" radius="md" variant='light' icon={<LiaPillsSolid />} onClick={() => handleCheck(terapia.id)} >Assunto</Chip>
 
                 </Flex>
                 <Flex
@@ -86,7 +120,13 @@ export function Assunzioni({ terapie, assunzioni }: Props) {
                   align={"self-end"}
                   justify="flex-end"
                 >
-                  <Text>0/3</Text>
+
+                  {/*{console.log((assunzioni.filter(assunzioni => assunzioni.idTerapia === terapia.id).map(assunzione => assunzione.giaAssunto)))};*/}
+                  {console.log((assunzioni.find(assunzione => assunzione.idTerapia === terapia.id)?.giaAssunte))}
+                  {console.log("assunzioni: ",assunzioni)}
+                  {console.log("assunzione.idTerapia: ", assunzioni.map(a=>a.idTerapia))}
+                  {console.log("assunzione.giaAssunte: ", assunzioni.map(a=>a.giaAssunte))}
+                  <Text>{(assunzioni.find(assunzione => assunzione.idTerapia === terapia.id)?.giaAssunte??0)}/{terapia.numAssunzioni}</Text>
 
                 </Flex>
 
@@ -107,7 +147,7 @@ export function Assunzioni({ terapie, assunzioni }: Props) {
         variant="light"
         mb="md"
       >
-        <Text mb={20} fw={500}>Non assumi Stagisti da 2 giorni
+        <Text mb={20} fw={500}>Non assumi farmaci da 2 giorni
         </Text>
       </Alert>
 
@@ -115,9 +155,12 @@ export function Assunzioni({ terapie, assunzioni }: Props) {
         mt={20}
         leftSection={<IconReportMedical size={16} />}
         variant="filled"
+        onClick={handleInviaReport}
       >
         Invia Report al Medico
       </Button>
     </Box >
   );
 }
+
+export default Assunzioni;

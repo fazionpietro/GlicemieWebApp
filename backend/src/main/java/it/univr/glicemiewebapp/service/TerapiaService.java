@@ -12,12 +12,11 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import it.univr.glicemiewebapp.dto.AlertTerapia;
 import it.univr.glicemiewebapp.dto.TerapiaDTO;
 import it.univr.glicemiewebapp.entity.Terapia;
 import it.univr.glicemiewebapp.entity.Utente;
+import it.univr.glicemiewebapp.entity.Paziente;
 import it.univr.glicemiewebapp.exception.BusinessException;
 import it.univr.glicemiewebapp.repository.PazienteRepository;
 import it.univr.glicemiewebapp.repository.TerapiaRepository;
@@ -108,4 +107,14 @@ public class TerapiaService {
 
   }
 
+  public List<TerapiaDTO> getAllByPaziente(UUID idPaziente){
+    try{
+      Paziente paziente = pazienteRepository.findById(idPaziente).orElseThrow(()->new BusinessException("PATIENT_NOT_FOUND", "paziente non trovato"));
+      return terapiaRepository.findByPaziente(paziente);
+    }catch(BusinessException e){
+      throw e;
+    }catch(Exception e){
+      throw new BusinessException("DATA_RETRIEVAL_ERROR", "Failed to retrieve patient's therapie");
+    }
+  }
 }

@@ -55,4 +55,10 @@ public class TerapiaController {
     return terapiaService.update(t, id);
 
   }
+
+  @GetMapping("paziente/{id}")
+  public ResponseEntity<List<TerapiaDTO>> getByPaziente(@PathVariable("id") UUID id){
+    logger.info("attempt to get therapies of patient: " + id);
+    return ResponseEntity.ok(terapiaService.getAllByPaziente(id));
+  }
 }

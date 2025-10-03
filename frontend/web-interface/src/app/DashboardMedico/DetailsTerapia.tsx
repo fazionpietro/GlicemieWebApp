@@ -56,7 +56,6 @@ export default function DetailsTerapia({
       },
     })
       .then((res) => {
-        console.log(res);
         closeEdit();
         fetchTerapie();
       })

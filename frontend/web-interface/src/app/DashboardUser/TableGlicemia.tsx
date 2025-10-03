@@ -18,17 +18,12 @@ function TableGlicemia() {
 
   useEffect(() => {
     if (!user) {
-      console.log("nessun utente loggato");
       return;
     }
 
     axios.get(`${import.meta.env.VITE_API_KEY}api/rilevazioni/dto/${user.id}`, { withCredentials: true })
       .then((res) => {
-        console.log("risposta: ", res);
-        console.log("dati: ", res.data);
-        console.log("tipo di dati: ", Array.isArray(res.data) ? "array" : typeof res.data);
         res.data.forEach((item: Rilevazione, index: number) => {
-          console.log(`Rilevazione ${index}: livello = "${item.livello}", tipo = ${typeof item.livello}`);
         });
         setRilevazioni(res.data.sort((a: Rilevazione, b: Rilevazione) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()));
       })

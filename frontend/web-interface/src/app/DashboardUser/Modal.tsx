@@ -1,53 +1,8 @@
 import { useDisclosure } from '@mantine/hooks';
 import { NumberInput, Modal, Button, Container, TextInput, Title } from '@mantine/core';
-import { JsonInput } from '@mantine/core';
 import { useState } from 'react';
 import axios, { AxiosError, type AxiosResponse } from 'axios';
 import { useAuth } from "../../context/AuthContext";
-
-
-function ModalSintomi() {
-  const [opened, { open, close }] = useDisclosure(false);
-
-  return (
-    <>
-      <Modal opened={opened} onClose={close} title="Inserisci una descrizione dei sintomi" centered>
-        <TextInput
-          size="xs"
-          radius="lg"
-          placeholder="segnala i sintomi qui"
-          w="100%"
-        />
-        <button style={{ marginTop: "20px" }}>invia</button>
-      </Modal>
-
-      <Button fullWidth style={{ height: '60px' }} type="submit" onClick={open} mt="30">
-        Inserisci malattia o sintomo
-      </Button>
-    </>
-  );
-}
-
-function ModalMedicinali() {
-  const [opened, { open, close }] = useDisclosure(false);
-  return (
-    <>
-      <Modal opened={opened} onClose={close} title="Inserisci i medicinali assunti" centered>
-        <TextInput
-          size="xs"
-          radius="lg"
-          placeholder="Inserisci nome e quantità delle assunzioni qui"
-          w="100%"
-        />
-        <button style={{ marginTop: "20px" }}>invia</button>
-      </Modal>
-
-      <Button fullWidth style={{ height: '60px' }} type="submit" onClick={open} mt="30">
-        Inserisci Medicinali Assunti
-      </Button>
-    </>
-  );
-}
 
 function ModalGlicemia() {
   const [opened, { open, close }] = useDisclosure(false);
@@ -62,11 +17,10 @@ function ModalGlicemia() {
     }
 
     if (!user) {
-      return null;
+      return;
     }
 
     setIsLoading(true);
-    console.log(user.id)
     try {
       const response: AxiosResponse = await axios({
         method: "post",
@@ -74,26 +28,24 @@ function ModalGlicemia() {
         headers: { "Content-Type": "application/json", withCredentials: true },
         params: { valore: valore, },
       });
-
-      console.log("Rilevazione inserita:", response.data);
-      alert("Rilevazione inserita con successo");
-
+      
       setValore(undefined);
       close();
+      window.location.reload();
     } catch (error) {
       const axiosError = error as AxiosError<string>;
       console.error("Errore nell'inserimento della rilevazione:", axiosError);
 
-      if (axiosError.response?.status === 400) {
-        alert("dati non validi");
-      } else if (axiosError.response?.status === 500) {
-        alert("Errore del server. Riprova più tardi");
-      } else {
-        alert("Si è verificato un errore durante l'inserimento della rilevazione");
+        if (axiosError.response?.status === 400) {
+          alert("dati non validi");
+        } else if (axiosError.response?.status === 500) {
+          alert("Errore del server. Riprova più tardi");
+        } else {
+          alert("Si è verificato un errore durante l'inserimento della rilevazione");
+        }
+      } finally {
+        setIsLoading(false);
       }
-    } finally {
-      setIsLoading(false);
-    }
   }
 
   return (
@@ -128,5 +80,4 @@ function ModalGlicemia() {
   );
 }
 
-
-export { ModalMedicinali, ModalSintomi, ModalGlicemia };
+export default ModalGlicemia;

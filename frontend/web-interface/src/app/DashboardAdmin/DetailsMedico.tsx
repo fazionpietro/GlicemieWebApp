@@ -65,7 +65,7 @@ export default function DetailsMedico({
       },
     })
       .then((res) => {
-        console.log(res);
+        (res);
         closeEdit();
         fetchMedici();
       })
@@ -155,7 +155,7 @@ export default function DetailsMedico({
             value={dataNascita}
             onChange={(d) => {
               setDataNascita(d);
-              console.log(d);
+              (d);
               setIsError("");
             }}
           />
