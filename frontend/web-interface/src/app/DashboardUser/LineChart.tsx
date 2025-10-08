@@ -84,7 +84,18 @@ function LineC({onRilevazione}: Props) {
       }}>
         <ModalGlicemia onRilevazione={onRilevazione}/>
       </div>
-      <LineChart
+
+      {forChartData.length === 0 ? (
+        <Paper withBorder shadow="md" p="x1" style={{height: "100%",display: "flex", flexDirection: "column",justifyContent:"center"
+          , alignItems: "center", textAlign: "center"}} >
+          <Text>
+            Nessuna rilevazione trovata per il tuo account
+            <br/>
+            Aggiungi la tua prima rilevazione con il pulsante "Nuova Rilevazione"
+          </Text>
+        </Paper>
+      ):(
+        <LineChart
         h="100%"
         w="100%"
         data={forChartData.slice(0, 7).reverse()}
@@ -128,6 +139,7 @@ function LineC({onRilevazione}: Props) {
           }
         }}
       />
+      )}
     </div>
   );
 }

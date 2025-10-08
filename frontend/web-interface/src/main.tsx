@@ -8,10 +8,10 @@ import "@mantine/core/styles.css";
 import Register from "./app/RegisterPage/Register";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import DashboardAdmin from "./app/DashboardAdmin/DashboardAdmin";
-import UserPage from "./app/DashboardUser/UserPage";
 import { AuthProvider } from "./context/AuthContext";
 import { ProtectedRoute } from "./routes/ProtectedRoute";
-import DashboardMedico from './app/DashboardMedico/DashboardMedico.tsx'
+import DashboardMedico from './app/DashboardMedico/DashboardMedico.tsx';
+import DashboardUser from './app/DashboardUser/DashboardUser.tsx';
 
 import axios from "axios";
 import { Unhautorized } from "./routes/Unhautorized.tsx";
@@ -53,7 +53,7 @@ createRoot(document.getElementById("root")!).render(
               path="/DashboardPaziente"
               element={
                 <ProtectedRoute requiredRole={["paziente"]}>
-                  <UserPage />
+                  <DashboardUser />
                 </ProtectedRoute>
               }
             />

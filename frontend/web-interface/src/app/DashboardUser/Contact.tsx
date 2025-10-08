@@ -65,15 +65,16 @@ function ContactMedic() {
   };
 
   return (
-    <form onSubmit={comunicazioneForm.onSubmit(handleSubmit)}>
+    <form onSubmit={comunicazioneForm.onSubmit(handleSubmit)} style={{textAlign: 'left'}}>
       <Title
         order={2}
         size="h1"
         style={{ fontFamily: 'Outfit, var(--mantine-font-family)' }}
         fw={900}
         ta="center"
+        mb="10px"
       >
-        Contact your Medic
+        Contatta il tuo Medico
       </Title>
       
       <Select label="priorità messaggio" placeholder="seleziona la priorità" data={[
@@ -83,6 +84,7 @@ function ContactMedic() {
       />
 
       <Textarea
+       
         mt="md"
         label="Messaggio"
         placeholder="Inserisci il messaggio"
@@ -95,7 +97,7 @@ function ContactMedic() {
       />
 
       <Group justify="center" mt="xl">
-        <Button type="submit" size="md">
+        <Button type="submit" size="md" w="100%">
           Invia
         </Button>
       </Group>
@@ -148,8 +150,8 @@ function SegnalaSintomi(){
   
 
   return(
-    <form onSubmit={form.onSubmit(handleSubmit)} >
-      <Title order={2} size="h1" style={{fontFamily: 'Outfit, var(--mantine-font-family)'}} fw={900} ta="center">
+    <form onSubmit={form.onSubmit(handleSubmit)} style={{textAlign: 'left'}}>
+      <Title mb="10px" order={2} size="h1" style={{fontFamily: 'Outfit, var(--mantine-font-family)'}} fw={900} ta="center">
         Segnala Sintomi
       </Title>
 
@@ -172,7 +174,7 @@ function SegnalaSintomi(){
         maxRows={3} minRows={2} autosize name="message" variant="filled" {...form.getInputProps('message')}/>
 
         <Group justify="center" mt="xl">
-          <Button type="submit" size="md">
+          <Button type="submit" size="md" w="100%">
             Invia
           </Button>
         </Group>

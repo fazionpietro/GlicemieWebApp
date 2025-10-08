@@ -1,7 +1,7 @@
 import { useAuth } from "../../context/AuthContext";
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Box, Text } from '@mantine/core';
+import { Box, Text, Paper} from '@mantine/core';
 import '@mantine/core/styles.css';
 
 interface Props{
@@ -47,7 +47,17 @@ function TableGlicemia({key}: Props) {
   }
   return (
     <div>
-      {rilevazioni.slice(0, 5).map((r) => {
+      {rilevazioni.length === 0 ?(
+        <Paper withBorder shadow="md" p="xl" style={{height: "100%",display: "flex", flexDirection: "column",justifyContent:"center"
+          , alignItems: "center", textAlign: "center"}} >
+          <Text>
+            Non sono state trovate delle rilevazioni per il tuo account
+            <br/>
+            Aggiungi la tua prima rilevazione con il pulsante "Nuova Rilevazione"
+          </Text>
+        </Paper>
+      ):(
+      rilevazioni.slice(0, 5).map((r) => {
         const dataFormattata = new Date(r.timestamp).toLocaleDateString();
         const oraFormattata = new Date(r.timestamp).toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
 
@@ -61,17 +71,18 @@ function TableGlicemia({key}: Props) {
             borderRadius: '4px',
             padding: '8px'
           }}>
-            <Text size="xs" c="dimmed">
-              {dataFormattata}-{oraFormattata}
-            </Text>
-            <Text size="sm">
-              <Text span fw={700} c={getColor(r.livello)}>
-                {r.livello.toUpperCase()}
-              </Text> - {r.valore} mg/dL;
-            </Text>
+              <Text size="xs" c="dimmed">
+                {dataFormattata}-{oraFormattata}
+              </Text>
+              <Text size="sm">
+                <Text span fw={700} c={getColor(r.livello)}>
+                  {r.livello.toUpperCase()}
+                </Text> - {r.valore} mg/dL
+              </Text>
           </Box>
         );
-      })}
+      })
+    )}
     </div>
   )
 }
