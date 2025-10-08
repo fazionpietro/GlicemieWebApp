@@ -63,7 +63,6 @@ function Assunzioni({ terapie, assunzioni, refreshComponente}: Props) {
         setTimeout(()=>{
           refreshComponente();
         }, 500);
-        console.log("gustor");
       }else{
         console.error("Errore HTTP", response.status);
       }
@@ -75,20 +74,43 @@ function Assunzioni({ terapie, assunzioni, refreshComponente}: Props) {
   const noAssunzioni= useMemo(()=>{
     if (terapie.length === 0) return false;
 
-    const giorniSA = Date.now() - (2*24*60* 60*1000);
+    const giorniSA = Date.now() - (2*24*60*60*1000);
     const assunzioniMappate =new Map(assunzioni.map(a=> [a.idTerapia, a]));
 
-    return terapie.every(terapia=>{
+
+
+    const noAssunzioneDG = terapie.some(terapia=>{
       const assunzione= assunzioniMappate.get(terapia.id);
       return !assunzione?.latestTimestamp || new Date(assunzione.latestTimestamp).getTime() < giorniSA;
     });
+
+    if(noAssunzioneDG){
+      return 'non assumi farmaci da almeno 2 giorni'
+    }
+
+    const noAssunzioneOggi = terapie.some (terapia=>{
+      const assunzione= assunzioniMappate.get(terapia.id);
+      const giorniSA = Date.now() - (2*24*60*60*1000);
+      const giorno = Date.now() -(24*60*60*1000);
+      
+      if(!assunzione?.latestTimestamp) return true;
+
+      const ultimaAssunzione =(new Date(assunzione.latestTimestamp).getTime())
+      return  ultimaAssunzione >giorniSA && ultimaAssunzione <giorno;
+    });
+
+    if(noAssunzioneOggi){
+      return 'ricordati di assumere i farmaci';
+    }
+
+    return false;
   },[terapie,assunzioni]);
 
   return (
     <Box p="md" w="100%">
       <Title order={1} mb="lg">Terapia Attuale</Title>
 
-      <Title order={2} mb="md">Farmaci in Terapia</Title>
+      <Title order={2} mb="md" style={{textAlign: 'center'}}>Farmaci in Terapia</Title>
 
       <Stack gap="lg" mb="xl">
 
@@ -148,7 +170,7 @@ function Assunzioni({ terapie, assunzioni, refreshComponente}: Props) {
       </Stack>
 
       <Divider my="xl" />
-      { noAssunzioni &&(
+      { noAssunzioni === 'non assumi farmaci da almeno 2 giorni' && (
         <Alert
         icon={<IconAlertTriangle size="1rem" />}
         title="Errore"
@@ -156,17 +178,25 @@ function Assunzioni({ terapie, assunzioni, refreshComponente}: Props) {
         variant="light"
         mb="md"
       >
-        <Text mb={20} fw={500}>Non assumi farmaci da 2 giorni
+        <Text mb={20} fw={500}>Non assumi farmaci da almeno 2 giorni
         </Text>
       </Alert>
       )}
 
-      <Button
-        mt={20}
-        leftSection={<IconReportMedical size={16} />}
-        variant="filled"
-        onClick={handleInviaReport}
+      { noAssunzioni === 'ricordati di assumere i farmaci' && (
+        <Alert
+        icon={<IconAlertTriangle size="1rem" />}
+        title="Errore"
+        color="yellow"
+        variant="light"
+        mb="md"
       >
+        <Text mb={20} fw={500}>ricordati di assumere i farmaci
+        </Text>
+      </Alert>
+      )}
+
+      <Button mt={20} variant="filled" onClick={handleInviaReport} w="100%">
         Invia Report al Medico
       </Button>
     </Box >
