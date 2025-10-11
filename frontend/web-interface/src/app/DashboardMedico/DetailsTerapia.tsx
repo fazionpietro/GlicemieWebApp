@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Button,
   Container,
@@ -8,7 +8,6 @@ import {
   Alert,
   NumberInput,
   Textarea,
-  Select,
   Modal,
   ActionIcon,
 } from "@mantine/core";
@@ -55,7 +54,7 @@ export default function DetailsTerapia({
         indicazioni,
       },
     })
-      .then((res) => {
+      .then(() => {
         closeEdit();
         fetchTerapie();
       })

@@ -5,15 +5,15 @@ import { HeaderMegaMenu } from '../Components/Header';
 import { useMediaQuery } from "@mantine/hooks";
 import { TableTerapie } from './TableTerapie.tsx';
 import TablePazienti from '../Components/TablePazienti';
-import type { Paziente, Terapia, User } from '../type/DataType';
+import type { Paziente, Terapia } from '../type/DataType';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useAuth } from '../../context/AuthContext.tsx';
+import { LogMessaggi } from './LogMessaggi.tsx';
 const PRIMARY_COL_HEIGHT = '40vh';
 
 
 function MedicPage() {
-  //const [user, setUser] = useState<User | null>(null)
   const theme = useMantineTheme();
   const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`);
   const [pazienti, setPazienti] = useState<Paziente[] | null>(null);
@@ -76,29 +76,38 @@ function MedicPage() {
       <Grid gutter={isMobile ? "md" : "xl"} ta={"left"} align="flex-start">
 
         <Grid.Col span={{ base: 12, lg: 8 }}>
-          <Card p="40" radius={"md"} h="40vh" shadow='sm' w={"auto"}>
-            <Title mb={"30"} size="2rem" order={isMobile ? 4 : 3}>Gestione Terapie</Title>
-            <TableTerapie pazienti={pazienti} fetchPazienti={fetchPazienti} terapie={terapie} fetchTerapie={fetchTerapie} />
-          </Card>
+          <Grid.Col span={12}>
+            <Card p="40" radius={"md"} h="40vh" shadow='sm' w={"auto"}>
+              <Title mb={"30"} size="2rem" order={isMobile ? 4 : 3}>Gestione Terapie</Title>
+              <TableTerapie pazienti={pazienti} fetchPazienti={fetchPazienti} terapie={terapie} fetchTerapie={fetchTerapie} />
+            </Card>
+          </Grid.Col>
+
+          <Grid.Col span={12}>
+
+            <Card p="40" radius={"md"} h="40vh" shadow='sm' w={"auto"}>
+              <Title mb={"30"} size="2rem" order={isMobile ? 4 : 3}>Pazienti</Title>
+              <TablePazienti
+                pazienti={pazienti}
+                medici={null}
+                fetchMedici={() => console.log("")}
+                fetchPazienti={fetchPazienti}
+
+
+              ></TablePazienti>
+            </Card>
+
+          </Grid.Col>
         </Grid.Col>
-        <Grid.Col mb={'5'} span={{ base: 12, lg: 4 }}><Skeleton height={PRIMARY_COL_HEIGHT} radius="md" animate={false} /></Grid.Col>
+        <Grid.Col mt={15} span={{ base: 12, md: 4 }}>
 
-        <Grid.Col span={{ base: 12, lg: 8 }}>
+          <Card radius={'md'} h={'82vh'}>
 
-          <Card p="40" radius={"md"} h="40vh" shadow='sm' w={"auto"}>
-            <Title mb={"30"} size="2rem" order={isMobile ? 4 : 3}>Pazienti</Title>
-            <TablePazienti
-              pazienti={pazienti}
-              medici={null}
-              fetchMedici={() => console.log("")}
-              fetchPazienti={fetchPazienti}
-
-
-            ></TablePazienti>
+            <LogMessaggi />
           </Card>
 
+
         </Grid.Col>
-        <Grid.Col span={{ base: 12, md: 4 }}><Skeleton height={PRIMARY_COL_HEIGHT} radius="md" animate={false} /></Grid.Col>
       </Grid>
     </div>
   );
