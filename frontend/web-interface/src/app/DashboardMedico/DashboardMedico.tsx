@@ -1,16 +1,15 @@
-import { Grid, Card, Skeleton, Title, useMantineTheme } from '@mantine/core';
+import { Grid, Card, Title, useMantineTheme } from '@mantine/core';
 
 import { HeaderMegaMenu } from '../Components/Header';
 
 import { useMediaQuery } from "@mantine/hooks";
 import { TableTerapie } from './TableTerapie.tsx';
 import TablePazienti from '../Components/TablePazienti';
-import type { Paziente, Terapia } from '../type/DataType';
+import type { Comunicazione, Paziente, Terapia } from '../type/DataType';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useAuth } from '../../context/AuthContext.tsx';
 import { LogMessaggi } from './LogMessaggi.tsx';
-const PRIMARY_COL_HEIGHT = '40vh';
 
 
 function MedicPage() {
@@ -19,6 +18,8 @@ function MedicPage() {
   const [pazienti, setPazienti] = useState<Paziente[] | null>(null);
   const [didFetch, setDidFetch] = useState(false);
   const [terapie, setTerapie] = useState<Terapia[] | null>(null)
+  const [_ws, setWs] = useState<WebSocket | null>(null);
+  const [comunicazioni, setComunicazioni] = useState<Comunicazione[]>([])
   const { user } = useAuth()
 
   async function fetchPazienti() {
@@ -58,6 +59,8 @@ function MedicPage() {
   }
 
 
+
+
   useEffect(() => {
 
     if (!didFetch && user !== null) {
@@ -67,6 +70,58 @@ function MedicPage() {
       setDidFetch(true);
     }
   }, [user]);
+
+
+  useEffect(() => {
+    const websocket = new WebSocket(`ws://localhost:8080/ws/comunicazioni?id=${user?.id}`);
+    setWs(websocket);
+
+    websocket.onopen = () => console.log('Connected to WebSocket server');
+
+    websocket.onmessage = (event) => {
+      try {
+        const newComs: Comunicazione[] = JSON.parse(event.data);
+
+        setComunicazioni(prevComs => {
+          const comsMap = new Map();
+
+          prevComs.forEach(com => comsMap.set(com.id, com));
+
+          newComs.forEach(com => comsMap.set(com.id, com));
+
+          const uniqueComs = Array.from(comsMap.values()).sort((a, b) =>
+            new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+          );
+
+          return uniqueComs;
+        });
+      } catch (error) {
+        console.error('Error parsing WebSocket message:', error);
+      }
+    };
+    websocket.onerror = (error) => {
+      console.error('WebSocket error:', error);
+    };
+
+    websocket.onclose = () => console.log('Disconnected from WebSocket server');
+
+    const handleBeforeUnload = () => {
+      if (websocket.readyState === WebSocket.OPEN) {
+        websocket.close();
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+
+      if (websocket.readyState === WebSocket.OPEN) {
+        websocket.close();
+      }
+    };
+  }, []);
+
 
 
   return (
@@ -103,7 +158,7 @@ function MedicPage() {
 
           <Card radius={'md'} h={'82vh'}>
 
-            <LogMessaggi />
+            <LogMessaggi messages={comunicazioni} />
           </Card>
 
 

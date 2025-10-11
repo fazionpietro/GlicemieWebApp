@@ -1,28 +1,7 @@
 
 import { Card, ScrollArea, Text, Stack, Box, Group } from '@mantine/core';
 import { useState } from 'react';
-
-interface LogMessage {
-  id: number;
-  descrizione: string;
-  priorita: number;
-  timestamp: string;
-  nome_paziente: string;
-  cognome_paziente: string;
-  email_paziente: string;
-}
-
-const messagesExample: LogMessage[] = [
-  {
-    id: 1,
-    descrizione: 'Richiesta urgente visita cardiologica',
-    priorita: 3,
-    timestamp: '2025-10-11T14:30:00',
-    nome_paziente: 'Mario',
-    cognome_paziente: 'Rossi',
-    email_paziente: 'mario.rossi@example.com'
-  },
-];
+import type { Comunicazione } from '../type/DataType';
 
 const getPriorityColor = (priorita: number) => {
   switch (priorita) {
@@ -48,8 +27,16 @@ const formatTimestamp = (timestamp: string) => {
   });
 };
 
-export function LogMessaggi() {
-  const [messages] = useState<LogMessage[]>(messagesExample);
+type Props = {
+  messages: Comunicazione[]
+}
+
+
+export function LogMessaggi({ messages }: Props) {
+
+
+
+
 
   return (
     <Card padding="lg" radius="md">
@@ -90,12 +77,12 @@ export function LogMessaggi() {
                     Paziente:
                   </Text>
                   <Text size="sm" fw={500}>
-                    {msg.nome_paziente} {msg.cognome_paziente}
+                    {msg.nome} {msg.cognome}
                   </Text>
                 </Group>
 
                 <Text size="xs" mt={4}>
-                  {msg.email_paziente}
+                  {msg.email}
                 </Text>
               </Box>
             );

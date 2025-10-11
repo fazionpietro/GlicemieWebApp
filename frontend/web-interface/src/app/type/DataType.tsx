@@ -80,3 +80,14 @@ export type Assunzione = {
   latestTimestamp: string,
   giaAssunte: number
 }
+
+export type Comunicazione = {
+  id: number;
+  descrizione: string;
+  priorita: number;
+  nome: string;
+  cognome: string;
+  email: string;
+  timestamp: string;
+}
+

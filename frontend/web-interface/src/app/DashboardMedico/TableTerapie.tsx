@@ -1,6 +1,6 @@
 import { Group, Modal, Paper, Text, ScrollArea, Table, ActionIcon } from '@mantine/core';
 import { Button } from '@mantine/core';
-import { modals, ModalsProvider } from '@mantine/modals';
+import { modals, } from '@mantine/modals';
 
 import { useDisclosure } from '@mantine/hooks';
 import { RegisterTerapia } from './RegisterTerapia';
@@ -22,7 +22,7 @@ type Props = {
   fetchPazienti: () => void
 
 }
-function TableTerapie({ pazienti, fetchPazienti, terapie, fetchTerapie }: Props) {
+function TableTerapie({ pazienti, terapie, fetchTerapie }: Props) {
 
   const [openedTerapie, { open: openTerapie, close: closeTerapie }] = useDisclosure(false);
 
@@ -37,7 +37,7 @@ function TableTerapie({ pazienti, fetchPazienti, terapie, fetchTerapie }: Props)
         withCredentials: true,
       },
     })
-      .then((res) => {
+      .then(() => {
         fetchTerapie();
       })
       .catch((err) => {
@@ -109,10 +109,6 @@ function TableTerapie({ pazienti, fetchPazienti, terapie, fetchTerapie }: Props)
                   Assunzioni Giornaliere
 
                 </Table.Th>
-                <Table.Th style={{ textAlign: "left" }}>
-                  Ultima Assunzione
-
-                </Table.Th>
                 <Table.Th style={{ textAlign: "right" }}>
                   <Modal
                     opened={openedTerapie}
@@ -163,7 +159,6 @@ function TableTerapie({ pazienti, fetchPazienti, terapie, fetchTerapie }: Props)
                       </Text>
                     </Group>
                   </Table.Td>
-                  <Table.Td></Table.Td>
                   <Table.Td style={{ textAlign: "left" }}>
                     <Group gap={0} justify="flex-end">
 
