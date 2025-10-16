@@ -96,7 +96,7 @@ function ContactMedic() {
         {...comunicazioneForm.getInputProps('message')}
       />
 
-      <Group justify="center" mt="xl">
+      <Group justify="center" mt={22}>
         <Button type="submit" size="md" w="100%">
           Invia
         </Button>
