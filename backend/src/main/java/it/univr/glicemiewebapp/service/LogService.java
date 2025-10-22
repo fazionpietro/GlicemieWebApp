@@ -1,7 +1,7 @@
 package it.univr.glicemiewebapp.service;
 
 import it.univr.glicemiewebapp.entity.Log;
-
+import it.univr.glicemiewebapp.event.NewLogEvent;
 import it.univr.glicemiewebapp.repository.LogRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +23,7 @@ public class LogService {
 
   private final LogRepository logRepository;
   private final ObjectMapper mapper;
-  private final ApplicationEventPublisher publisher; // Spring lo injetta
+  private final ApplicationEventPublisher publisher;
 
   public void info(String message) {
     saveAndPublish("INFO", message);

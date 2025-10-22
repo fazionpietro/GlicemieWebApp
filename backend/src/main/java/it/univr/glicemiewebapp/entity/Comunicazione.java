@@ -34,6 +34,9 @@ public class Comunicazione {
   @Column(name = "descrizione", nullable = false, length = Integer.MAX_VALUE)
   private String descrizione;
 
+  @Column(name = "letto", nullable = false, columnDefinition = "boolean default false")
+  private boolean letto;
+
   @NotNull
   @Column(name = "\"timestamp\"", nullable = false)
   private Instant timestamp;

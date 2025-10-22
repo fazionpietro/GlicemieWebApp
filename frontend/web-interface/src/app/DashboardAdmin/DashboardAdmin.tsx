@@ -1,7 +1,6 @@
 import {
   Container,
   Grid,
-  Paper,
   Text,
   Title,
   ScrollArea,
@@ -79,7 +78,7 @@ function DashboardAdmin() {
     })
       .then((res) => {
         setPazienti(res.data);
-       
+
       })
       .catch((err) => {
         console.error(err);
@@ -97,7 +96,7 @@ function DashboardAdmin() {
     })
       .then((res) => {
         setMedici(res.data);
-        
+
       })
       .catch((err) => {
         console.error(err);
@@ -150,7 +149,6 @@ function DashboardAdmin() {
 
     websocket.onclose = () => console.log('Disconnected from WebSocket server');
 
-    // Gestione della chiusura della pagina/componente
     const handleBeforeUnload = () => {
       if (websocket.readyState === WebSocket.OPEN) {
         websocket.close();
@@ -159,7 +157,6 @@ function DashboardAdmin() {
 
     window.addEventListener('beforeunload', handleBeforeUnload);
 
-    // Cleanup function
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
 

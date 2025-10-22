@@ -1,25 +1,25 @@
-import { Grid, Card, Skeleton, Title, useMantineTheme } from '@mantine/core';
+import { Grid, Card, Title, useMantineTheme } from "@mantine/core";
 
-import { HeaderMegaMenu } from '../Components/Header';
+import { HeaderMegaMenu } from "../Components/Header";
 
 import { useMediaQuery } from "@mantine/hooks";
-import { TableTerapie } from './TableTerapie.tsx';
-import TablePazienti from '../Components/TablePazienti';
-import type { Paziente, Terapia, User } from '../type/DataType';
-import { useEffect, useState } from 'react';
-import axios from 'axios';
-import { useAuth } from '../../context/AuthContext.tsx';
-const PRIMARY_COL_HEIGHT = '40vh';
-
+import { TableTerapie } from "./TableTerapie.tsx";
+import TablePazienti from "../Components/TablePazienti";
+import type { Comunicazione, Paziente, Terapia } from "../type/DataType";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { useAuth } from "../../context/AuthContext.tsx";
+import { LogMessaggi } from "./LogMessaggi.tsx";
 
 function MedicPage() {
-  //const [user, setUser] = useState<User | null>(null)
   const theme = useMantineTheme();
   const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`);
   const [pazienti, setPazienti] = useState<Paziente[] | null>(null);
   const [didFetch, setDidFetch] = useState(false);
-  const [terapie, setTerapie] = useState<Terapia[] | null>(null)
-  const { user } = useAuth()
+  const [terapie, setTerapie] = useState<Terapia[] | null>(null);
+  const [_ws, setWs] = useState<WebSocket | null>(null);
+  const [comunicazioni, setComunicazioni] = useState<Comunicazione[]>([]);
+  const { user } = useAuth();
 
   async function fetchPazienti() {
     await axios({
@@ -31,14 +31,11 @@ function MedicPage() {
       },
     })
       .then((res) => {
-
-        setPazienti(res.data)
+        setPazienti(res.data);
       })
       .catch((err) => {
         console.error(err);
       });
-
-
   }
 
   async function fetchTerapie() {
@@ -47,58 +44,126 @@ function MedicPage() {
       url: `${import.meta.env.VITE_API_KEY}api/terapie/medico/${user?.id}`,
       headers: {
         "Content-Type": "application/json",
-        withCredentials: true
-      }
-    }).then((res) => {
-
-      setTerapie(res.data)
-    }).catch((err) => {
-      console.error(err)
+        withCredentials: true,
+      },
     })
+      .then((res) => {
+        setTerapie(res.data);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   }
 
-
   useEffect(() => {
-
     if (!didFetch && user !== null) {
-
-      fetchTerapie()
+      fetchTerapie();
       fetchPazienti();
       setDidFetch(true);
     }
   }, [user]);
 
+  function handleMessageRead(id: string) {
+    setComunicazioni((prevMessages) =>
+      prevMessages.filter((msg) => msg.id !== id),
+    );
+  }
+
+  useEffect(() => {
+    const websocket = new WebSocket(
+      `ws://localhost:8080/ws/comunicazioni?id=${user?.id}`,
+    );
+    setWs(websocket);
+
+    websocket.onopen = () => console.log("Connected to WebSocket server");
+
+    websocket.onmessage = (event) => {
+      try {
+        const newComs: Comunicazione[] = JSON.parse(event.data);
+
+        setComunicazioni((prevComs) => {
+          const comsMap = new Map();
+
+          prevComs.forEach((com) => comsMap.set(com.id, com));
+
+          newComs.forEach((com) => comsMap.set(com.id, com));
+
+          const uniqueComs = Array.from(comsMap.values()).sort(
+            (a, b) =>
+              new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime(),
+          );
+
+          return uniqueComs;
+        });
+      } catch (error) {
+        console.error("Error parsing WebSocket message:", error);
+      }
+    };
+    websocket.onerror = (error) => {
+      console.error("WebSocket error:", error);
+    };
+
+    websocket.onclose = () => console.log("Disconnected from WebSocket server");
+
+    const handleBeforeUnload = () => {
+      if (websocket.readyState === WebSocket.OPEN) {
+        websocket.close();
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+
+      if (websocket.readyState === WebSocket.OPEN) {
+        websocket.close();
+      }
+    };
+  }, []);
 
   return (
     <div>
       <HeaderMegaMenu />
 
       <Grid gutter={isMobile ? "md" : "xl"} ta={"left"} align="flex-start">
-
         <Grid.Col span={{ base: 12, lg: 8 }}>
-          <Card p="40" radius={"md"} h="40vh" shadow='sm' w={"auto"}>
-            <Title mb={"30"} size="2rem" order={isMobile ? 4 : 3}>Gestione Terapie</Title>
-            <TableTerapie pazienti={pazienti} fetchPazienti={fetchPazienti} terapie={terapie} fetchTerapie={fetchTerapie} />
+          <Grid.Col span={12}>
+            <Card p="40" radius={"md"} h="40vh" shadow="sm" w={"auto"}>
+              <Title mb={"30"} size="2rem" order={isMobile ? 4 : 3}>
+                Gestione Terapie
+              </Title>
+              <TableTerapie
+                pazienti={pazienti}
+                fetchPazienti={fetchPazienti}
+                terapie={terapie}
+                fetchTerapie={fetchTerapie}
+              />
+            </Card>
+          </Grid.Col>
+
+          <Grid.Col span={12}>
+            <Card p="40" radius={"md"} h="40vh" shadow="sm" w={"auto"}>
+              <Title mb={"30"} size="2rem" order={isMobile ? 4 : 3}>
+                Pazienti
+              </Title>
+              <TablePazienti
+                pazienti={pazienti}
+                medici={null}
+                fetchMedici={() => console.log("")}
+                fetchPazienti={fetchPazienti}
+              ></TablePazienti>
+            </Card>
+          </Grid.Col>
+        </Grid.Col>
+        <Grid.Col mt={15} span={{ base: 12, md: 4 }}>
+          <Card radius={"md"} h={"82vh"}>
+            <LogMessaggi
+              messages={comunicazioni}
+              onMessageRead={handleMessageRead}
+            />
           </Card>
         </Grid.Col>
-        <Grid.Col mb={'5'} span={{ base: 12, lg: 4 }}><Skeleton height={PRIMARY_COL_HEIGHT} radius="md" animate={false} /></Grid.Col>
-
-        <Grid.Col span={{ base: 12, lg: 8 }}>
-
-          <Card p="40" radius={"md"} h="40vh" shadow='sm' w={"auto"}>
-            <Title mb={"30"} size="2rem" order={isMobile ? 4 : 3}>Pazienti</Title>
-            <TablePazienti
-              pazienti={pazienti}
-              medici={null}
-              fetchMedici={() => console.log("")}
-              fetchPazienti={fetchPazienti}
-
-
-            ></TablePazienti>
-          </Card>
-
-        </Grid.Col>
-        <Grid.Col span={{ base: 12, md: 4 }}><Skeleton height={PRIMARY_COL_HEIGHT} radius="md" animate={false} /></Grid.Col>
       </Grid>
     </div>
   );
