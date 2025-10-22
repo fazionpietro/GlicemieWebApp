@@ -100,7 +100,7 @@ function TableTerapie({ pazienti, terapie, fetchTerapie }: Props) {
                   <Modal
                     opened={openedTerapie}
                     centered
-                    onClose={close}
+                    onClose={closeTerapie}
                     radius={"md"}
                     size="auto"
                   >

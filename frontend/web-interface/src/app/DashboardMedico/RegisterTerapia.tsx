@@ -1,8 +1,19 @@
 import { useCallback, useState } from "react";
-import { Button, Container, Group, TextInput, Title, Alert, NumberInput, Textarea, Select } from "@mantine/core";
+import {
+  Button,
+  Container,
+  Group,
+  TextInput,
+  Title,
+  Alert,
+  NumberInput,
+  Textarea,
+  Select,
+} from "@mantine/core";
 import { IconAlertTriangle } from "@tabler/icons-react";
 import type { Paziente } from "../type/DataType";
 import axios from "axios";
+import { useAuth } from "../../context/AuthContext";
 
 type Props = {
   pazienti: Paziente[] | null;
@@ -11,71 +22,138 @@ type Props = {
 };
 
 export function RegisterTerapia({ pazienti, fetchTerapie, onSuccess }: Props) {
-  const [numAssunzioni, setNumAssunzioni] = useState("");
   const [farmaco, setFarmaco] = useState("");
   const [dosaggio, setDosaggio] = useState("");
   const [indicazioni, setIndicazioni] = useState("");
   const [idPaziente, setIdPaziente] = useState("");
   const [isError, setIsError] = useState("");
+  const [numAssunzioni, setNumAssunzioni] = useState<string | number>(0);
+  const { user } = useAuth();
 
-  const createTerapia = useCallback(async () => {
-    try {
-      const raw = localStorage.getItem("user");
-      if (!raw) throw new Error("Utente non presente in sessione");
-      const user = JSON.parse(raw);
-      await axios.post(
-        `${import.meta.env.VITE_API_KEY}api/terapie/new`,
-        {
-          farmaco,
-          numAssunzioni,
-          dosaggio,
-          indicazioni,
-          idPaziente,
-          idMedico: `${user.id}`,
-        },
-        { headers: { "Content-Type": "application/json", withCredentials: true as any } }
-      );
-      fetchTerapie();
-      onSuccess();
-    } catch (err: any) {
-      console.error(err);
-      setIsError(err?.message ?? "Errore durante la creazione");
-    }
-  }, [farmaco, numAssunzioni, dosaggio, indicazioni, idPaziente, fetchTerapie, onSuccess]);
+  async function createTerapia() {
+    await axios({
+      method: "PUT",
+      url: `${import.meta.env.VITE_API_KEY}api/terapie/new`,
+      headers: {
+        "Content-Type": "application/json",
+        withCredentials: true,
+      },
+      data: {
+        farmaco,
+        numAssunzioni,
+        dosaggio,
+        indicazioni,
+        idPaziente,
+        idMedico: `${user?.id}`,
+      },
+    })
+      .then((res) => {
+        console.log(res);
+        fetchTerapie();
+        onSuccess();
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }
 
   return (
-    <Container>
-      <Title order={4} mb="sm">Registra terapia</Title>
+    <Container fluid w={600} my={10} pl={40} pr={40}>
+      <Title size={"xl"} pb={30}>
+        Registra terapia
+      </Title>
+
+      <Group mb={20}>
+        <TextInput
+          size="md"
+          radius="md"
+          label="Farmaco"
+          withAsterisk
+          placeholder="Farmaco"
+          value={farmaco}
+          onChange={(e) => {
+            setFarmaco(e.currentTarget.value);
+            setIsError("");
+          }}
+          w="70%"
+        />
+        <NumberInput
+          size="md"
+          radius="md"
+          label="num. Assunzioni"
+          value={numAssunzioni}
+          onChange={setNumAssunzioni}
+          w="26%"
+          min={0}
+        />
+      </Group>
+
       <TextInput
-        label="Farmaco"
-        value={farmaco}
-        onChange={(e) => { setFarmaco(e.currentTarget.value); setIsError(""); }}
-      />
-      <TextInput
+        mb={20}
+        size="md"
+        radius="md"
         label="Dosaggio"
+        withAsterisk
+        placeholder="Dosaggio"
         value={dosaggio}
-        onChange={(e) => { setDosaggio(e.currentTarget.value); setIsError(""); }}
+        onChange={(e) => {
+          setDosaggio(e.currentTarget.value);
+          setIsError("");
+        }}
       />
       <Textarea
+        size="md"
+        radius="md"
+        mb={20}
         label="Indicazioni"
+        placeholder="Indiccazioni"
         value={indicazioni}
         onChange={(e) => setIndicazioni(e.currentTarget.value)}
       />
+
       <Select
         label="Paziente"
-        data={(pazienti ?? []).map(m => ({ value: m.id, label: `${m.nome} ${m.cognome}` }))}
-        value={idPaziente}
-        onChange={(val) => { if (val) setIdPaziente(val); }}
+        placeholder="Paziente"
         searchable
+        size="md"
+        mb={60}
+        value={idPaziente}
+        data={pazienti?.map((m) => ({
+          value: m.id,
+          label: `${m.nome} ${m.cognome} `,
+        }))}
+        onChange={(val) => {
+          if (val) {
+            setIdPaziente(val);
+          }
+        }}
       />
+
       {isError && (
-        <Alert color="red" icon={<IconAlertTriangle />} mb="md" withCloseButton onClose={() => setIsError("")}>
+        <Alert
+          variant="light"
+          color="red"
+          title="Errore"
+          ta={"left"}
+          withCloseButton
+          onClose={() => setIsError("")}
+          icon={<IconAlertTriangle size={18} stroke={1.5} />}
+          mb="md"
+        >
           {isError}
         </Alert>
       )}
-      <Group justify="flex-end" mt="md">
-        <Button onClick={createTerapia}>Salva</Button>
-      </Group>
+
+      <Button
+        size="md"
+        fullWidth
+        mt="xl"
+        radius="md"
+        mb={80}
+        onClick={createTerapia}
+      >
+        Salva
+      </Button>
     </Container>
   );
 }

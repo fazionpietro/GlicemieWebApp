@@ -27,7 +27,7 @@ public class TerapiaController {
   @Autowired
   private LogService logger;
 
-  @PostMapping("/new")
+  @PutMapping("/new")
   public ResponseEntity<String> create(@RequestBody TerapiaDTO t) {
     logger.info("attempt to create a terapy");
     return terapiaService.create(t);
@@ -57,7 +57,7 @@ public class TerapiaController {
   }
 
   @GetMapping("paziente/{id}")
-  public ResponseEntity<List<TerapiaDTO>> getByPaziente(@PathVariable("id") UUID id){
+  public ResponseEntity<List<TerapiaDTO>> getByPaziente(@PathVariable("id") UUID id) {
     logger.info("attempt to get therapies of patient: " + id);
     return ResponseEntity.ok(terapiaService.getAllByPaziente(id));
   }

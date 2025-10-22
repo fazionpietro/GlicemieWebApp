@@ -33,5 +33,5 @@ build/
 .vscode/
 
 ### DB ###
-.data\db\webapp.db.mv.db
-.data\db\webapp.db.trace.db
+data/db/
+data/db/
