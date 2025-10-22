@@ -109,7 +109,7 @@ function DashboardUser() {
       </Grid>
       <Grid columns={24} mt={100}>
         <Grid.Col span={8}>
-          <Card p="40" radius={"md"} shadow='sm' w={"auto"}>
+          <Card p="40" radius={"md"} shadow='sm' w={"auto"} style={{height: '450px', minHeight: '400px'}}>
           <SegnalaSintomi/>
           </Card>
         </Grid.Col>
@@ -119,7 +119,7 @@ function DashboardUser() {
           </Card>
         </Grid.Col>
         <Grid.Col span={8}>
-          <Card p="40" radius={"md"} shadow='sm' w={"auto"}>
+          <Card p="40" radius={"md"} shadow='sm' w={"auto"} style={{height: '450px', minHeight: '400px'}}>
             <ContactMedic />
           </Card>
         </Grid.Col>

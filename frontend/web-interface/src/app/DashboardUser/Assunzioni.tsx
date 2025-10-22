@@ -115,9 +115,13 @@ function Assunzioni({ terapie, assunzioni, refreshComponente}: Props) {
       <Stack gap="lg" mb="xl">
 
 
-        {terapie.map((terapia) => (
+        {terapie.map((terapia) => {
           
+          const assunzioneTerapia=assunzioni.find(assunzione => assunzione.idTerapia === terapia.id)?.giaAssunte??0;
+          const booleanAssunzione = assunzioneTerapia >=  terapia.numAssunzioni;
 
+
+          return(
           <Card key={terapia.id} bdrs={"md"} withBorder shadow="sm" p="lg">
             <Grid>
               <Grid.Col span={7}>
@@ -148,7 +152,10 @@ function Assunzioni({ terapie, assunzioni, refreshComponente}: Props) {
                   pr={20}
                 >
                   <Chip color="green" size="lg" radius="md" variant='light' icon={<LiaPillsSolid />}
-                  checked={selezionaTerapia.includes(terapia.id)} onClick={() => handleCheck(terapia.id)} >Assunto</Chip>
+                  checked={selezionaTerapia.includes(terapia.id)}
+                  onClick={() => handleCheck(terapia.id)} disabled={booleanAssunzione}>
+                  Assunto
+                  </Chip>
 
                 </Flex>
                 <Flex
@@ -156,17 +163,18 @@ function Assunzioni({ terapie, assunzioni, refreshComponente}: Props) {
                   align={"self-end"}
                   justify="flex-end"
                 >
-                  <Text>{(assunzioni.find(assunzione => assunzione.idTerapia === terapia.id)?.giaAssunte??0)}/{terapia.numAssunzioni}</Text>
+                    {booleanAssunzione ? (<Badge bg="green" size="sm" variant='filled'>Assunto</Badge>):
+                  (<Text>{assunzioneTerapia}/{terapia.numAssunzioni}</Text>)}
 
                 </Flex>
-
 
               </Grid.Col>
             </Grid>
 
           </Card>
+          );
 
-        ))}
+        })}
       </Stack>
 
       <Divider my="xl" />
