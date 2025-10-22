@@ -3,8 +3,8 @@ export type Paziente = {
   email: string;
   nome: string;
   cognome: string;
-  dataNascita: string;        // ISO date "YYYY-MM-DD"
-  ruolo: 'ROLE_PAZIENTE';
+  dataNascita: string; // ISO date "YYYY-MM-DD"
+  ruolo: "ROLE_PAZIENTE";
   fattoriRischio: string | null;
   comorbita: string | null;
   patologiePregresse: string | null;
@@ -16,19 +16,17 @@ export type Paziente = {
 };
 
 export type PazienteMedico = {
-
   id: string;
   email: string;
   nome: string;
   cognome: string;
-  dataNascita: string;        // ISO date "YYYY-MM-DD"
-  ruolo: 'ROLE_PAZIENTE';
+  dataNascita: string; // ISO date "YYYY-MM-DD"
+  ruolo: "ROLE_PAZIENTE";
   fattoriRischio: string | null;
   comorbita: string | null;
   patologiePregresse: string | null;
   idMedico: string | null;
-}
-
+};
 
 export interface User {
   id: string;
@@ -45,49 +43,46 @@ export interface AuthContextType {
   checkAuth: () => Promise<void>;
 }
 
-
 export type Medico = {
-  id: string
-  email: string
-  nome: string
-  cognome: string
-  dataNascita: string
-  ruolo: string
-}
+  id: string;
+  email: string;
+  nome: string;
+  cognome: string;
+  dataNascita: string;
+  ruolo: string;
+};
 
 export type Terapia = {
-  id: string,
-  farmaco: string,
-  numAssunzioni: number,
-  dosaggio: string,
-  indicazioni: string,
-  idPaziente: string
-  medicoCurante: string
-}
+  id: string;
+  farmaco: string;
+  numAssunzioni: number;
+  dosaggio: string;
+  indicazioni: string;
+  idPaziente: string;
+  medicoCurante: string;
+};
 
 export type Rilevazione = {
-
-  id: string,
-  idPaziente: string,
-  valore: number,
-  timestamp: string,
-  livello: number
-}
+  id: string;
+  idPaziente: string;
+  valore: number;
+  timestamp: string;
+  livello: number;
+};
 
 export type Assunzione = {
-  id: string,
-  idTerapia: string,
-  latestTimestamp: string,
-  giaAssunte: number
-}
+  id: string;
+  idTerapia: string;
+  latestTimestamp: string;
+  giaAssunte: number;
+};
 
 export type Comunicazione = {
-  id: number;
+  id: string;
   descrizione: string;
   priorita: number;
   nome: string;
   cognome: string;
   email: string;
   timestamp: string;
-}
-
+};

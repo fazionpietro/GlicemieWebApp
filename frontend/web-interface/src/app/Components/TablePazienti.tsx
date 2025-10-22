@@ -1,4 +1,3 @@
-
 import {
   ActionIcon,
   Button,
@@ -33,17 +32,14 @@ export default function TablePazienti({
   medici,
   fetchPazienti,
 }: Props) {
-  const [rilevazioni, setRilevazioni] = useState<Rilevazione[] | null>(null)
+  const [rilevazioni, setRilevazioni] = useState<Rilevazione[] | null>(null);
   const [didFetch, setDidFetch] = useState(false);
   const [openedRegister, { open: openRegister, close: closeRegister }] =
     useDisclosure(false);
-  const [openedDel, { open: _openDel, close: closeDel }] =
-    useDisclosure(false);
-  const { user } = useAuth()
+  const [openedDel, { open: _openDel, close: closeDel }] = useDisclosure(false);
+  const { user } = useAuth();
 
   const handleDelete = async (id: string) => {
-    
-
     await axios({
       method: "DELETE",
       url: `${import.meta.env.VITE_API_KEY}api/utenti/delete/${id}`,
@@ -53,7 +49,6 @@ export default function TablePazienti({
       },
     })
       .then((res) => {
-        
         fetchPazienti();
       })
       .catch((err) => {
@@ -61,15 +56,16 @@ export default function TablePazienti({
       });
   };
   async function fetchRilevazioni() {
-
-    await axios.get(`${import.meta.env.VITE_API_KEY}api/rilevazioni/my/${user?.id}`, { withCredentials: true })
+    await axios
+      .get(`${import.meta.env.VITE_API_KEY}api/rilevazioni/my/${user?.id}`, {
+        withCredentials: true,
+      })
       .then((res) => {
         setRilevazioni(res.data);
       })
       .catch((err) => {
         console.error("Errore nel caricamento rilevazioni:", err);
       });
-
   }
 
   useEffect(() => {
@@ -79,7 +75,6 @@ export default function TablePazienti({
     }
   }, []);
 
-
   const openDeleteModal = (id: string) =>
     modals.openConfirmModal({
       title: "Elimina Paziente",
@@ -87,9 +82,8 @@ export default function TablePazienti({
       children: (
         <Text size="sm">
           Sei sicuro di voler eliminare questo utente? Quest'azione è
-          distruttiva e nel caso di eliminazione accidentale dovrai
-          contattare gli amministratori del sistema per ripristinare i
-          dati.
+          distruttiva e nel caso di eliminazione accidentale dovrai contattare
+          gli amministratori del sistema per ripristinare i dati.
         </Text>
       ),
       labels: {
@@ -106,11 +100,7 @@ export default function TablePazienti({
 
   return (
     <ModalsProvider>
-      <Paper
-
-        radius="md"
-        style={{ overflow: "hidden", height: "38vh" }}
-      >
+      <Paper radius="md" style={{ overflow: "hidden", height: "38vh" }}>
         <ScrollArea style={{ height: "100%" }}>
           <Table
             stickyHeader
@@ -124,12 +114,8 @@ export default function TablePazienti({
           >
             <Table.Thead>
               <Table.Tr>
-                <Table.Th style={{ textAlign: "left" }}>
-                  Paziente
-                </Table.Th>
-                <Table.Th style={{ textAlign: "left" }}>
-                  Email
-                </Table.Th>
+                <Table.Th style={{ textAlign: "left" }}>Paziente</Table.Th>
+                <Table.Th style={{ textAlign: "left" }}>Email</Table.Th>
                 <Table.Th style={{ textAlign: "left" }}>
                   Data di nascita
                 </Table.Th>
@@ -138,29 +124,36 @@ export default function TablePazienti({
                 </Table.Th>
 
                 <Table.Th style={{ textAlign: "right" }}>
-                  {medici ? (<><Modal
-                    opened={openedRegister}
-                    centered
-                    onClose={() => {
-                      fetchPazienti();
-                      closeRegister();
-                    }}
-                    radius={"md"}
-                    size="auto"
-                  >
-                    <RegisterPaziente
-                      medici={medici}
-                      onSuccess={() => {
-                        fetchPazienti();
-                        closeRegister();
-                      }}
-                    />
-                  </Modal>
+                  {medici ? (
+                    <>
+                      <Modal
+                        opened={openedRegister}
+                        centered
+                        onClose={() => {
+                          fetchPazienti();
+                          closeRegister();
+                        }}
+                        radius={"md"}
+                        size="auto"
+                      >
+                        <RegisterPaziente
+                          medici={medici}
+                          onSuccess={() => {
+                            fetchPazienti();
+                            closeRegister();
+                          }}
+                        />
+                      </Modal>
 
-                    <Button variant="filled" w="100%" onClick={openRegister}>
-                      <Text fw={700} truncate="end">Nuovo paziente</Text>
-                    </Button>
-                  </>) : "Azioni"}
+                      <Button variant="filled" w="100%" onClick={openRegister}>
+                        <Text fw={700} truncate="end">
+                          Nuovo paziente
+                        </Text>
+                      </Button>
+                    </>
+                  ) : (
+                    "Azioni"
+                  )}
                 </Table.Th>
               </Table.Tr>
             </Table.Thead>
@@ -176,7 +169,7 @@ export default function TablePazienti({
                   </Table.Td>
                   <Table.Td style={{ textAlign: "left" }}>
                     <Group gap="sm">
-                      <Text fz="sm" fw={500}>
+                      <Text fz="sm" fw={500} truncate="end">
                         {item.email}
                       </Text>
                     </Group>
@@ -202,7 +195,11 @@ export default function TablePazienti({
                         fetchMedici={fetchPazienti}
                         fetchPazienti={fetchPazienti}
                       />
-                      <RilevazioniModal id={item.id} rilevazioni={rilevazioni} fetchRilevazioni={fetchRilevazioni} />
+                      <RilevazioniModal
+                        id={item.id}
+                        rilevazioni={rilevazioni}
+                        fetchRilevazioni={fetchRilevazioni}
+                      />
                       <div>
                         <Modal
                           opened={openedDel}
@@ -214,14 +211,9 @@ export default function TablePazienti({
                         <ActionIcon
                           variant="subtle"
                           color="red"
-                          onClick={() =>
-                            openDeleteModal(item.id)
-                          }
+                          onClick={() => openDeleteModal(item.id)}
                         >
-                          <IconTrash
-                            size={16}
-                            stroke={1.5}
-                          />
+                          <IconTrash size={16} stroke={1.5} />
                         </ActionIcon>
                       </div>
                     </Group>
@@ -235,4 +227,3 @@ export default function TablePazienti({
     </ModalsProvider>
   );
 }
-

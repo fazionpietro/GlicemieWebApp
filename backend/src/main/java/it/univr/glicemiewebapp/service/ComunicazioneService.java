@@ -61,4 +61,18 @@ public class ComunicazioneService {
     }
 
   }
+
+  @Transactional
+  public String markAsRead(UUID id) {
+
+    try {
+      Comunicazione c = comunicazioneRepository.findById(id)
+          .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Comunication not found"));
+
+      c.setLetto(true);
+      return "Comunication (" + id + ") marked as read";
+    } catch (Exception e) {
+      throw new BusinessException("UPDATE_ERROR", "failed to mark comunication as read");
+    }
+  }
 }

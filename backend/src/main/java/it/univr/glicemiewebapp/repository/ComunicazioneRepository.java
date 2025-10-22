@@ -24,7 +24,7 @@ public interface ComunicazioneRepository extends JpaRepository<Comunicazione, UU
           c.timestamp
       ) FROM Comunicazione c
       LEFT JOIN c.idPaziente p
-      WHERE p.idMedico.id = :id_medico
+      WHERE p.idMedico.id = :id_medico and c.letto = FALSE
       """)
   List<ComunicazioneMedicoDTO> findByMedico(@Param("id_medico") UUID idMedico);
 };

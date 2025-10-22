@@ -1,42 +1,61 @@
-
-import { Card, ScrollArea, Text, Stack, Box, Group } from '@mantine/core';
-import { useState } from 'react';
-import type { Comunicazione } from '../type/DataType';
+import {
+  Card,
+  ScrollArea,
+  Text,
+  Stack,
+  Box,
+  Group,
+  Button,
+} from "@mantine/core";
+import type { Comunicazione } from "../type/DataType";
+import axios from "axios";
 
 const getPriorityColor = (priorita: number) => {
   switch (priorita) {
     case 3:
-      return { color: 'red' };
+      return { color: "red" };
     case 2:
-      return { color: 'orange' };
+      return { color: "orange" };
     case 1:
-      return { color: 'blue' };
+      return { color: "blue" };
     default:
-      return { color: 'gray' };
+      return { color: "gray" };
   }
 };
 
 const formatTimestamp = (timestamp: string) => {
   const date = new Date(timestamp);
-  return date.toLocaleString('it-IT', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
+  return date.toLocaleString("it-IT", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
   });
 };
 
 type Props = {
-  messages: Comunicazione[]
-}
+  messages: Comunicazione[];
+  onMessageRead: (id: string) => void;
+};
 
+export function LogMessaggi({ messages, onMessageRead }: Props) {
+  async function markAsRead(id: string) {
+    await axios({
+      method: "POST",
+      url: `${import.meta.env.VITE_API_KEY}api/comunicazioni/read/${id}`,
 
-export function LogMessaggi({ messages }: Props) {
-
-
-
-
+      headers: {
+        withCredentials: true,
+      },
+    })
+      .then(() => {
+        onMessageRead(id);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }
 
   return (
     <Card padding="lg" radius="md">
@@ -54,28 +73,27 @@ export function LogMessaggi({ messages }: Props) {
                 key={msg.id}
                 p="md"
                 style={{
-
-                  backgroundColor: '#424242',
-                  borderRadius: '8px',
+                  backgroundColor: "#424242",
+                  borderRadius: "8px",
                   borderLeft: `4px solid var(--mantine-color-${priorityStyle.color}-6)`,
-                  transition: 'transform 0.2s ease',
+                  transition: "transform 0.2s ease",
                 }}
               >
                 <Group justify="space-between" mb="xs">
-
-                  <Text size="xs" >
-                    {formatTimestamp(msg.timestamp)}
-                  </Text>
+                  <Text size="xs">{formatTimestamp(msg.timestamp)}</Text>
                 </Group>
 
-                <Text fw={600} size="sm" mb="xs" style={{ width: '100%', wordBreak: 'break-word' }}>
+                <Text
+                  fw={600}
+                  size="sm"
+                  mb="xs"
+                  style={{ width: "100%", wordBreak: "break-word" }}
+                >
                   {msg.descrizione}
                 </Text>
 
                 <Group gap="xs">
-                  <Text size="sm" >
-                    Paziente:
-                  </Text>
+                  <Text size="sm">Paziente:</Text>
                   <Text size="sm" fw={500}>
                     {msg.nome} {msg.cognome}
                   </Text>
@@ -84,6 +102,14 @@ export function LogMessaggi({ messages }: Props) {
                 <Text size="xs" mt={4}>
                   {msg.email}
                 </Text>
+                <Button
+                  size="xs"
+                  mt={10}
+                  color={priorityStyle.color}
+                  onClick={() => markAsRead(msg.id)}
+                >
+                  leggi
+                </Button>
               </Box>
             );
           })}

@@ -5,6 +5,7 @@ import it.univr.glicemiewebapp.dto.ComunicazioneMedicoDTO;
 import it.univr.glicemiewebapp.entity.Comunicazione;
 import it.univr.glicemiewebapp.service.ComunicazioneService;
 import jakarta.validation.Valid;
+import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -51,5 +52,12 @@ public class ComunicazioneController {
         .id(comunicazione.getId()).priorita(comunicazione.getPriorita())
         .idPaziente(comunicazione.getIdPaziente() != null ? comunicazione.getIdPaziente().getId() : null)
         .descrizione(comunicazione.getDescrizione()).timestamp(comunicazione.getTimestamp()).build();
+  }
+
+  @PostMapping("/read/{id}")
+  public ResponseEntity<String> markAsRead(@PathVariable UUID id) {
+    logger.info("lettura comunicazione: " + id);
+
+    return ResponseEntity.ok(comunicazioneService.markAsRead(id));
   }
 }
