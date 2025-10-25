@@ -17,7 +17,6 @@ function MedicPage() {
   const [pazienti, setPazienti] = useState<Paziente[] | null>(null);
   const [didFetch, setDidFetch] = useState(false);
   const [terapie, setTerapie] = useState<Terapia[] | null>(null);
-  const [_ws, setWs] = useState<WebSocket | null>(null);
   const [comunicazioni, setComunicazioni] = useState<Comunicazione[]>([]);
   const { user } = useAuth();
 

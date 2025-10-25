@@ -30,11 +30,8 @@ public class ComunicazioneController {
     logger.info("creazione comunicazione per paziente: " + comunicazioneDTO.getIdPaziente());
 
     try {
-      Comunicazione comunicazione = Comunicazione.builder().priorita(comunicazioneDTO.getPriorita())
-          .descrizione(comunicazioneDTO.getDescrizione()).timestamp(Instant.now()).build();
 
-      Comunicazione comunicazioneSalvata = comunicazioneService.salvaComunicazione(
-          comunicazione, comunicazioneDTO.getIdPaziente());
+      Comunicazione comunicazioneSalvata = comunicazioneService.salvaComunicazione(comunicazioneDTO);
 
       logger.info("comunicazione salvata con id: {} ", comunicazioneSalvata.getId());
       return ResponseEntity.status(HttpStatus.CREATED).body(toDTO(comunicazioneSalvata));
