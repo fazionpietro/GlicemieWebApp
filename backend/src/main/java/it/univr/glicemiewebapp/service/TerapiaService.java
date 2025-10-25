@@ -1,11 +1,13 @@
 package it.univr.glicemiewebapp.service;
 
+import java.security.PublicKey;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -13,11 +15,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import it.univr.glicemiewebapp.dto.AlertTerapia;
+import it.univr.glicemiewebapp.dto.ComunicazioneMedicoDTO;
 import it.univr.glicemiewebapp.dto.TerapiaDTO;
 import it.univr.glicemiewebapp.entity.Terapia;
 import it.univr.glicemiewebapp.entity.Utente;
+import it.univr.glicemiewebapp.event.NewComunicazioneEvent;
+import it.univr.glicemiewebapp.entity.Comunicazione;
 import it.univr.glicemiewebapp.entity.Paziente;
 import it.univr.glicemiewebapp.exception.BusinessException;
+import it.univr.glicemiewebapp.repository.ComunicazioneRepository;
 import it.univr.glicemiewebapp.repository.PazienteRepository;
 import it.univr.glicemiewebapp.repository.TerapiaRepository;
 import it.univr.glicemiewebapp.repository.UtenteRepository;
@@ -35,6 +41,10 @@ public class TerapiaService {
   private final UtenteRepository utenteRepository;
   @Autowired
   private final PazienteRepository pazienteRepository;
+  @Autowired
+  private final ApplicationEventPublisher publisher;
+  @Autowired
+  private final ComunicazioneRepository comunicazioneRepository;
 
   public ResponseEntity<String> create(TerapiaDTO t) {
     try {
@@ -89,16 +99,42 @@ public class TerapiaService {
     }
   }
 
-  // @Scheduled(cron = "*/10 * * * * *", zone = "Europe/Berlin")
   @Scheduled(cron = "0 0 0,6,12 * * *", zone = "Europe/Berlin")
   public void checkForAlert() {
 
     try {
       Instant threeDaysAgo = Instant.now().minus(Duration.ofDays(3));
       List<AlertTerapia> list = terapiaRepository.findPazientiInadempienti(threeDaysAgo);
+      Comunicazione c;
+      ComunicazioneMedicoDTO cm;
+      Paziente p;
+      Terapia t;
+      Instant tsp;
+      String dscpt;
 
       for (AlertTerapia a : list) {
         log.info(a.toString());
+        p = pazienteRepository.findById(a.getIdPaziente()).get();
+        t = terapiaRepository.findById(a.getIdTerapia()).get();
+        tsp = Instant.now();
+        dscpt = "Paziente " + p.getNominativo() + " non assume " + t.getFarmaco() + " da almeno 3 giorni";
+
+        c = new Comunicazione(null,
+            3,
+            p,
+            dscpt,
+            false,
+            tsp);
+        comunicazioneRepository.save(c);
+        cm = new ComunicazioneMedicoDTO(c.getId(),
+            3,
+            dscpt,
+            p.getNome(),
+            p.getCognome(),
+            p.getEmail(),
+            tsp);
+
+        publisher.publishEvent(new NewComunicazioneEvent(p.getIdMedico(), cm));
       }
 
     } catch (Exception e) {
@@ -107,13 +143,14 @@ public class TerapiaService {
 
   }
 
-  public List<TerapiaDTO> getAllByPaziente(UUID idPaziente){
-    try{
-      Paziente paziente = pazienteRepository.findById(idPaziente).orElseThrow(()->new BusinessException("PATIENT_NOT_FOUND", "paziente non trovato"));
+  public List<TerapiaDTO> getAllByPaziente(UUID idPaziente) {
+    try {
+      Paziente paziente = pazienteRepository.findById(idPaziente)
+          .orElseThrow(() -> new BusinessException("PATIENT_NOT_FOUND", "paziente non trovato"));
       return terapiaRepository.findByPaziente(paziente);
-    }catch(BusinessException e){
+    } catch (BusinessException e) {
       throw e;
-    }catch(Exception e){
+    } catch (Exception e) {
       throw new BusinessException("DATA_RETRIEVAL_ERROR", "Failed to retrieve patient's therapie");
     }
   }
