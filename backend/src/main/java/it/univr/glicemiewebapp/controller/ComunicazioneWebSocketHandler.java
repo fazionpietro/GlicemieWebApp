@@ -59,6 +59,8 @@ public class ComunicazioneWebSocketHandler extends TextWebSocketHandler {
 
   @EventListener
   public void onNewComunicazione(NewComunicazioneEvent event) {
+
+    log.info("nuovo alert generato");
     sendToMedico(event.getIdMedico(), event.getComunicazione());
   }
 
@@ -76,6 +78,7 @@ public class ComunicazioneWebSocketHandler extends TextWebSocketHandler {
     if (session != null && session.isOpen()) {
       try {
         String json = objectMapper.writeValueAsString(comunicazione);
+        log.info("new message: " + json);
         session.sendMessage(new TextMessage(json));
       } catch (Exception e) {
 

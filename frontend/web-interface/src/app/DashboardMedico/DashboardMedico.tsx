@@ -17,7 +17,6 @@ function MedicPage() {
   const [pazienti, setPazienti] = useState<Paziente[] | null>(null);
   const [didFetch, setDidFetch] = useState(false);
   const [terapie, setTerapie] = useState<Terapia[] | null>(null);
-  const [_ws, setWs] = useState<WebSocket | null>(null);
   const [comunicazioni, setComunicazioni] = useState<Comunicazione[]>([]);
   const { user } = useAuth();
 
@@ -70,35 +69,40 @@ function MedicPage() {
   }
 
   useEffect(() => {
+    if (user === null) {
+      return;
+    }
+
     const websocket = new WebSocket(
-      `ws://localhost:8080/ws/comunicazioni?id=${user?.id}`,
+      `ws://localhost:8080/ws/comunicazioni?id=${user.id}`,
     );
-    setWs(websocket);
 
     websocket.onopen = () => console.log("Connected to WebSocket server");
 
     websocket.onmessage = (event) => {
       try {
-        const newComs: Comunicazione[] = JSON.parse(event.data);
+        const parsedData = JSON.parse(event.data);
+
+        const newComs: Comunicazione[] = Array.isArray(parsedData)
+          ? parsedData
+          : [parsedData];
 
         setComunicazioni((prevComs) => {
           const comsMap = new Map();
-
           prevComs.forEach((com) => comsMap.set(com.id, com));
-
           newComs.forEach((com) => comsMap.set(com.id, com));
 
           const uniqueComs = Array.from(comsMap.values()).sort(
             (a, b) =>
               new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime(),
           );
-
           return uniqueComs;
         });
       } catch (error) {
         console.error("Error parsing WebSocket message:", error);
       }
     };
+
     websocket.onerror = (error) => {
       console.error("WebSocket error:", error);
     };
@@ -115,12 +119,11 @@ function MedicPage() {
 
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
-
       if (websocket.readyState === WebSocket.OPEN) {
         websocket.close();
       }
     };
-  }, []);
+  }, [user]);
 
   return (
     <div>

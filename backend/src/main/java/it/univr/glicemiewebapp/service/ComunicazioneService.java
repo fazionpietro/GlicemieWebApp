@@ -1,5 +1,6 @@
 package it.univr.glicemiewebapp.service;
 
+import it.univr.glicemiewebapp.dto.ComunicazioneDTO;
 import it.univr.glicemiewebapp.dto.ComunicazioneMedicoDTO;
 import it.univr.glicemiewebapp.entity.Comunicazione;
 import it.univr.glicemiewebapp.entity.Paziente;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,26 +28,29 @@ public class ComunicazioneService {
 
   private final ApplicationEventPublisher publisher;
 
-  @Transactional
-  public Comunicazione salvaComunicazione(Comunicazione comunicazione, UUID idPaziente) {
+  public Comunicazione salvaComunicazione(ComunicazioneDTO dto) {
     try {
-      Paziente paziente = pazienteRepository.findById(idPaziente)
+      Comunicazione comunicazione = Comunicazione.builder().priorita(dto.getPriorita())
+          .descrizione(dto.getDescrizione()).timestamp(Instant.now()).build();
+
+      Paziente paziente = pazienteRepository.findById(dto.getIdPaziente())
           .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Paziente non trovato"));
       comunicazione.setIdPaziente(paziente);
+      comunicazioneRepository.save(comunicazione);
+      ComunicazioneMedicoDTO medicDto = ComunicazioneMedicoDTO.builder()
+          .id(comunicazione.getId())
+          .priorita(comunicazione.getPriorita())
+          .descrizione(comunicazione.getDescrizione())
+          .nome(paziente.getNome())
+          .cognome(paziente.getCognome())
+          .email(paziente.getEmail())
+          .timestamp(comunicazione.getTimestamp()).build();
 
-      ComunicazioneMedicoDTO dto = new ComunicazioneMedicoDTO(paziente.getId(),
-          comunicazione.getPriorita(),
-          comunicazione.getDescrizione(),
-          paziente.getNome(),
-          paziente.getCognome(),
-          paziente.getEmail(),
-          comunicazione.getTimestamp());
+      publisher.publishEvent(new NewComunicazioneEvent(paziente.getIdMedico(), medicDto));
 
-      publisher.publishEvent(new NewComunicazioneEvent(paziente.getIdMedico(), dto));
-
-      return comunicazioneRepository.save(comunicazione);
+      return comunicazione;
     } catch (Exception e) {
-      throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "errore: ");
+      throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "errore: " + e.getLocalizedMessage());
     }
   }
 

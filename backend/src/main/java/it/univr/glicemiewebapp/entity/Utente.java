@@ -67,4 +67,9 @@ public class Utente {
     return List.of(new SimpleGrantedAuthority(this.ruolo));
   }
 
+  @JsonIgnore
+  public String getNominativo() {
+    return nome + " " + cognome + " Email: " + email;
+  }
+
 }
