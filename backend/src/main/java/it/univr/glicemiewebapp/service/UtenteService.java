@@ -6,7 +6,7 @@ import it.univr.glicemiewebapp.repository.UtenteRepository;
 import it.univr.glicemiewebapp.exception.*;
 import lombok.extern.slf4j.Slf4j;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Autowired; // Puoi tenere o rimuovere l'import
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,15 +22,14 @@ import java.util.UUID;
 public class UtenteService {
 
   private final PasswordEncoder passwordEncoder;
-
-  private UtenteRepository repository;
+  private final UtenteRepository repository;
+  private final LogService logger;
 
   @Autowired
-  private LogService logger;
-
-  public UtenteService(UtenteRepository repository, PasswordEncoder passwordEncoder) {
+  public UtenteService(UtenteRepository repository, PasswordEncoder passwordEncoder, LogService logger) {
     this.repository = repository;
     this.passwordEncoder = passwordEncoder;
+    this.logger = logger;
   }
 
   public List<Utente> getAll() {
@@ -104,6 +103,9 @@ public class UtenteService {
       return new ResponseEntity<>("USER UPDATED", HttpStatus.OK);
 
     } catch (Exception e) {
+      if (e instanceof ValidationException) {
+        throw e;
+      }
       throw new BusinessException("DATA_RETRIEVAL_ERROR", "Failed to retrieve patients for medico");
     }
 

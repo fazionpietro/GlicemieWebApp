@@ -29,54 +29,58 @@ public class ComunicazioneService {
   private final ApplicationEventPublisher publisher;
 
   public Comunicazione salvaComunicazione(ComunicazioneDTO dto) {
+
+    Paziente paziente = pazienteRepository.findById(dto.getIdPaziente())
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Paziente non trovato"));
+
     try {
+
       Comunicazione comunicazione = Comunicazione.builder().priorita(dto.getPriorita())
           .descrizione(dto.getDescrizione()).timestamp(Instant.now()).build();
 
-      Paziente paziente = pazienteRepository.findById(dto.getIdPaziente())
-          .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Paziente non trovato"));
       comunicazione.setIdPaziente(paziente);
-      comunicazioneRepository.save(comunicazione);
+
+      Comunicazione savedComunicazione = comunicazioneRepository.save(comunicazione);
+
       ComunicazioneMedicoDTO medicDto = ComunicazioneMedicoDTO.builder()
-          .id(comunicazione.getId())
-          .priorita(comunicazione.getPriorita())
-          .descrizione(comunicazione.getDescrizione())
+          .id(savedComunicazione.getId()) // <- Corretto
+          .priorita(savedComunicazione.getPriorita())
+          .descrizione(savedComunicazione.getDescrizione())
           .nome(paziente.getNome())
           .cognome(paziente.getCognome())
           .email(paziente.getEmail())
-          .timestamp(comunicazione.getTimestamp()).build();
+          .timestamp(savedComunicazione.getTimestamp()).build();
 
       publisher.publishEvent(new NewComunicazioneEvent(paziente.getIdMedico(), medicDto));
 
-      return comunicazione;
+      return savedComunicazione;
     } catch (Exception e) {
+
       throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "errore: " + e.getLocalizedMessage());
     }
   }
 
   public List<ComunicazioneMedicoDTO> getByMedico(UUID medico) {
-
     try {
       List<ComunicazioneMedicoDTO> comunicazioni = comunicazioneRepository.findByMedico(medico);
       return comunicazioni;
-
     } catch (Exception e) {
       throw new BusinessException("DELETION_ERROR", "Failed to delete user");
-
     }
-
   }
 
   @Transactional
   public String markAsRead(UUID id) {
 
+    Comunicazione c = comunicazioneRepository.findById(id)
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Comunication not found"));
+
     try {
-      Comunicazione c = comunicazioneRepository.findById(id)
-          .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Comunication not found"));
 
       c.setLetto(true);
       return "Comunication (" + id + ") marked as read";
     } catch (Exception e) {
+
       throw new BusinessException("UPDATE_ERROR", "failed to mark comunication as read");
     }
   }

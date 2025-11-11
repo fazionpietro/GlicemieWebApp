@@ -67,7 +67,8 @@ class AssunzioneServiceTest {
     String result = assunzioneService.create(request);
 
     // Then
-    assertEquals("Assumption strored correctly", result);
+    // ERRORE CORRETTO: "strored" è diventato "stored"
+    assertEquals("Assumption stored correctly", result);
     verify(terapiaRepository).findById(terapiaId);
     verify(repository).save(any(Assunzione.class));
   }
