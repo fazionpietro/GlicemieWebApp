@@ -1,0 +1,76 @@
+\documentclass{report}
+\usepackage{graphicx}
+\renewcommand{\contentsname}{indice}
+
+%preambolo
+\title{\Huge Documentazione ingegneria del software \\[0.5cm]
+        \Large Progetto: Webapp per la gestione della glicemia}
+\author{Fazion Pietro (VR501347) , Dal Degan Pietro (VR500305)}
+\date{}
+
+%inzio del documento
+\begin{document}
+% pagina 1 (titolo)
+\maketitle
+\newpage
+
+%pagina 2 (indice)
+\tableofcontents
+
+\newpage
+
+%pagina 3 (use case)
+\chapter{Azioni degli utenti}
+
+La Webapp che siamo andati a sviluppare è a servizio di tre tipologie di utenti:
+\begin{itemize}
+    \item Paziente
+    \item Medico
+    \item Admin
+\end{itemize}
+Tutte le precedenti categorie di utenti hanno bisogno di autenticarsi per poter
+accedere alla propria area riservata.
+Andiamo a vedere ora i casi d'uso e i loro diagrammi di sequenza.
+
+\textbf{Per motivi di chiarezza nella visualizzazione delle immagini,\\
+ divideremo i casi d'uso per utente, nonostante siano collegati tra loro.}
+\\
+\section{Casi d'uso del Paziente}
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth, height=0.305\textheight, keepaspectratio]
+    {Use_case_paziente.png}
+\end{figure}
+
+Dopo esssersi autenticate il paziente verra reindirizzato alla sua homepage,
+dove troverà:
+\begin{itemize}
+    \item un grafico con l'andamento della sua glicemia nel tempo
+    \item un pulsante per l'inserimento della glicemia
+    \item gli ultimi record di glicemia inseriti
+    \item un form per la comunicazione di sintomi e malattie
+    \item un area per contrassegnare i medicinali assunti
+    \item un form per contattare il medico
+\end{itemize}
+
+\section{Casi d'uso del Medico}
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth, height=\textheight, keepaspectratio]
+    {Use_case_medico.png}
+\end{figure}
+
+\section{Casi d'uso dell'Admin}
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth, height=\textheight, keepaspectratio]
+    {Use_case_admin.png}
+\end{figure}
+
+
+
+
+
+
+
+\end{document}
