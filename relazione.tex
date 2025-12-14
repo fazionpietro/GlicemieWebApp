@@ -39,32 +39,78 @@ Andiamo a vedere ora i casi d'uso e i loro diagrammi di sequenza.
 \begin{figure}[h!]
     \centering
     \includegraphics[width=\textwidth, height=0.305\textheight, keepaspectratio]
-    {Use_case_paziente.png}
+    {img_relazione/Use_case_paziente.png}
 \end{figure}
 
 Dopo esssersi autenticate il paziente verra reindirizzato alla sua homepage,
 dove troverà:
 \begin{itemize}
-    \item un grafico con l'andamento della sua glicemia nel tempo
-    \item un pulsante per l'inserimento della glicemia
-    \item gli ultimi record di glicemia inseriti
-    \item un form per la comunicazione di sintomi e malattie
-    \item un area per contrassegnare i medicinali assunti
-    \item un form per contattare il medico
+    \item Un grafico con l'andamento della sua glicemia nel tempo
+    \item Un pulsante per l'inserimento della glicemia
+    \item Gli ultimi record di glicemia inseriti
+    \item Un form per la comunicazione di sintomi e malattie
+    \item Un area per contrassegnare i medicinali assunti
+    \item Un form per contattare il medico
 \end{itemize}
+
+\vspace{1cm}
+Ora elenchiamo di seguito i casi d'uso visti nell'immagine:
+\begin{itemize}
+    \item Inserimento della rilevazione della glicemia
+    \item Segnalazione di patologie, malattie e/o sintomi riscontrati al medico
+    \item Registrazione giornaliera di medicinali assunti
+    \item Contattare il medico
+\end{itemize}
+\vspace{0.5cm}
+\subsection{inserimento della rilevazione della glicemia}
+Il paziente deve essere in grado di poter inserire il livello glicemico,
+schiacciando il pulsante "inserisci glicemia" si visualizza un modal dove 
+inserire il proprio livello glicemico.
+
+\vspace{0.5cm}
+
+\fbox{
+    \begin{minipage}{0.9\textwidth}
+
+        \vspace{0.3cm}
+        \textbf{Attori: } Paziente \\
+        \textbf{Precondizioni: } Il paziente deve essersi autenticato \\
+        \textbf{Passi: } \vspace{0.05cm}
+        \begin{enumerate}
+            \item Il paziente accede alla sua zona riservata
+            \item Il paziente clicca il pulsante "inserisci glicemia"
+            \item Il paziente riempie il campo del modal glicemia che compare
+            \item Il paziente clicca il pulsante "invia"
+            \item Il dato viene salvato nel database
+            \item Viene controllata la validità del dato inserito
+            \item Eventualmente vengono creati alert per Medico e Paziente in caso
+            di valori fuori range
+        \end{enumerate}
+        \textbf{Postcondizioni: }
+
+    \end{minipage}
+}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth, height=\textheight, keepaspectratio]
+    {img_relazione/Inserimento_glicemia.png}
+\end{figure}
+
+
 
 \section{Casi d'uso del Medico}
 \begin{figure}[h!]
     \centering
     \includegraphics[width=\textwidth, height=\textheight, keepaspectratio]
-    {Use_case_medico.png}
+    {img_relazione/Use_case_medico.png}
 \end{figure}
 
 \section{Casi d'uso dell'Admin}
 \begin{figure}[h!]
     \centering
     \includegraphics[width=\textwidth, height=\textheight, keepaspectratio]
-    {Use_case_admin.png}
+    {img_relazione/Use_case_admin.png}
 \end{figure}
 
 
