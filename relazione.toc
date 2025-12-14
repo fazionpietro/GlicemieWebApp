@@ -1,5 +1,8 @@
 \contentsline {chapter}{\numberline {1}Azioni degli utenti}{2}{}%
 \contentsline {section}{\numberline {1.1}Casi d'uso del Paziente}{2}{}%
 \contentsline {subsection}{\numberline {1.1.1}inserimento della rilevazione della glicemia}{3}{}%
-\contentsline {section}{\numberline {1.2}Casi d'uso del Medico}{5}{}%
-\contentsline {section}{\numberline {1.3}Casi d'uso dell'Admin}{5}{}%
+\contentsline {subsection}{\numberline {1.1.2}Segnalazione di patologie, malattie e/o sintomi}{4}{}%
+\contentsline {subsection}{\numberline {1.1.3}Registrazione giornaliera di medicinali assunti}{6}{}%
+\contentsline {subsection}{\numberline {1.1.4}Contattare il medico}{7}{}%
+\contentsline {section}{\numberline {1.2}Casi d'uso del Medico}{8}{}%
+\contentsline {section}{\numberline {1.3}Casi d'uso dell'Admin}{8}{}%

@@ -72,32 +72,136 @@ inserire il proprio livello glicemico.
 \fbox{
     \begin{minipage}{0.9\textwidth}
 
-        \vspace{0.3cm}
+        \vspace{0.2cm}
         \textbf{Attori: } Paziente \\
         \textbf{Precondizioni: } Il paziente deve essersi autenticato \\
         \textbf{Passi: } \vspace{0.05cm}
         \begin{enumerate}
-            \item Il paziente accede alla sua zona riservata
             \item Il paziente clicca il pulsante "inserisci glicemia"
             \item Il paziente riempie il campo del modal glicemia che compare
             \item Il paziente clicca il pulsante "invia"
-            \item Il dato viene salvato nel database
             \item Viene controllata la validità del dato inserito
             \item Eventualmente vengono creati alert per Medico e Paziente in caso
             di valori fuori range
         \end{enumerate}
-        \textbf{Postcondizioni: }
+        \textbf{Postcondizioni: } Il dato glicemico viene inserito nel database
+        \vspace{0.2cm}
 
     \end{minipage}
 }
-
 \begin{figure}[h!]
     \centering
     \includegraphics[width=\textwidth, height=\textheight, keepaspectratio]
     {img_relazione/Inserimento_glicemia.png}
 \end{figure}
 
+\subsection{Segnalazione di patologie, malattie e/o sintomi}
+Il paziente può segnalare al proprio medico eventuali patologie, malattie e/o
+sintomi. Nel riquadro dedicato il paziente può selezionare i vari sintomi dalle
+checkbox oppure scriverli liberamente nel campo di testo assieme a eventuali 
+malattie e patologie.
 
+\vspace{0.5cm}
+
+\fbox{
+    \begin{minipage}{0.9\textwidth}
+
+        \vspace{0.2cm}
+        \textbf{Attori: } Paziente \\
+        \textbf{Precondizioni: } Il paziente deve essersi autenticato \\
+        \textbf{Passi: } \vspace{0.05cm}
+        \begin{enumerate}
+            \item Il paziente seleziona le checkbox dei sintomi riscontrati
+            \item Il paziente compila il campo di testo inserendo patologie e malattie
+            \item Il paziente clicca il pulsante "invia segnalazione"
+            \item Viene poi confermata l'avvenuta segnalazione o meno
+            \item La segnalazione viene comunicata al medico
+        \end{enumerate}
+        \textbf{Postcondizioni: } La segnalazione viene inserita nel database
+        e viene segnalata al medico
+    \vspace{0.2cm}
+    \end{minipage}
+}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth, height=12.4cm, keepaspectratio]
+    {img_relazione/Segnala_medico.png}
+\end{figure}
+
+\vspace{0.5cm}
+
+\subsection{Registrazione giornaliera di medicinali assunti}
+Il paziente può registrare i medicinali assunti giornalmente.
+Nel riquardo apposito ci sarà la lista dei medicinali che il paziente dovrebbe
+assumere durante la giornata, dovrà semplicemente selezionare quelli assunti
+e schiacciare il pulsante "invia" affinchè possano essere registrati.
+Inoltre si potrà visualizzzare il numero di volte che si è assunto un certo
+medicinale in un giorno.
+
+\vspace{0.5cm}
+
+\fbox{
+    \begin{minipage}{0.9\textwidth}
+
+        \vspace{0.2cm}
+        \textbf{Attori: } Paziente \\
+        \textbf{Precondizioni: } Il paziente deve essersi autenticato \\
+        \textbf{Passi: } \vspace{0.05cm}
+        \begin{enumerate}
+            \item Il paziente seleziona i medicinali assunti dalla lista
+            \item Il paziente clicca il pulsante "invia"
+            \item Vengono poi controllati i dati inseriti
+            \item Infine viene confermata l'avvenuta registrazione dei 
+            medicinali o meno
+        \end{enumerate}
+        \textbf{Postcondizioni: } I medicinali assunti vengono registrati nel
+        database
+    \vspace{0.2cm}
+    \end{minipage}
+}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth, height=\textheight, keepaspectratio]
+    {img_relazione/Medicinali_assunti.png}
+\end{figure}
+
+\vspace{0.5cm}
+
+\subsection{Contattare il medico}
+Il Paziente può contattare il proprio medico grazie ad un form dedicato.
+Nel riquadro apposito il paziente dovrà compilare il campo di testo e selezionare
+la priorità del messagio tra bassa, media e alta; schiacciando poi il tasto
+"invia" il messaggio verrà inviato al medico.
+
+\vspace{0.5cm}
+
+\fbox{
+    \begin{minipage}{0.9\textwidth}
+
+        \vspace{0.2cm}
+        \textbf{Attori: } Paziente \\
+        \textbf{Precondizioni: } Il paziente deve essersi autenticato \\
+        \textbf{Passi: } \vspace{0.05cm}
+        \begin{enumerate}
+            \item Il Paziente compila il campo di testo
+            \item Il paziente seleziona la priorità
+            \item Il paziente clicca il pulsante "invia"
+            \item Viene data conferma dell'avvenuto invio del messaggio o meno 
+        \end{enumerate}
+        \textbf{Postcondizioni: } Il messaggio viene inviato al medico
+    \vspace{0.2cm}
+    \end{minipage}
+}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth, height=\textheight, keepaspectratio]
+    {img_relazione/Contatta_medico.png}
+\end{figure}
+
+\vspace{0.5cm}
 
 \section{Casi d'uso del Medico}
 \begin{figure}[h!]
