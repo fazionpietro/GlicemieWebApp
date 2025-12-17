@@ -213,9 +213,9 @@ la priorità del messagio tra bassa, media e alta; schiacciando poi il tasto
 Dopo esssersi autenticate il medico verra reindirizzato alla sua homepage,
 dove troverà:
 \begin{itemize}
-    \item 
-    \item 
-    \item 
+    \item Un riquadro con la lista di messaggi e alert ricevuti
+    \item Un'area per la gestione delle terapie dei pazienti
+    \item Un'area per la gestione dei pazienti
 \end{itemize}
 
 \vspace{1cm}
@@ -223,11 +223,24 @@ Ora elenchiamo di seguito i casi d'uso visti nell'immagine:
 \begin{itemize}
     \item ricezione e visualizzazione degli alert per il medico
     \item Gestione delle terapie dei pazienti
+        \begin{itemize}
+            \item Modifica terapia
+            \item Elimina terapia
+            \item Aggiungi terapia
+        \end{itemize}
     \item Gestione dei pazienti
+        \begin{itemize}
+            \item Visualizza paziente
+            \item Modifica paziente
+            \item Elimina paziente
+        \end{itemize}
 \end{itemize}
 \vspace{0.5cm}
 \subsection{Visualizza alert per il medico}
-%inserire descrizione caso d'uso
+
+Il medico avrà la lista dei messaggi e degli alert sulla destra della sua
+homepage; quando avrà letto l'alert o non ne necessiterà più potrà schiacciare
+il tasto "leggi" per segnarlo come letto e quindi rimuoverlo dalla lista.
 
 \vspace{0.5cm}
 
@@ -239,9 +252,10 @@ Ora elenchiamo di seguito i casi d'uso visti nell'immagine:
         \textbf{Precondizioni: } Il medico deve essersi autenticato \\
         \textbf{Passi: } \vspace{0.05cm}
         \begin{enumerate}
-            \item %inserire passi
+            \item Il medico legge l'alert
+            \item Il medico clicca il pulsante "leggi" per eliminarlo dalla lista
         \end{enumerate}
-        \textbf{Postcondizioni: }
+        \textbf{Postcondizioni: } l'alert viene rimosso dalla lista del medico
         \vspace{0.2cm}
 
     \end{minipage}
@@ -249,8 +263,16 @@ Ora elenchiamo di seguito i casi d'uso visti nell'immagine:
 
 %inserire immagine
 
+\vspace{0.5cm}
+
+
 \subsection{Gestione Terapie}
-%inserire descrizione caso d'uso
+Il medico può decidere di modificare una terapia cliccando il pulsante a forma
+di matita affianco alla terapia che vuole modificare; in caso volesse
+eliminarla dovrà schiacciare il pulsante a forma di cestino e infine può decidere
+di crearne una nuova schiacciando il pulsante "Nuova".
+Nel caso della creazione e della modifica si aprirà un modal nel quale dovrà
+inserire i dati richiesti e scegliere il paziente per il quale è stata creata.
 
 \vspace{0.5cm}
 
@@ -262,7 +284,7 @@ Ora elenchiamo di seguito i casi d'uso visti nell'immagine:
         \textbf{Precondizioni: } Il medico deve essersi autenticato \\
         \textbf{Passi: } \vspace{0.05cm}
         \begin{enumerate}
-            \item %inserire passi
+            \item 
         \end{enumerate}
         \textbf{Postcondizioni: }
         \vspace{0.2cm}
