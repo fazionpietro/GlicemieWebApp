@@ -38,7 +38,7 @@ Andiamo a vedere ora i casi d'uso e i loro diagrammi di sequenza.
 \section{Casi d'uso del Paziente}
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=\textwidth, height=0.305\textheight, keepaspectratio]
+    \includegraphics[width=\textwidth, height=\textheight, keepaspectratio]
     {img_relazione/Use_case_paziente.png}
 \end{figure}
 
@@ -77,7 +77,7 @@ inserire il proprio livello glicemico.
         \textbf{Precondizioni: } Il paziente deve essersi autenticato \\
         \textbf{Passi: } \vspace{0.05cm}
         \begin{enumerate}
-            \item Il paziente clicca il pulsante "inserisci glicemia"
+            \item Il paziente clicca il pulsante "Nupva rilevazione"
             \item Il paziente riempie il campo del modal glicemia che compare
             \item Il paziente clicca il pulsante "invia"
             \item Viene controllata la validità del dato inserito
@@ -114,7 +114,6 @@ malattie e patologie.
             \item Il paziente seleziona le checkbox dei sintomi riscontrati
             \item Il paziente compila il campo di testo inserendo patologie e malattie
             \item Il paziente clicca il pulsante "invia segnalazione"
-            \item Viene poi confermata l'avvenuta segnalazione o meno
             \item La segnalazione viene comunicata al medico
         \end{enumerate}
         \textbf{Postcondizioni: } La segnalazione viene inserita nel database
@@ -135,7 +134,7 @@ malattie e patologie.
 Il paziente può registrare i medicinali assunti giornalmente.
 Nel riquardo apposito ci sarà la lista dei medicinali che il paziente dovrebbe
 assumere durante la giornata, dovrà semplicemente selezionare quelli assunti
-e schiacciare il pulsante "invia" affinchè possano essere registrati.
+e schiacciare il pulsante "invia report al medico" affinchè possano essere registrati.
 Inoltre si potrà visualizzzare il numero di volte che si è assunto un certo
 medicinale in un giorno.
 
@@ -150,7 +149,7 @@ medicinale in un giorno.
         \textbf{Passi: } \vspace{0.05cm}
         \begin{enumerate}
             \item Il paziente seleziona i medicinali assunti dalla lista
-            \item Il paziente clicca il pulsante "invia"
+            \item Il paziente clicca il pulsante "invia report al medico"
             \item Vengono poi controllati i dati inseriti
             \item Infine viene confermata l'avvenuta registrazione dei 
             medicinali o meno
@@ -226,7 +225,7 @@ Ora elenchiamo di seguito i casi d'uso visti nell'immagine:
         \begin{itemize}
             \item Modifica terapia
             \item Elimina terapia
-            \item Aggiungi terapia
+            \item Crea terapia
         \end{itemize}
     \item Gestione dei pazienti
         \begin{itemize}
@@ -269,8 +268,8 @@ il tasto "leggi" per segnarlo come letto e quindi rimuoverlo dalla lista.
 \subsection{Gestione Terapie}
 Il medico può decidere di modificare una terapia cliccando il pulsante a forma
 di matita affianco alla terapia che vuole modificare; in caso volesse
-eliminarla dovrà schiacciare il pulsante a forma di cestino e infine può decidere
-di crearne una nuova schiacciando il pulsante "Nuova".
+eliminarla dovrà schiacciare il pulsante a forma di cestino, con conferma dell'eliminazione, 
+e infine può decidere di crearne una nuova schiacciando il pulsante "Nuova Terapia".
 Nel caso della creazione e della modifica si aprirà un modal nel quale dovrà
 inserire i dati richiesti e scegliere il paziente per il quale è stata creata.
 
@@ -284,9 +283,27 @@ inserire i dati richiesti e scegliere il paziente per il quale è stata creata.
         \textbf{Precondizioni: } Il medico deve essersi autenticato \\
         \textbf{Passi: } \vspace{0.05cm}
         \begin{enumerate}
-            \item 
+            \item Modifica terapia
+            \begin{enumerate}
+                \item Il medico schiaccia il pulsante a forma di matita
+                \item Il medico modifica i dati del modal della terapia
+                \item Il medico schiaccia il pulsante "salva"
+            \end{enumerate}
+            \item Aggiungi terapia
+            \begin{enumerate}
+                \item Il medico schiaccia il pulsante "Nuova Terapia"
+                \item Il medico compila i campi richiesti nel modal
+                \item Il medico schiaccia il pulsante "salva"
+            \end{enumerate}
+            \item Elimina terapia
+            \begin{enumerate}
+                \item Il medico schiaccia il pulsante a forma di cestino affianco
+                alla terapia che desidera eliminare
+                \item Il medico conferma l'eliminazione della terapia
+            \end{enumerate}
         \end{enumerate}
-        \textbf{Postcondizioni: }
+        \textbf{Postcondizioni: } La terapia viene modificata, creata o eliminata
+        in base alle decisioni del medico
         \vspace{0.2cm}
 
     \end{minipage}
@@ -295,7 +312,14 @@ inserire i dati richiesti e scegliere il paziente per il quale è stata creata.
 %inserire immagine
 
 \subsection{Gestione Pazienti}
-%inserire descrizione caso d'uso
+Il medico può decidere di modificare le informazioni di un Paziente cliccando il
+pulsante a forma di matita affianco al paziente del quale vuole modificare i dati;
+in caso volesse eliminarlo dovrà schiacciare il pulsante a forma di cestino;
+nel caso voglia solo visualizzare l'andamento glicemico bisogna che schiacci il 
+pulsante a forma di occhio.
+Nel caso della creazione si aprirà un modal nel quale dovrà
+inserire i dati richiesti e scegliere il paziente per il quale è stata creata.
+
 
 \vspace{0.5cm}
 
@@ -307,9 +331,25 @@ inserire i dati richiesti e scegliere il paziente per il quale è stata creata.
         \textbf{Precondizioni: } Il medico deve essersi autenticato \\
         \textbf{Passi: } \vspace{0.05cm}
         \begin{enumerate}
-            \item %inserire passi
+            \item Modifica dati del Paziente
+            \begin{enumerate}
+                \item Il medico schiaccia il pulsante a forma di matita
+                \item Il medico modifica i dati del modal del paziente
+                \item Il medico schiaccia il pulsante "salva"
+            \end{enumerate}
+            \item Visualizza dati Paziente
+            \begin{enumerate}
+                \item Il medico schiaccia il pulsante a forma di occhio
+            \end{enumerate}
+            \item Elimina Paziente
+            \begin{enumerate}
+                \item Il medico schiaccia il pulsante a forma di cestino affianco
+                al paziente che desidera eliminare
+                \item Il medico conferma l'eliminazione del paziente
+            \end{enumerate}
         \end{enumerate}
-        \textbf{Postcondizioni: }
+        \textbf{Postcondizioni: } Il paziente viene modificato o eliminato
+        in base alle decisioni del medico, oppure vengono visualizzati i suoi dati
         \vspace{0.2cm}
 
     \end{minipage}
@@ -324,12 +364,15 @@ inserire i dati richiesti e scegliere il paziente per il quale è stata creata.
     {img_relazione/Use_case_admin.png}
 \end{figure}
 
-Dopo esssersi autenticate l'admin verra reindirizzato alla sua homepage,
+Dopo esssersi autenticato l'admin verra reindirizzato alla sua homepage,
 dove troverà:
 \begin{itemize}
-    \item 
-    \item 
-    \item 
+    \item Gestione utenti
+    \begin{itemize}
+        \item Gestisci Pazienti
+        \item Gestisci Medici
+    \end{itemize}
+    \item Lista dei log del sistema
 \end{itemize}
 
 \vspace{1cm}
@@ -337,11 +380,24 @@ Ora elenchiamo di seguito i casi d'uso visti nell'immagine:
 \begin{itemize}
     \item Visualizzazione dei log di sistema
     \item Gestione dei Pazienti
-    \item Gestione dei Medici 
+    \begin{itemize}
+        \item Visualizza paziente
+        \item Modifica paziente
+        \item Elimina paziente
+        \item Crea paziente
+    \end{itemize}
+    \item Gestione dei Medici
+    \begin{itemize}
+        \item Modifica medico
+        \item Elimina medico
+        \item Crea medico
+    \end{itemize}
 \end{itemize}
 \vspace{0.5cm}
 \subsection{Visualizza log}
 %inserire descrizione caso d'uso
+L'admin può visualizzare i log del sistema per monitorare le attività compiute
+dagli utenti.
 
 \vspace{0.5cm}
 
@@ -349,13 +405,12 @@ Ora elenchiamo di seguito i casi d'uso visti nell'immagine:
     \begin{minipage}{0.9\textwidth}
 
         \vspace{0.2cm}
-        \textbf{Attori: } Medico \\
-        \textbf{Precondizioni: } Il medico deve essersi autenticato \\
+        \textbf{Attori: } Admin \\
+        \textbf{Precondizioni: } l'Admin deve essersi autenticato \\
         \textbf{Passi: } \vspace{0.05cm}
         \begin{enumerate}
-            \item %inserire passi
+            \item visualizza i log del sistema
         \end{enumerate}
-        \textbf{Postcondizioni: }
         \vspace{0.2cm}
 
     \end{minipage}
@@ -364,7 +419,8 @@ Ora elenchiamo di seguito i casi d'uso visti nell'immagine:
 %inserire immagine
 
 \subsection{Gestisci Pazienti}
-%inserire descrizione caso d'uso
+L'admin può gestire i pazienti al posto del dottore in caso di necessità
+come il dottore può modificare, creare, eliminare e visualizzare i pazienti.
 
 \vspace{0.5cm}
 
@@ -372,13 +428,36 @@ Ora elenchiamo di seguito i casi d'uso visti nell'immagine:
     \begin{minipage}{0.9\textwidth}
 
         \vspace{0.2cm}
-        \textbf{Attori: } Medico \\
-        \textbf{Precondizioni: } Il medico deve essersi autenticato \\
+        \textbf{Attori: } Admin \\
+        \textbf{Precondizioni: } l'Admin deve essersi autenticato \\
         \textbf{Passi: } \vspace{0.05cm}
         \begin{enumerate}
-            \item %inserire passi
+            \item Modifica Paziente
+            \begin{enumerate}
+                \item L'Admin schiaccia il pulsante a forma di matita
+                \item L'Admin modifica i dati del modal del paziente
+                \item L'Admin schiaccia il pulsante "salva"
+            \end{enumerate}
+            \item Visualizza Paziente
+            \begin{enumerate}
+                \item L'Admin schiaccia il pulsante a forma di occhio
+            \end{enumerate}
+            \item Elimina Paziente
+            \begin{enumerate}
+                \item L'Admin schiaccia il pulsante a forma di cestino affianco
+                al paziente che desidera eliminare
+                \item L'Admin coferma l'eliminazione del paziente
+            \end{enumerate}
+            \item Crea Paziente
+            \begin{enumerate}
+                \item l'Admin schiaccia il pulsante "Nuovo Paziente"
+                \item L'Admin compila i campi richiesti nel modal
+                \item L'admin schiaccia il pulsante "Registra"
+            \end{enumerate}
         \end{enumerate}
-        \textbf{Postcondizioni: }
+        \textbf{Postcondizioni: } Il paziente viene modificato, eliminato o creato
+        in base alle decisioni dell'Admin, oppure vengono visualizzati i dati del
+        paziente.
         \vspace{0.2cm}
 
     \end{minipage}
@@ -399,9 +478,27 @@ Ora elenchiamo di seguito i casi d'uso visti nell'immagine:
         \textbf{Precondizioni: } Il medico deve essersi autenticato \\
         \textbf{Passi: } \vspace{0.05cm}
         \begin{enumerate}
-            \item %inserire passi
+            \item Modifica Medico
+            \begin{enumerate}
+                \item L'Admin schiaccia il pulsante a forma di matita
+                \item L'Admin modifica i dati del modal del medico
+                \item L'Admin schiaccia il pulsante "salva"
+            \end{enumerate}
+            \item Elimina Medico
+            \begin{enumerate}
+                \item L'Admin schiaccia il pulsante a forma di cestino affianco
+                al medico che desidera eliminare
+                \item L'Admin conferma l'eliminazione del medico
+            \end{enumerate}
+            \item Crea Medico
+            \begin{enumerate}
+                \item l'Admin schiaccia il pulsante "Nuovo Medico"
+                \item L'Admin compila i campi richiesti nel modal
+                \item L'admin schiaccia il pulsante "Registra"
+            \end{enumerate}
         \end{enumerate}
-        \textbf{Postcondizioni: }
+        \textbf{Postcondizioni: } Il Medico viene modificato, eliminato o creato
+        in base alle decisioni dell'Admin.
         \vspace{0.2cm}
 
     \end{minipage}
