@@ -150,7 +150,7 @@ export default function DetailsPaziente({
               setEmail(e.currentTarget.value);
               setIsError("");
             }}
-            error={isInvalid ? "Invalid email" : null}
+            error={isInvalid ? "email invalida" : null}
             placeholder="Email"
             classNames={
               isInvalid ? { input: emailcss.invalid } : {}

@@ -1,8 +1,8 @@
 export const data = ["Paziente", "Medico"];
 
 export const requirements = [
-    { re: /[0-9]/, label: "Includes number" },
-    { re: /[a-z]/, label: "Includes lowercase letter" },
-    { re: /[A-Z]/, label: "Includes uppercase letter" },
-    { re: /[$&+,:;=?@#|'<>.^*()%!-]/, label: "Includes special symbol" },
+    { re: /[0-9]/, label: "Include numeri" },
+    { re: /[a-z]/, label: "Include lettere minuscole" },
+    { re: /[A-Z]/, label: "Include lettere maiuscole" },
+    { re: /[$&+,:;=?@#|'<>.^*()%!-]/, label: "Include simboli speciali" },
 ];

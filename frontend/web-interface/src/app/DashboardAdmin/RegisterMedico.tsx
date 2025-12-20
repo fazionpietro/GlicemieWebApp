@@ -24,10 +24,10 @@ import emailcss from "../Components/InvalidEmail.module.css";
 
 
 const requirements = [
-  { re: /[0-9]/, label: "Includes number" },
-  { re: /[a-z]/, label: "Includes lowercase letter" },
-  { re: /[A-Z]/, label: "Includes uppercase letter" },
-  { re: /[$&+,:;=?@#|'<>.^*()%!-]/, label: "Includes special symbol" },
+  { re: /[0-9]/, label: "Include numeri" },
+  { re: /[a-z]/, label: "Include lettere minuscole" },
+  { re: /[A-Z]/, label: "Include lettere maiuscole" },
+  { re: /[$&+,:;=?@#|'<>.^*()%!-]/, label: "Include simboli speciali" },
 ];
 
 function PasswordRequirement({
@@ -169,7 +169,7 @@ export function RegisterMedico({ onSuccess }: Props) {
           setIsError("");
         }}
         required
-        error={isInvalid ? "Invalid email" : null}
+        error={isInvalid ? "email invalida" : null}
         placeholder="Email"
         classNames={isInvalid ? { input: emailcss.invalid } : {}}
         rightSection={
@@ -240,7 +240,7 @@ export function RegisterMedico({ onSuccess }: Props) {
       </Group>
 
       <PasswordRequirement
-        label="Has at least 6 characters"
+        label="Contiene almeno 6 caratteri"
         meets={password.length > 5}
       />
       {checks}
@@ -255,12 +255,12 @@ export function RegisterMedico({ onSuccess }: Props) {
           setConfirmPassword(e.currentTarget.value);
           setIsError("");
         }}
-        placeholder="Confirm password"
-        label="Confirm Password"
+        placeholder="Conferma password"
+        label="Conferma Password"
         required
         error={
           confirmPassword.length > 0 && confirmPassword !== password
-            ? "Passwords do not match"
+            ? "le password non coincidono"
             : null
         }
       />
@@ -292,7 +292,7 @@ export function RegisterMedico({ onSuccess }: Props) {
           (password.length != 0 && confirmPassword !== password)
         }
       >
-        Register
+        Registra
       </Button>
     </Container>
   );

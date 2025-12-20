@@ -223,7 +223,7 @@ function Register() {
             value={email}
             onChange={(e) => setEmail(e.currentTarget.value)}
             required
-            error={isInvalid ? "Invalid email" : null}
+            error={isInvalid ? "email invalida" : null}
             placeholder="Email"
             classNames={
               isInvalid ? { input: emailcss.invalid } : {}
@@ -285,7 +285,7 @@ function Register() {
               onChange={(event) =>
                 setPassword(event.currentTarget.value)
               }
-              placeholder="Your password"
+              placeholder="password"
               label="Password"
               required
             />
@@ -295,7 +295,7 @@ function Register() {
             </Group>
 
             <PasswordRequirement
-              label="Has at least 6 characters"
+              label="Contiene almeno 6 caratteri"
               meets={password.length > 5}
             />
             {checks}
@@ -308,14 +308,14 @@ function Register() {
               onChange={(event) =>
                 setConfirmPassword(event.currentTarget.value)
               }
-              placeholder="Confirm password"
-              label="Confirm Password"
+              placeholder="Conferma password"
+              label="Conferma Password"
               required
               mt="md"
               error={
                 confirmPassword.length > 0 &&
                   confirmPassword !== password
-                  ? "Passwords do not match"
+                  ? "le password non coincidono"
                   : null
               }
             />
@@ -358,7 +358,7 @@ function Register() {
             <Alert
               variant="light"
               color="red"
-              title="Alert title"
+              title="Allerta"
               withCloseButton
               onClose={() => setIsError("")}
               icon={
@@ -383,7 +383,7 @@ function Register() {
             radius="md"
             onClick={handleRegister}
           >
-            Register
+            Registra
           </Button>
         </div>
       </Paper>
