@@ -10,16 +10,16 @@
 
 %inzio del documento
 \begin{document}
-% pagina 1 (titolo)
+%titolo
 \maketitle
 \newpage
 
-%pagina 2 (indice)
+%indice
 \tableofcontents
 
 \newpage
 
-%pagina 3 (use case)
+%use case
 \chapter{Azioni degli utenti}
 
 La Webapp che siamo andati a sviluppare è a servizio di tre tipologie di utenti:
@@ -39,7 +39,7 @@ Andiamo a vedere ora i casi d'uso e i loro diagrammi di sequenza.
 \begin{figure}[h!]
     \centering
     \includegraphics[width=\textwidth, height=\textheight, keepaspectratio]
-    {img_relazione/Use_case_paziente.png}
+    {img_relazione/Use_case/Use_case_paziente.png}
 \end{figure}
 
 Dopo esssersi autenticate il paziente verra reindirizzato alla sua homepage,
@@ -92,7 +92,7 @@ inserire il proprio livello glicemico.
 \begin{figure}[h!]
     \centering
     \includegraphics[width=\textwidth, height=\textheight, keepaspectratio]
-    {img_relazione/Inserimento_glicemia.png}
+    {img_relazione/Use_case/Inserimento_glicemia.png}
 \end{figure}
 
 \subsection{Segnalazione di patologie, malattie e/o sintomi}
@@ -125,7 +125,7 @@ malattie e patologie.
 \begin{figure}[h!]
     \centering
     \includegraphics[width=\textwidth, height=12.4cm, keepaspectratio]
-    {img_relazione/Segnala_medico.png}
+    {img_relazione/Use_case/Segnala_medico.png}
 \end{figure}
 
 \vspace{0.5cm}
@@ -163,7 +163,7 @@ medicinale in un giorno.
 \begin{figure}[h!]
     \centering
     \includegraphics[width=\textwidth, height=\textheight, keepaspectratio]
-    {img_relazione/Medicinali_assunti.png}
+    {img_relazione/Use_case/Medicinali_assunti.png}
 \end{figure}
 
 \vspace{0.5cm}
@@ -197,7 +197,7 @@ la priorità del messagio tra bassa, media e alta; schiacciando poi il tasto
 \begin{figure}[h!]
     \centering
     \includegraphics[width=\textwidth, height=\textheight, keepaspectratio]
-    {img_relazione/Contatta_medico.png}
+    {img_relazione/Use_case/Contatta_medico.png}
 \end{figure}
 
 \vspace{0.5cm}
@@ -206,7 +206,7 @@ la priorità del messagio tra bassa, media e alta; schiacciando poi il tasto
 \begin{figure}[h!]
     \centering
     \includegraphics[width=\textwidth, height=\textheight, keepaspectratio]
-    {img_relazione/Use_case_medico.png}
+    {img_relazione/Use_case/Use_case_medico.png}
 \end{figure}
 
 Dopo esssersi autenticate il medico verra reindirizzato alla sua homepage,
@@ -263,7 +263,7 @@ il tasto "leggi" per segnarlo come letto e quindi rimuoverlo dalla lista.
 \begin{figure}[h!]
     \centering
     \includegraphics[width=\textwidth, height=\textheight, keepaspectratio]
-    {img_relazione/Vis_alert_medico.png}
+    {img_relazione/Use_case/Vis_alert_medico.png}
 \end{figure}
 
 \vspace{0.5cm}
@@ -316,19 +316,19 @@ inserire i dati richiesti e scegliere il paziente per il quale è stata creata.
 \begin{figure}[h!]
     \centering
     \includegraphics[width=\textwidth, height=\textheight, keepaspectratio]
-    {img_relazione/Modifica_terapie.png}
+    {img_relazione/Use_case/Modifica_terapie.png}
 \end{figure}
 
 \begin{figure}[h!]
     \centering
     \includegraphics[width=\textwidth, height=\textheight, keepaspectratio]
-    {img_relazione/Crea_terapie.png}
+    {img_relazione/Use_case/Crea_terapie.png}
 \end{figure}
 
 \begin{figure}[h!]
     \centering
     \includegraphics[width=\textwidth, height=\textheight, keepaspectratio]
-    {img_relazione/Elimina_terapie.png}
+    {img_relazione/Use_case/Elimina_terapie.png}
 \end{figure}
 
 \subsection{Gestione Pazienti}
@@ -378,26 +378,26 @@ inserire i dati richiesti e scegliere il paziente per il quale è stata creata.
 \begin{figure}[h!]
     \centering
     \includegraphics[width=\textwidth, height=\textheight, keepaspectratio]
-    {img_relazione/Modifica_paziente.png}
+    {img_relazione/Use_case/Modifica_paziente.png}
 \end{figure}
 
 \begin{figure}[h!]
     \centering
     \includegraphics[width=\textwidth, height=\textheight, keepaspectratio]
-    {img_relazione/Visualizza_paziente.png}
+    {img_relazione/Use_case/Visualizza_paziente.png}
 \end{figure}
 
 \begin{figure}[h!]
     \centering
     \includegraphics[width=\textwidth, height=\textheight, keepaspectratio]
-    {img_relazione/Elimina_pazienti.png}
+    {img_relazione/Use_case/Elimina_pazienti.png}
 \end{figure}
 
 \section{Casi d'uso dell'Admin}
 \begin{figure}[h!]
     \centering
     \includegraphics[width=\textwidth, height=\textheight, keepaspectratio]
-    {img_relazione/Use_case_admin.png}
+    {img_relazione/Use_case/Use_case_admin.png}
 \end{figure}
 
 Dopo esssersi autenticato l'admin verra reindirizzato alla sua homepage,
@@ -499,25 +499,25 @@ come il dottore può modificare, creare, eliminare e visualizzare i pazienti.
 \begin{figure}[h!]
     \centering
     \includegraphics[width=\textwidth, height=\textheight, keepaspectratio]
-    {img_relazione/Modifica_paziente.png}
+    {img_relazione/Use_case/Modifica_paziente.png}
 \end{figure}
 
 \begin{figure}[h!]
     \centering
     \includegraphics[width=\textwidth, height=\textheight, keepaspectratio]
-    {img_relazione/Visualizza_paziente.png}
+    {img_relazione/Use_case/Visualizza_paziente.png}
 \end{figure}
 
 \begin{figure}[h!]
     \centering
     \includegraphics[width=\textwidth, height=\textheight, keepaspectratio]
-    {img_relazione/Elimina_pazienti.png}
+    {img_relazione/Use_case/Elimina_pazienti.png}
 \end{figure}
 
 \begin{figure}[h!]
     \centering
     \includegraphics[width=\textwidth, height=\textheight, keepaspectratio]
-    {img_relazione/Crea_paziente.png}
+    {img_relazione/Use_case/Crea_paziente.png}
 \end{figure}
 
 \subsection{Gestisci Medici}
@@ -565,19 +565,141 @@ Nel caso della creazione si aprirà un modal nel quale dovrà inserire i dati ri
 \begin{figure}[h!]
     \centering
     \includegraphics[width=\textwidth, height=\textheight, keepaspectratio]
-    {img_relazione/Modifica_medico.png}
+    {img_relazione/Use_case/Modifica_medico.png}
 \end{figure}
 
 \begin{figure}[h!]
     \centering
     \includegraphics[width=\textwidth, height=\textheight, keepaspectratio]
-    {img_relazione/Elimina_medico.png}
+    {img_relazione/Use_case/Elimina_medico.png}
 \end{figure}
 
 \begin{figure}[h!]
     \centering
     \includegraphics[width=\textwidth, height=\textheight, keepaspectratio]
-    {img_relazione/Crea_medico.png}
+    {img_relazione/Use_case/Crea_medico.png}
+\end{figure}
+
+\chapter{Diagrammi di attività}
+Andiamo di seguito a mostrare i diagrammi di attività di ciascuna tipologia
+di utente.
+
+
+\section{Diagramma di autenticazione}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth, height=\textheight, keepaspectratio]
+    {img_relazione/Diagrammi/DA_autenticazione.png}
+    \caption{Diagramma dell'autenticazione di un utente}
+\end{figure}
+
+Per i successivi diagrammi di attività presupponiamo che l'utente abbia già
+effettuato l'autenticazione.
+I diagrammi verranno visualizzati prima completi con per ogni utente e poi
+divisi per avere una più nitida visualizzazione delle varie sezioni.
+Le immagini delle diverse sezioni possono avere una struttura diversa da quella
+nella foto principale a causa del ridimensionamento per una migliore
+visualizzazione.
+
+\section{Diagramma del paziente}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth, height=\textheight, keepaspectratio]
+    {img_relazione/Diagrammi/DA_paziente.png}
+    \caption{Diagramma completo del paziente}
+\end{figure}
+
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth, height=\textheight, keepaspectratio]
+    {img_relazione/Diagrammi/DA_paziente_0.png}
+    \caption{Diagramma per la segnalazione di patologie, malattie e/o sintomi}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth, height=\textheight, keepaspectratio]
+    {img_relazione/Diagrammi/DA_paziente_1.png}
+    \caption{Diagramma di come un paziente comunica con il medico}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth, height=\textheight, keepaspectratio]
+    {img_relazione/Diagrammi/DA_paziente_2.png}
+    \caption{Diagramma per l'inserimento della glicemia}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth, height=\textheight, keepaspectratio]
+    {img_relazione/Diagrammi/DA_paziente_3.png}
+    \caption{Diagramma per la registrazione giornaliera dei medicinali}
+\end{figure}
+
+
+
+\section{Diagramma del medico}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth, height=\textheight, keepaspectratio]
+    {img_relazione/Diagrammi/DA_medico.png}
+    \caption{Diagramma completo del medico}
+\end{figure}
+
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth, height=\textheight, keepaspectratio]
+    {img_relazione/Diagrammi/DA_medico_0.png}
+    \caption{Diagramma di gestione delle terapie}
+\end{figure}
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth, height=\textheight, keepaspectratio]
+    {img_relazione/Diagrammi/DA_medico_1.png}
+    \caption{Diagramma di visualizzazione degli alert del medico}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth, height=\textheight, keepaspectratio]
+    {img_relazione/Diagrammi/DA_medico_2.png}
+    \caption{Diagramma di gestione dei pazienti}
+\end{figure}
+
+\section{Diagramma dell'admin}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth, height=\textheight, keepaspectratio]
+    {img_relazione/Diagrammi/DA_admin.png}
+    \caption{Diagramma completo dell'admin}
+\end{figure}
+
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth, height=\textheight, keepaspectratio]
+    {img_relazione/Diagrammi/DA_admin_0.png}
+    \caption{Diagramma gestione dei pazienti}
+\end{figure}
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth, height=\textheight, keepaspectratio]
+    {img_relazione/Diagrammi/DA_admin_1.png}
+    \caption{Diagramma della gestione dei medici}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth, height=\textheight, keepaspectratio]
+    {img_relazione/Diagrammi/DA_admin_2.png}
+    \caption{Diagramma visualizzazione dei log}
 \end{figure}
 
 \end{document}

@@ -12,3 +12,8 @@
 \contentsline {subsection}{\numberline {1.3.1}Visualizza log}{16}{}%
 \contentsline {subsection}{\numberline {1.3.2}Gestisci Pazienti}{16}{}%
 \contentsline {subsection}{\numberline {1.3.3}Gestisci Medici}{17}{}%
+\contentsline {chapter}{\numberline {2}Diagrammi di attività}{22}{}%
+\contentsline {section}{\numberline {2.1}Diagramma di autenticazione}{22}{}%
+\contentsline {section}{\numberline {2.2}Diagramma del paziente}{22}{}%
+\contentsline {section}{\numberline {2.3}Diagramma del medico}{22}{}%
+\contentsline {section}{\numberline {2.4}Diagramma dell'admin}{22}{}%
