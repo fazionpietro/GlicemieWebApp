@@ -702,4 +702,64 @@ visualizzazione.
     \caption{Diagramma visualizzazione dei log}
 \end{figure}
 
+\chapter{Test}
+In questa fase del progetto ci siamo assicurati che tutte le funzionalità 
+richieste fossero implementate e che i vari diagrammi fossero coerenti. \\
+Successivamente abbiamo poi creato dei test automatizzati utilizzando "Junit"
+e "Mockito" con l'bbiettivo di verificare automaticamente il corretto
+funzionamento di alcuni parti del codice. \\
+Dopo l'esecuzione degli Unit test abbiamo svolto un test manuale dell'applicazione,
+e infine, abbiamo fatto provare la webapp ad alcuni utenti esterni per ottenere un 
+feedback da parte di un possibile utente della webapp.
+\\
+\section{Test automatici}
+I nostri test automatici controllano il funzionamento dei service, ovvero
+delle funzionalità dell'applicazione e delle possibilità offerte agli utenti.
+\\ \\
+In questi test come detto in precedenza abbiamo usato Mock per simulare repository
+e dipendenze necessarie per testare automaticamente i seguenti service:
+\begin{itemize}
+    \item GlicemiawebApplicationTests.java : il test principale che verifica
+    il corretto avvio del contesto di spring boot
+    \item AssunzioneServiceTest.java : testa le funzionalità legate alle assunzioni
+    di medicinali, cioè la possibilità del sistema di recuperare i dati necessari
+    e la possibilità del paziente di registrarli
+    \item AuthenticationServiceTest.java : viene testata l'autenticazione, sia
+    per login che logout grazie all'utilizzo di un token JWT.
+    \item ComunicazioneServiceTest.java : testa la comunicazione paziente-medico,
+    si verifica la funzionalità di invio e ricezione dei messaggi e pure la possibilità
+    del medico di segnare come letti i messaggi ricevuti
+    \item PazienteServiceTest.java : testa delle funzionalità legate alla gestione
+    del paziente, come la possibilità di recuperare i pazienti anche in base al medico,
+    viene testata anche la possibilità di aggiornare i dati del paziente, l'associazione
+    del medico e la gestione della password.
+    \item RilevazioneServiceTest.java : testa l'inserimento e l'eliminazione di 
+    una rilevazione da parte dell'utente, per la visualizzazione dei dati viene
+    pure testata la possibilità di recuperarli ma con l'applicazione di filtri basati
+    sul ruolo
+    \item TerapiaService.java : testa la gestione delle terapie, quindi la creazione, modifica
+    e l'eliminazione da parte del medico.
+    \item UtenteServiceTest.java : testa la gestione di tutti gli utenti, quindi la creazione,
+    la modifica e l'eliminazione di medici e pazienti.
+\end{itemize}
+
+\section{Test degli sviluppatori}
+Abbiamo poi eseguito dei test manuali per verificare il corretto funzionamento della applicazione,
+di seguito le principali verifiche:
+\begin{itemize}
+    \item Verfica del corretto funzionamento dell'autenticazione
+    \item Verifica del corretto funzionamento di tutte le funzionalità utente per utente
+    \item Verifica di mancato salvataggio in caso di dati non validi o vuoti
+\end{itemize}
+
+\section{Test di un possibile utente}
+Infine abbiamo sottoposto degli utenti esterni alla nostra applicazione per avere un
+un feedback da qualcuno di esterno che potrebbe essere un possibile utilizzatore
+dell'applicazione.
+In questa fase siamo stati solo osservatori e non abbiamo dato alcun tipo di informazione
+su come utilizzare l'applicazione eccetto per le credenziali di accesso e lo scopo
+della applicazione.
+Grazie a questo test abbiamo migliorato l'applicazione in termini di user friendly
+e a livello grafico.
+
 \end{document}
