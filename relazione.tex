@@ -1,8 +1,12 @@
 \documentclass{report}
 \usepackage{graphicx}
 \renewcommand{\contentsname}{indice}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}   
+\usepackage[italian]{babel} 
+\usepackage{geometry}       
+\usepackage{hyperref}
 
-%preambolo
 \title{\Huge Documentazione ingegneria del software \\[0.5cm]
         \Large Progetto: Webapp per la gestione della glicemia}
 \author{Fazion Pietro (VR501347) , Dal Degan Pietro (VR500305)}
@@ -77,7 +81,7 @@ inserire il proprio livello glicemico.
         \textbf{Precondizioni: } Il paziente deve essersi autenticato \\
         \textbf{Passi: } \vspace{0.05cm}
         \begin{enumerate}
-            \item Il paziente clicca il pulsante "Nupva rilevazione"
+            \item Il paziente clicca il pulsante "Nuova rilevazione"
             \item Il paziente riempie il campo del modal glicemia che compare
             \item Il paziente clicca il pulsante "invia"
             \item Viene controllata la validità del dato inserito
@@ -702,11 +706,80 @@ visualizzazione.
     \caption{Diagramma visualizzazione dei log}
 \end{figure}
 
+\chapter{Sviluppo del Software}
+\section{Metodologia di sviluppo}
+Per lo sviluppo del sistema è stato adottato un modello di processo iterativo e incrementale di matrice Agile, caratterizzato da un'elevata flessibilità operativa in funzione delle specificità progettuali. Il workflow, avviato con l'analisi dei requisiti e la progettazione architetturale preliminare, si è articolato nella pianificazione ed esecuzione di Sprint focalizzati sull'implementazione. Al termine di ogni iterazione, si è proceduto sistematicamente alla validazione tramite test, all'aggiornamento della documentazione tecnica e alla revisione dei requisiti, garantendo così un miglioramento continuo del prodotto software 
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth, height=\textheight, keepaspectratio]
+    {img_relazione/Diagrammi/ProcessoSviluppo_tmp.png}
+    \caption{Processo di sviluppo}
+\end{figure}
+\newpage
+\section{Architettura}
+Il software è stato progettato utilizzando principalmente \textit{Client-Server}
+con similità al pattern \textit{Model-View-Controller}. 
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth, height=\textheight, keepaspectratio]
+    {img_relazione/Diagrammi/architettura.png}
+    \caption{Architettura del sistema}
+\end{figure}
+
+
+Il sistema è composto da due componenti principali:  
+\begin{itemize}
+  \item \textbf{Client (View)}: L'interfaccia utente è gestita da React un framework per JavaScript (in questo caso è stato utilizzato TypeScript, un linguaggio di tipizzazione 
+    basato su JavaScript). 
+  \item \textbf{Server (Model + Controller)}: Il server e il modello di dati sono implementati con Spring Boot, un framework Java per la creazione di applicazioni Java web. 
+    ed è suddiviso in due componenti: 
+    \begin{itemize}
+      \item \textbf{Controller}: Il controller si occupa di ricevere le richieste che il client effettua alla web API grazie ai \textit{Rest Controller} forniti da Java Spring e di passarle al modello dei dati per la loro elaborazione, e restituire le risposte in formato JSON.
+      \item \textbf{Model}: Questo componente rappresenta i dati del sistema e la logica di business, e si occupa di interagire con il database utilizzando i \textit{Repository} di 
+        Java Spring per un accesso efficente e semplice, e gestire le operazioni CRUD su di esso attraverso i \textit{Service} dedicati alle varie entità.
+    \end{itemize}
+\end{itemize}
+\subsection{Pattern utilizzati}
+Il \textbf{Service Layer} rappresenta il nucleo applicativo dove risiede la logica di business, implementata attraverso i componenti annotati come \texttt{@Service}.
+\begin{itemize}
+    \item \textbf{Gestione Transazionale:} Sfruttando l'annotazione \texttt{@Transactional} di Spring, i servizi garantiscono l'integrità dei dati. Il framework gestisce automaticamente l'apertura e la chiusura delle transazioni: se un'operazione fallisce (es. eccezione runtime), viene eseguito il \textit{rollback} automatico di tutte le modifiche al database, prevenendo stati inconsistenti.
+    \item \textbf{Orchestrazione:} I Service fungono da punto di ingresso per i Controller, orchestrando chiamate verso vari Repository e componenti esterni, mantenendo il codice di presentazione libero da logica condizionale complessa.
+\end{itemize}
+
+\subsubsection{Repository Pattern (Spring Data JPA)}
+L'accesso ai dati è gestito primariamente tramite \textbf{Spring Data JPA}, che implementa il Repository Pattern riducendo drasticamente il codice necessario.
+\begin{itemize}
+    \item \textbf{Query Methods:} Utilizzando le interfacce \texttt{JpaRepository}, il sistema permette di eseguire operazioni CRUD (Create, Read, Update, Delete) e query di ricerca basate sulla convenzione dei nomi dei metodi, senza la necessità di scrivere SQL manualmente.
+    \item \textbf{Astrazione:} Questo approccio disaccoppia l'applicazione dallo specifico database SQL sottostante, delegando a Hibernate la generazione del dialetto SQL corretto.
+\end{itemize}
+
+\subsubsection{Data Access Object (DAO)}
+L'architettura dell'applicazione implementa il pattern Data Access Object per garantire una separazione tra la logica di business e il livello di persistenza dei dati. Questo pattern incapsula le operazioni di accesso al database, fornendo un'interfaccia astratta che nasconde i dettagli implementativi delle query e delle transazioni. I componenti di accesso ai dati gestiscono esclusivamente le operazioni CRUD e le query personalizzate, mentre la logica applicativa rimane nei servizi di business. Tale separazione favorisce la manutenibilità del codice e la testabilità, permettendo di modificare la strategia di persistenza senza impattare gli strati superiori dell'applicazione.
+
+
+\subsection{Observer Pattern}
+
+L'applicazione utilizza il pattern Observer attraverso il sistema di gestione degli eventi offerto dal framework Spring. Questo pattern comportamentale permette di implementare un meccanismo di notifica asincrona tra componenti, dove oggetti publisher possono notificare eventi a listener interessati senza conoscerne i dettagli implementativi. Il disaccoppiamento tra emettitore e ricevitore degli eventi favorisce l'estensibilità del sistema, permettendo l'aggiunta di nuovi listener senza modificare la logica di business esistente. Tale approccio risulta particolarmente efficace per gestire comunicazioni e notifiche in risposta a eventi significativi dell'applicazione, mantenendo i componenti indipendenti e facilitando la manutenzione del codice.
+\subsection{Pattern Creazionali}
+
+\subsubsection{Builder Pattern}
+Per la gestione di oggetti complessi come le \textit{Entity} JPA e i DTO (\textit{Data Transfer Objects}), viene utilizzato il \textbf{Builder Pattern}, spesso supportato dalla libreria \textit{Lombok}.
+\begin{itemize}
+    \item \textbf{Costruzione Fluente:} Sostituisce i costruttori tradizionali con una sintassi fluente (es. \texttt{.builder().nome("X").build()}), rendendo il codice più leggibile e riducendo gli errori di assegnazione dei campi, specialmente in classi con numerosi attributi.
+    \item \textbf{Immutabilità:} Facilita la creazione di oggetti immutabili (DTO), essenziali per passare dati tra i vari livelli dell'applicazione in modo sicuro (Thread-safety).
+\end{itemize}
+
+\subsection{Pattern Comportamentali}
+
+\subsubsection{Iterator Pattern (Paginazione e Stream)}
+Per la gestione e manipolazione delle liste di oggetti rappresentati il risultato delle interrogazioni delle repository o dall'esecuzione di un servizio.
+\end{itemize}
+
 \chapter{Test}
 In questa fase del progetto ci siamo assicurati che tutte le funzionalità 
 richieste fossero implementate e che i vari diagrammi fossero coerenti. \\
 Successivamente abbiamo poi creato dei test automatizzati utilizzando "Junit"
-e "Mockito" con l'bbiettivo di verificare automaticamente il corretto
+e "Mockito" con l'obbiettivo di verificare automaticamente il corretto
 funzionamento di alcuni parti del codice. \\
 Dopo l'esecuzione degli Unit test abbiamo svolto un test manuale dell'applicazione,
 e infine, abbiamo fatto provare la webapp ad alcuni utenti esterni per ottenere un 
