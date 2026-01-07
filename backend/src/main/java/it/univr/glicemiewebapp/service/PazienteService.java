@@ -13,10 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import it.univr.glicemiewebapp.dto.PazienteDTO;
 import it.univr.glicemiewebapp.dto.PazienteUtenteDTO;
+import it.univr.glicemiewebapp.dto.response.MessageResponse;
 import it.univr.glicemiewebapp.entity.Paziente;
 import it.univr.glicemiewebapp.entity.Utente;
 import it.univr.glicemiewebapp.repository.PazienteRepository;
@@ -52,20 +51,21 @@ public class PazienteService {
 
   public List<PazienteDTO> findByMedico(UUID id) {
     try {
-      Utente medico = utenteRepository.findById(id).get();
-
+      Utente medico = utenteRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Medico", id));
       return pazienteRepository.findByIdMedico(medico);
 
+    } catch (ResourceNotFoundException e) {
+        throw e;
     } catch (Exception e) {
       throw new BusinessException("DATA_RETRIEVAL_ERROR", "Failed to retrieve patients for medico");
     }
   }
 
   @Transactional
-  public ResponseEntity<String> update(PazienteUtenteDTO request) {
+  public ResponseEntity<MessageResponse> update(PazienteUtenteDTO request) {
 
     Paziente paziente = pazienteRepository.findById(request.getId())
-        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "DATABASE ERROR"));
+        .orElseThrow(() -> new ResourceNotFoundException("Paziente", request.getId()));
 
     logger.warn("attempt to modify user: " + paziente.toString());
     try {
@@ -89,10 +89,12 @@ public class PazienteService {
 
       pazienteRepository.save(paziente);
 
-      return new ResponseEntity<>("USER UPDATED", HttpStatus.OK);
+      return new ResponseEntity<>(new MessageResponse("USER UPDATED"), HttpStatus.OK);
 
+    } catch (ResourceNotFoundException e) {
+        throw e;
     } catch (Exception e) {
-      throw new BusinessException("DATA_RETRIEVAL_ERROR", "Failed to retrieve patients for medico");
+      throw new BusinessException("UPDATE_ERROR", "Failed to update paziente");
     }
 
   }

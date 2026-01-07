@@ -40,12 +40,6 @@
       <artifactId>jakarta.validation-api</artifactId>
       <version>3.1.1</version>
     </dependency>
-    <!-- https://mvnrepository.com/artifact/org.json/json -->
-    <dependency>
-      <groupId>org.json</groupId>
-      <artifactId>json</artifactId>
-      <version>20250517</version>
-    </dependency>
     <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-core -->
     <dependency>
       <groupId>org.hibernate</groupId>
@@ -176,9 +170,8 @@
           <password>password</password><driver>org.h2.Driver</driver>
           <outputChangeLogFile>src/main/resources/db/changelog/generated-changelog.xml</outputChangeLogFile>
         </configuration>
-      </plugin>   
+      </plugin>
     </plugins>
   </build>
 
 </project>
-

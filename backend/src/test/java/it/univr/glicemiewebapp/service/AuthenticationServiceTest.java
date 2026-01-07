@@ -7,7 +7,6 @@ import static org.mockito.Mockito.*;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,6 +19,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.server.ResponseStatusException;
 
+import it.univr.glicemiewebapp.dto.response.AuthenticationResponse;
+import it.univr.glicemiewebapp.dto.response.MessageResponse;
 import it.univr.glicemiewebapp.entity.Utente;
 import it.univr.glicemiewebapp.forms.SignInForm;
 import it.univr.glicemiewebapp.repository.UtenteRepository;
@@ -72,11 +73,11 @@ class AuthenticationServiceTest {
     when(jwtService.generateToken(utente)).thenReturn("jwt_token");
 
     // When
-    ResponseEntity<String> response = authenticationService.authentication(signInForm);
+    ResponseEntity<AuthenticationResponse> response = authenticationService.authentication(signInForm);
 
     // Then
     assertEquals(HttpStatus.ACCEPTED, response.getStatusCode());
-    assertTrue(response.getBody().contains("CREDENTIAL VALIDATED"));
+    assertEquals("CREDENTIAL VALIDATED", response.getBody().getMessage());
     verify(authenticationManager).authenticate(any());
   }
 
@@ -139,11 +140,11 @@ class AuthenticationServiceTest {
     when(jwtService.checkValidity(token)).thenReturn(true);
 
     // When
-    ResponseEntity<String> response = authenticationService.logout(token);
+    ResponseEntity<MessageResponse> response = authenticationService.logout(token);
 
     // Then
     assertEquals(HttpStatus.OK, response.getStatusCode());
-    assertTrue(response.getBody().contains("LOGOUT SUCCESSFUL"));
+    assertEquals("LOGOUT SUCCESSFUL", response.getBody().getMessage());
     verify(jwtService).addToBlacklist(token);
   }
 
@@ -154,10 +155,10 @@ class AuthenticationServiceTest {
     when(jwtService.checkValidity(token)).thenReturn(false);
 
     // When
-    ResponseEntity<String> response = authenticationService.logout(token);
+    ResponseEntity<MessageResponse> response = authenticationService.logout(token);
 
     // Then
     assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
-    assertEquals("INVALID TOKEN", response.getBody());
+    assertEquals("INVALID TOKEN", response.getBody().getMessage());
   }
 }

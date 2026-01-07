@@ -1,73 +1,79 @@
 package it.univr.glicemiewebapp.exception;
 
+import it.univr.glicemiewebapp.dto.response.ErrorResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.server.ResponseStatusException;
 
-import it.univr.glicemiewebapp.service.LogService;
+import java.time.LocalDateTime;
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-  private final LogService log;
 
-  public GlobalExceptionHandler(LogService log) {
-    this.log = log;
-  }
+    @ExceptionHandler(ResponseStatusException.class)
+    public ResponseEntity<ErrorResponse> handleResponseStatusException(ResponseStatusException ex, HttpServletRequest request) {
+        log.error("ResponseStatusException: {}", ex.getMessage());
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .timestamp(LocalDateTime.now())
+                .status(ex.getStatusCode().value())
+                .error(((HttpStatus) ex.getStatusCode()).getReasonPhrase())
+                .message(ex.getReason())
+                .path(request.getRequestURI())
+                .build();
+        return new ResponseEntity<>(errorResponse, ex.getStatusCode());
+    }
 
-  @ExceptionHandler(ResourceNotFoundException.class)
-  public ResponseEntity<ErrorResponse> handleResourceNotFound(ResourceNotFoundException ex) {
-    log.error("Resource not found: " + ex.getMessage());
-    ErrorResponse error = ErrorResponse.of(ex.getErrorCode(), ex.getMessage());
-    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
-  }
+    @ExceptionHandler(BusinessException.class)
+    public ResponseEntity<ErrorResponse> handleBusinessException(BusinessException ex, HttpServletRequest request) {
+        log.error("BusinessException: {}", ex.getMessage());
+        // Map generic business exceptions to 500 or 400 depending on logic.
+        // For now, assuming 500 unless specific mapping logic is added.
+        // Often BusinessException might imply a 422 Unprocessable Entity or 400 Bad Request.
+        // Given the current usage, it seems to replace generic exceptions mostly.
+        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
 
-  @ExceptionHandler(ValidationException.class)
-  public ResponseEntity<ErrorResponse> handleValidation(ValidationException ex) {
-    log.error("Validation error: " + ex.getMessage());
-    ErrorResponse error = ErrorResponse.of(ex.getErrorCode(), ex.getMessage());
-    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
-  }
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .timestamp(LocalDateTime.now())
+                .status(status.value())
+                .error(ex.getErrorCode())
+                .message(ex.getMessage())
+                .path(request.getRequestURI())
+                .build();
+        return new ResponseEntity<>(errorResponse, status);
+    }
 
-  @ExceptionHandler(DataRetrievalException.class)
-  public ResponseEntity<ErrorResponse> handleDataRetrieval(DataRetrievalException ex) {
-    log.error("Data retrieval error: " + ex.getMessage() + " " + ex);
-    ErrorResponse error = ErrorResponse.of(ex.getErrorCode(), ex.getMessage());
-    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
-  }
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleResourceNotFoundException(ResourceNotFoundException ex, HttpServletRequest request) {
+        log.error("ResourceNotFoundException: {}", ex.getMessage());
+        HttpStatus status = HttpStatus.NOT_FOUND;
 
-  @ExceptionHandler(UpdateException.class)
-  public ResponseEntity<ErrorResponse> handleUpdate(UpdateException ex) {
-    log.error("Update error: " + ex.getMessage() + " " + ex);
-    ErrorResponse error = ErrorResponse.of(ex.getErrorCode(), ex.getMessage());
-    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
-  }
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .timestamp(LocalDateTime.now())
+                .status(status.value())
+                .error("NOT_FOUND")
+                .message(ex.getMessage())
+                .path(request.getRequestURI())
+                .build();
+        return new ResponseEntity<>(errorResponse, status);
+    }
 
-  @ExceptionHandler(BusinessException.class)
-  public ResponseEntity<ErrorResponse> handleBusiness(BusinessException ex) {
-    log.error("Business error: " + ex.getMessage() + " " + ex);
-    ErrorResponse error = ErrorResponse.of(ex.getErrorCode(), ex.getMessage());
-    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
-  }
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleGlobalException(Exception ex, HttpServletRequest request) {
+        log.error("Exception: {}", ex.getMessage(), ex);
+        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
 
-  @ExceptionHandler(DeletionException.class)
-  public ResponseEntity<ErrorResponse> handleDeletion(DeletionException ex) {
-    log.error("Deletion error: " + ex.getMessage() + " ex");
-    ErrorResponse error = ErrorResponse.of(ex.getErrorCode(), ex.getMessage());
-    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
-  }
-
-  @ExceptionHandler(CreationException.class)
-  public ResponseEntity<ErrorResponse> handleDeletion(CreationException ex) {
-    log.error("Creation error: " + ex.getMessage() + " ex");
-    ErrorResponse error = ErrorResponse.of(ex.getErrorCode(), ex.getMessage());
-    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
-  }
-
-  @ExceptionHandler(Exception.class)
-  public ResponseEntity<ErrorResponse> handleGeneral(Exception ex) {
-    log.error("Unexpected error occurred" + ex);
-    ErrorResponse error = ErrorResponse.of("INTERNAL_SERVER_ERROR", "An unexpected error occurred");
-    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
-  }
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .timestamp(LocalDateTime.now())
+                .status(status.value())
+                .error("Internal Server Error")
+                .message(ex.getMessage())
+                .path(request.getRequestURI())
+                .build();
+        return new ResponseEntity<>(errorResponse, status);
+    }
 }

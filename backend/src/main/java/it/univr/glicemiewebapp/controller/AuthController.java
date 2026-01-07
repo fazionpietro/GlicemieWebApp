@@ -1,5 +1,7 @@
 package it.univr.glicemiewebapp.controller;
 
+import it.univr.glicemiewebapp.dto.response.AuthenticationResponse;
+import it.univr.glicemiewebapp.dto.response.MessageResponse;
 import it.univr.glicemiewebapp.entity.Utente;
 import it.univr.glicemiewebapp.forms.AdminForm;
 import it.univr.glicemiewebapp.forms.MedicoForm;
@@ -13,11 +15,11 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Optional;
-import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
@@ -26,149 +28,123 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
 @Slf4j
 @RestController
 @RequestMapping("/api/auth")
+@RequiredArgsConstructor
 public class AuthController {
-    @Autowired
-    AuthenticationService authenticationService;
-    @Autowired
-    UtenteRepository utenteRepository;
-    @Autowired
-    PasswordEncoder passwordEncoder;
-    @Autowired
-    JwtService jwtService;
-    @Autowired
-    private LogService logger;
 
-    
+    private final AuthenticationService authenticationService;
+    private final UtenteRepository utenteRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
+    private final LogService logger;
+
     @CrossOrigin
     @PostMapping("/signin")
-    public ResponseEntity<String> signin(@RequestBody @Valid SignInForm signInForm) {
-        logger.info("Login attempt"); 
-        try {
-            return authenticationService.authentication(signInForm);
-        
-        } catch (ResponseStatusException e) {
-            System.out.println(e);
-            return new ResponseEntity<>(e.getReason(), e.getStatusCode());
-            
-        }
+    public ResponseEntity<AuthenticationResponse> signin(@RequestBody @Valid SignInForm signInForm) {
+        logger.info("Login attempt");
+        return authenticationService.authentication(signInForm);
     }
 
     @PostMapping("/signup/medico")
-    public ResponseEntity<String> registerMedico(@RequestBody @Valid MedicoForm medico) {
+    public ResponseEntity<AuthenticationResponse> registerMedico(@RequestBody @Valid MedicoForm medico) {
         logger.info("Attempt to create a new doctor");
-        
-        try {
-
-            return authenticationService.register(medico);
-        } catch (ResponseStatusException e) {
-        
-            System.out.println(e);
-            return new ResponseEntity<>(e.getReason(), e.getStatusCode());
-            
-        }
+        return authenticationService.register(medico);
     }
 
     @PostMapping("/signup/admin")
-    public ResponseEntity<String> registerAdmin(@RequestBody @Valid AdminForm admin) {
+    public ResponseEntity<AuthenticationResponse> registerAdmin(@RequestBody @Valid AdminForm admin) {
         logger.info("Attempt to create a new admin");
-        try {
-            return authenticationService.register(admin);
-        } catch (ResponseStatusException e) {
-        
-            System.out.println(e);
-            return new ResponseEntity<>(e.getReason(), e.getStatusCode());
-            
-        }
+        return authenticationService.register(admin);
     }
 
     @PostMapping("/signup/paziente")
-    public ResponseEntity<String> registerPaziente(@RequestBody @Valid PazienteForm paziente) {
-        logger.info("Attempt to create a new patient"); 
-        try {
-            return authenticationService.register(paziente);
-        } catch (ResponseStatusException e) {
-        
-            System.out.println(e);
-            return new ResponseEntity<>(e.getReason(), e.getStatusCode());
-            
-        }
+    public ResponseEntity<AuthenticationResponse> registerPaziente(@RequestBody @Valid PazienteForm paziente) {
+        logger.info("Attempt to create a new patient");
+        return authenticationService.register(paziente);
     }
 
     @GetMapping("/verify")
-    public ResponseEntity<String> verifyToken(HttpServletRequest request) {
+    public ResponseEntity<?> verifyToken(HttpServletRequest request) {
+        String token = extractTokenFromCookie(request);
+        logger.info("Veryfing Token: " + token);
 
-        
-        try {
-            String token = extractTokenFromCookie(request);
-            logger.info("Veryfing Token: "+token);
-
-            if (token == null || !jwtService.checkValidity(token)) {
-                return new ResponseEntity<>("INVALID TOKEN", HttpStatus.UNAUTHORIZED);
-            }
-
-            String email = jwtService.getMailFromToken(token);
-            Optional<Utente> userOpt = utenteRepository.findByEmailAddress(email);
-
-            if (userOpt.isEmpty()) {
-                return new ResponseEntity<>("USER NOT FOUND", HttpStatus.UNAUTHORIZED);
-            }
-
-            Utente user = userOpt.get();
-
-            JSONObject response = new JSONObject();
-            response.put("id", user.getId().toString());
-            response.put("email", user.getEmail());
-            response.put("role", user.getRuolo());
-            response.put("message", "TOKEN VALID");
-
-            log.info("Token verificato con successo per utente: {}", email);
-            return new ResponseEntity<>(response.toString(), HttpStatus.OK);
-
-        } catch (Exception e) {
-            log.error("Errore durante la verifica del token: {}", e.getMessage(), e);
-            return new ResponseEntity<>("TOKEN VERIFICATION FAILED", HttpStatus.UNAUTHORIZED);
+        if (token == null || !jwtService.checkValidity(token)) {
+            return new ResponseEntity<>("INVALID TOKEN", HttpStatus.UNAUTHORIZED);
         }
+
+        String email = jwtService.getMailFromToken(token);
+        Optional<Utente> userOpt = utenteRepository.findByEmailAddress(email);
+
+        if (userOpt.isEmpty()) {
+            return new ResponseEntity<>("USER NOT FOUND", HttpStatus.UNAUTHORIZED);
+        }
+
+        Utente user = userOpt.get();
+
+        AuthenticationResponse response = AuthenticationResponse.builder()
+                .id(user.getId().toString())
+                .role(user.getRuolo())
+                .message("TOKEN VALID")
+                // email is not in AuthenticationResponse usually, but we can reuse it or create another DTO if strictly needed to be identical JSON structure.
+                // The previous code returned: {id, email, role, message}
+                // My AuthenticationResponse has: {message, id, role}
+                // I should add email to AuthenticationResponse or create a UserResponse
+                .build();
+
+        // Let's modify AuthenticationResponse to include email if needed to be identical visually/functionally.
+        // Wait, the previous code returned a JSONObject with "email" property.
+        // I should check if the frontend uses "email".
+        // In Login.tsx:
+        /*
+          const user: User = {
+            id: response.data.id,
+            email: email, // This is from local state in Login.tsx
+            role: response.data.role,
+          };
+        */
+        // Login.tsx uses local email variable.
+        // But what about other places? The `verify` endpoint is likely used for session restoration.
+        // If I look at `frontend/web-interface/src/context/AuthContext.tsx` I might see it.
+        // But for now, let's keep it clean. I will create a specific DTO for Verify if needed or just use a Map for now to be safe on this specific endpoint which was returning unstructured JSON.
+
+        // Actually, let's just use a Map or a specific DTO.
+        // To be safe and "visually identical" in response, I should match the keys.
+
+        return new ResponseEntity<>(java.util.Map.of(
+            "id", user.getId().toString(),
+            "email", user.getEmail(),
+            "role", user.getRuolo(),
+            "message", "TOKEN VALID"
+        ), HttpStatus.OK);
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<String> logout(HttpServletRequest request,
+    public ResponseEntity<MessageResponse> logout(HttpServletRequest request,
                                      HttpServletResponse response) {
-                                        
-        try {
 
-            String token = extractTokenFromCookie(request);
-            logger.warn("Logout – token estratto: "+ token);
-            ResponseEntity<String> svcResp = authenticationService.logout(token);
+        String token = extractTokenFromCookie(request);
+        logger.warn("Logout – token estratto: "+ token);
 
-            // Invalida il cookie impostando maxAge a 0
-            ResponseCookie cookie = ResponseCookie.from("token", "")
-                    .httpOnly(true)
-                    .secure(false) // Imposta true in produzione con HTTPS
-                    .sameSite("Strict")
-                    .path("/")
-                    .maxAge(0) // Invalida immediatamente
-                    .build();
+        ResponseEntity<MessageResponse> svcResp = authenticationService.logout(token); // logic is in service now
 
-            response.addHeader("Set-Cookie", cookie.toString());
+        // Invalida il cookie impostando maxAge a 0
+        ResponseCookie cookie = ResponseCookie.from("token", "")
+                .httpOnly(true)
+                .secure(false) // Imposta true in produzione con HTTPS
+                .sameSite("Strict")
+                .path("/")
+                .maxAge(0) // Invalida immediatamente
+                .build();
 
-            JSONObject body = new JSONObject();
-            body.put("message", "LOGOUT SUCCESSFUL");
+        response.addHeader("Set-Cookie", cookie.toString());
 
-            log.info("Logout completato con successo");
-            return new ResponseEntity<>(body.toString(), HttpStatus.OK);
-
-        } catch (Exception e) {
-            log.error("Errore durante il logout: {}", e.getMessage(), e);
-            return new ResponseEntity<>("LOGOUT FAILED", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        log.info("Logout completato con successo");
+        return svcResp;
     }
 
     // Metodo helper per estrarre il token dal cookie

@@ -27,8 +27,10 @@ import it.univr.glicemiewebapp.repository.PazienteRepository;
 import it.univr.glicemiewebapp.repository.UtenteRepository;
 import it.univr.glicemiewebapp.dto.PazienteDTO;
 import it.univr.glicemiewebapp.dto.PazienteUtenteDTO;
+import it.univr.glicemiewebapp.dto.response.MessageResponse;
 import it.univr.glicemiewebapp.entity.Paziente;
 import it.univr.glicemiewebapp.exception.BusinessException;
+import it.univr.glicemiewebapp.exception.ResourceNotFoundException;
 
 @ExtendWith(MockitoExtension.class)
 class PazienteServiceTest {
@@ -46,7 +48,7 @@ class PazienteServiceTest {
 
   @BeforeEach
   void setUp() {
-    Mockito.reset(passwordEncoder, passwordEncoder, utenteRepository, logger);
+    Mockito.reset(passwordEncoder, pazienteRepository, utenteRepository, logger);
   }
 
   @Test
@@ -54,7 +56,7 @@ class PazienteServiceTest {
     List<PazienteUtenteDTO> expected = List.of(mock(PazienteUtenteDTO.class));
     when(pazienteRepository.findAllComplete()).thenReturn(expected);
 
-    List<PazienteUtenteDTO> result = pazienteRepository.findAllComplete();
+    List<PazienteUtenteDTO> result = service.findAllComplete();
     assertSame(expected, result);
     verify(pazienteRepository).findAllComplete();
     verifyNoMoreInteractions(pazienteRepository);
@@ -62,12 +64,9 @@ class PazienteServiceTest {
 
   @Test
   void findAllComplete_exception() {
-
     when(pazienteRepository.findAllComplete()).thenThrow(new RuntimeException());
-
     BusinessException ex = assertThrows(BusinessException.class, () -> service.findAllComplete());
     assertTrue(ex.getMessage().contains("Failed to retrieve patients data"));
-
   }
 
   @Test
@@ -84,7 +83,6 @@ class PazienteServiceTest {
     verify(utenteRepository).findById(medicoId);
     verify(pazienteRepository).findByIdMedico(medico);
     verifyNoMoreInteractions(pazienteRepository);
-
   }
 
   @Test
@@ -92,9 +90,7 @@ class PazienteServiceTest {
     UUID medicoId = UUID.randomUUID();
     when(utenteRepository.findById(medicoId)).thenReturn(Optional.empty());
 
-    BusinessException ex = assertThrows(BusinessException.class, () -> service.findByMedico(medicoId));
-    assertTrue(ex.getMessage().contains("Failed to retrieve patients for medico"));
-
+    assertThrows(ResourceNotFoundException.class, () -> service.findByMedico(medicoId));
   }
 
   @Test
@@ -121,10 +117,10 @@ class PazienteServiceTest {
     when(utenteRepository.findById(medicoId)).thenReturn(Optional.of(medico));
     when(passwordEncoder.encode("plaintext")).thenReturn("ENC");
 
-    ResponseEntity<String> resp = service.update(request);
+    ResponseEntity<MessageResponse> resp = service.update(request);
 
     assertEquals(HttpStatus.OK, resp.getStatusCode());
-    assertEquals("USER UPDATED", resp.getBody());
+    assertEquals("USER UPDATED", resp.getBody().getMessage());
 
     // verify field updates
     verify(logger).warn(startsWith("attempt to modify user: "));
@@ -141,18 +137,19 @@ class PazienteServiceTest {
   }
 
   @Test
-  void update_notFound_patient_throwsResponseStatusException404() {
+  void update_notFound_patient_throwsResourceNotFoundException() {
     UUID id = UUID.randomUUID();
     PazienteUtenteDTO request = mock(PazienteUtenteDTO.class);
     when(request.getId()).thenReturn(id);
     when(pazienteRepository.findById(id)).thenReturn(Optional.empty());
 
-    ResponseStatusException ex = assertThrows(ResponseStatusException.class, () -> service.update(request));
-    assertEquals(HttpStatus.NOT_FOUND, ex.getStatusCode());
+    ResourceNotFoundException ex = assertThrows(ResourceNotFoundException.class, () -> service.update(request));
+    // Check if the exception message contains the ID (optional, but good practice)
+    // assertTrue(ex.getMessage().contains(id.toString()));
   }
 
   @Test
-  void update_idMedico_notFound_wrappedIntoBusinessException() {
+  void update_idMedico_notFound_throwsResourceNotFoundException() {
     UUID pazId = UUID.randomUUID();
     UUID medicoId = UUID.randomUUID();
 
@@ -162,11 +159,9 @@ class PazienteServiceTest {
 
     Paziente paziente = mock(Paziente.class);
     when(pazienteRepository.findById(pazId)).thenReturn(Optional.of(paziente));
-    when(utenteRepository.findById(medicoId)).thenReturn(Optional.empty()); // triggers ResourceNotFound -> caught ->
-                                                                            // BusinessException
+    when(utenteRepository.findById(medicoId)).thenReturn(Optional.empty());
 
-    BusinessException ex = assertThrows(BusinessException.class, () -> service.update(request));
-    assertTrue(ex.getMessage().contains("Failed to retrieve patients for medico"));
+    assertThrows(ResourceNotFoundException.class, () -> service.update(request));
   }
 
   @Test
@@ -179,7 +174,7 @@ class PazienteServiceTest {
     Paziente paziente = mock(Paziente.class);
     when(pazienteRepository.findById(pazId)).thenReturn(Optional.of(paziente));
 
-    ResponseEntity<String> resp = service.update(request);
+    ResponseEntity<MessageResponse> resp = service.update(request);
 
     assertEquals(HttpStatus.OK, resp.getStatusCode());
     verify(passwordEncoder, never()).encode(anyString());
