@@ -32,3 +32,31 @@ The comprehensive project documentation, including UML diagrams and Activity dia
 - `doc/Documentazione.tex`: Italian Documentation source file.
 - `doc/Documentation.tex`: English Documentation source file.
 - `doc/img/`: Images and diagrams referenced in the documentation.
+
+## Running the Application
+
+### Prerequisites
+- Java Database and Maven setup
+- Node.js and npm
+
+### Backend
+To start the Spring Boot backend, navigate to the `backend` directory and run the Maven wrapper:
+
+```bash
+cd backend
+./mvnw spring-boot:run
+```
+*(On Windows, use `mvnw.cmd spring-boot:run`)*
+
+### Frontend
+To start the React frontend (built with Vite), navigate to the `frontend/web-interface` directory, install dependencies, and run the development server:
+
+```bash
+cd frontend/web-interface
+npm install
+npm run dev
+```
+The frontend should now be running on `localhost:5173` (default for Vite) or `localhost:3000`.
+
+## License
+This project is licensed under the [MIT License](https://opensource.org/licenses/MIT).
