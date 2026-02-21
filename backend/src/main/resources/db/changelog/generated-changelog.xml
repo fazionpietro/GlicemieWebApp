@@ -1,0 +1,226 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet author="pietro (generated)" id="1757931158952-1">
+        <createTable tableName="ASSUNZIONI">
+            <column name="ID_ASSUNZIONE" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_E"/>
+            </column>
+            <column name="timestamp" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ID_PAZIENTE" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ID_TERAPIA" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="pietro (generated)" id="1757931158952-2">
+        <createTable tableName="LOGS">
+            <column name="ID_LOG" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_2"/>
+            </column>
+            <column name="DESCRIZIONE" type="CHARACTER LARGE OBJECT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="timestamp" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TIPO" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="pietro (generated)" id="1757931158952-3">
+        <createTable tableName="PAZIENTI">
+            <column name="COMORBITA" type="CHARACTER LARGE OBJECT"/>
+            <column name="FATTORI_RISCHIO" type="CHARACTER LARGE OBJECT"/>
+            <column name="PATOLOGIE_PREGRESSE" type="CHARACTER LARGE OBJECT"/>
+            <column name="ID_PAZIENTE" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_8"/>
+            </column>
+            <column name="ID_MEDICO" type="UUID"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="pietro (generated)" id="1757931158952-4">
+        <createTable tableName="RILEVAZIONI">
+            <column name="ID_RILEVAZIONE" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_97"/>
+            </column>
+            <column name="timestamp" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="VALORE" type="DOUBLE PRECISION">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ID_PAZIENTE" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="pietro (generated)" id="1757931158952-5">
+        <createTable tableName="SEGNALAZIONI">
+            <column name="ID_SEGNALAZIONE" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_1"/>
+            </column>
+            <column name="DESCRIZIONE" type="CHARACTER LARGE OBJECT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="INTENSITA" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="timestamp" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ID_PAZIENTE" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ID_SINTOMO" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="pietro (generated)" id="1757931158952-6">
+        <createTable tableName="SINTOMI">
+            <column name="ID_SINTOMO" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_A"/>
+            </column>
+            <column name="DESCRIZIONE" type="CHARACTER LARGE OBJECT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NOME" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="pietro (generated)" id="1757931158952-7">
+        <createTable tableName="TERAPIE">
+            <column name="ID_TERAPIA" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_D"/>
+            </column>
+            <column name="DOSAGGIO" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="FARMACO" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="INDICAZIONI" type="VARCHAR(255)"/>
+            <column name="NUM_ASSUNZIONI" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ID_PAZIENTE" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="MEDICO_CURANTE" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="pietro (generated)" id="1757931158952-8">
+        <createTable tableName="TOKEN_BLACKLIST">
+            <column name="JTI" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_1D"/>
+            </column>
+            <column name="CREATED_AT" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="EXPIRY" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="pietro (generated)" id="1757931158952-9">
+        <createTable tableName="UTENTI">
+            <column name="ID_UTENTE" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="CONSTRAINT_95"/>
+            </column>
+            <column name="COGNOME" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DATA_NASCITA" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="EMAIL" type="VARCHAR(320)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NOME" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PASSWORD_HASH" type="VARCHAR(256)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="RUOLO" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="pietro (generated)" id="1757931158952-10">
+        <addUniqueConstraint columnNames="EMAIL" constraintName="UK9B90MK1NOLF3OU90P42A93TJO" tableName="UTENTI"/>
+    </changeSet>
+    <changeSet author="pietro (generated)" id="1757931158952-11">
+        <addUniqueConstraint columnNames="ID_TERAPIA" constraintName="UKO7XTO23DDH9037J9VKJTDOHAI" tableName="ASSUNZIONI"/>
+    </changeSet>
+    <changeSet author="pietro (generated)" id="1757931158952-12">
+        <createIndex associatedWith="" indexName="FK1E53E175OLG7F8AALA0HMPKUN_INDEX_E" tableName="ASSUNZIONI">
+            <column name="ID_PAZIENTE"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pietro (generated)" id="1757931158952-13">
+        <createIndex associatedWith="" indexName="FK2GHK2SQ0RN0346POYGKOAUA9M_INDEX_D" tableName="TERAPIE">
+            <column name="MEDICO_CURANTE"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pietro (generated)" id="1757931158952-14">
+        <createIndex associatedWith="" indexName="FK6SAJR4OP20WA8GV24PK9I5MN2_INDEX_8" tableName="PAZIENTI">
+            <column name="ID_MEDICO"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pietro (generated)" id="1757931158952-15">
+        <createIndex associatedWith="" indexName="FKEURLSL7P76KEBFG59SG98ND1C_INDEX_9" tableName="RILEVAZIONI">
+            <column name="ID_PAZIENTE"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pietro (generated)" id="1757931158952-16">
+        <createIndex associatedWith="" indexName="FKLOKFF0GULRSK9A54PXOAD567L_INDEX_1" tableName="SEGNALAZIONI">
+            <column name="ID_PAZIENTE"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pietro (generated)" id="1757931158952-17">
+        <createIndex associatedWith="" indexName="FKQGKULI7KXWS93RG4EATL7LILX_INDEX_1" tableName="SEGNALAZIONI">
+            <column name="ID_SINTOMO"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pietro (generated)" id="1757931158952-18">
+        <createIndex associatedWith="" indexName="FKSN2VOUVE8JUQQI1O6CTNUM05V_INDEX_D" tableName="TERAPIE">
+            <column name="ID_PAZIENTE"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="pietro (generated)" id="1757931158952-19">
+        <addForeignKeyConstraint baseColumnNames="ID_PAZIENTE" baseTableName="ASSUNZIONI" constraintName="FK1E53E175OLG7F8AALA0HMPKUN" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ID_PAZIENTE" referencedTableName="PAZIENTI" validate="true"/>
+    </changeSet>
+    <changeSet author="pietro (generated)" id="1757931158952-20">
+        <addForeignKeyConstraint baseColumnNames="MEDICO_CURANTE" baseTableName="TERAPIE" constraintName="FK2GHK2SQ0RN0346POYGKOAUA9M" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ID_UTENTE" referencedTableName="UTENTI" validate="true"/>
+    </changeSet>
+    <changeSet author="pietro (generated)" id="1757931158952-21">
+        <addForeignKeyConstraint baseColumnNames="ID_TERAPIA" baseTableName="ASSUNZIONI" constraintName="FK3LJ6SRM43LPPEI5YADK7K7MS7" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ID_TERAPIA" referencedTableName="TERAPIE" validate="true"/>
+    </changeSet>
+    <changeSet author="pietro (generated)" id="1757931158952-22">
+        <addForeignKeyConstraint baseColumnNames="ID_MEDICO" baseTableName="PAZIENTI" constraintName="FK6SAJR4OP20WA8GV24PK9I5MN2" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ID_UTENTE" referencedTableName="UTENTI" validate="true"/>
+    </changeSet>
+    <changeSet author="pietro (generated)" id="1757931158952-23">
+        <addForeignKeyConstraint baseColumnNames="ID_PAZIENTE" baseTableName="RILEVAZIONI" constraintName="FKEURLSL7P76KEBFG59SG98ND1C" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ID_PAZIENTE" referencedTableName="PAZIENTI" validate="true"/>
+    </changeSet>
+    <changeSet author="pietro (generated)" id="1757931158952-24">
+        <addForeignKeyConstraint baseColumnNames="ID_PAZIENTE" baseTableName="PAZIENTI" constraintName="FKF8AL9M5WMW5NFFJVWUKG1VY52" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="ID_UTENTE" referencedTableName="UTENTI" validate="true"/>
+    </changeSet>
+    <changeSet author="pietro (generated)" id="1757931158952-25">
+        <addForeignKeyConstraint baseColumnNames="ID_PAZIENTE" baseTableName="SEGNALAZIONI" constraintName="FKLOKFF0GULRSK9A54PXOAD567L" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ID_PAZIENTE" referencedTableName="PAZIENTI" validate="true"/>
+    </changeSet>
+    <changeSet author="pietro (generated)" id="1757931158952-26">
+        <addForeignKeyConstraint baseColumnNames="ID_SINTOMO" baseTableName="SEGNALAZIONI" constraintName="FKQGKULI7KXWS93RG4EATL7LILX" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ID_SINTOMO" referencedTableName="SINTOMI" validate="true"/>
+    </changeSet>
+    <changeSet author="pietro (generated)" id="1757931158952-27">
+        <addForeignKeyConstraint baseColumnNames="ID_PAZIENTE" baseTableName="TERAPIE" constraintName="FKSN2VOUVE8JUQQI1O6CTNUM05V" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="ID_PAZIENTE" referencedTableName="PAZIENTI" validate="true"/>
+    </changeSet>
+</databaseChangeLog>

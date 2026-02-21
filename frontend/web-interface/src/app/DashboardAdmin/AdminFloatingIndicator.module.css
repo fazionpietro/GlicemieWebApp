@@ -1,0 +1,46 @@
+.root {
+    position: relative;
+    background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-8));
+    width: 100%;
+    border-radius: var(--mantine-radius-md);
+    padding: 4px;
+    border: 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+    display: flex;
+    box-shadow: 0 1px 3px light-dark(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.15));
+}
+
+.control {
+    flex: 1;
+    padding: 6px 16px;
+    line-height: 1.4;
+    color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark-1));
+    border-radius: calc(var(--mantine-radius-md) - 2px);
+    font-size: var(--mantine-font-size-sm);
+    transition: all 150ms ease;
+    font-weight: 500;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+    cursor: pointer;
+
+    &:hover:not([data-active]) {
+        color: light-dark(var(--mantine-color-black), var(--mantine-color-white));
+        background-color: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-6));
+    }
+
+    &[data-active] {
+        color: var(--mantine-color-white);
+    }
+}
+
+.controlLabel {
+    position: relative;
+    z-index: 1;
+}
+
+.indicator {
+    background-color: var(--mantine-primary-color-filled);
+    border-radius: calc(var(--mantine-radius-md) - 2px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 150ms ease, width 150ms ease;
+}
