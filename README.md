@@ -1,7 +1,7 @@
 # Blood Glucose Management Webapp
 
 ## Project Overview
-This project is a comprehensive web application designed for blood glucose management. It facilitates the daily tracking of glycemic levels, communication between patients and doctors, and overall therapy management. The software architecture is divided into a React-based frontend and a Spring Boot-based backend.
+This project is a comprehensive web application designed for blood glucose management, developed as a university project. It facilitates the daily tracking of glycemic levels, communication between patients and doctors, and overall therapy management. The software architecture is divided into a React-based frontend and a Spring Boot-based backend.
 
 ## User Roles
 The application serves three distinct user categories:
